@@ -1,0 +1,79 @@
+{
+  "common": {
+    "create": "Create",
+    "search": "Search",
+    "loading": "Loading...",
+    "total": "Total {{total}} items",
+    "perPage": "{{count}} items/page"
+  },
+  "error": {
+    "loadFailed": "Failed to load application list",
+    "loginExpired": "Login expired, please login again",
+    "requestFailed": "Request failed"
+  },
+  "dataset": {
+    "lastUpdated": "Created {{time}}",
+    "uploadTitle": "Please select files to upload",
+    "uploadSuccess": "File uploaded successfully",
+    "uploadError": "Upload operation failed",
+    "pleaseUpload": "Please upload files first",
+    "updateSuccess": "Dataset updated successfully",
+    "updateError": "Update operation failed",
+    "uploadFiles": "Upload Files",
+    "dragFiles": "Drag files here, or",
+    "selectFiles": "Select files",
+    "supportedFormats": "Supported formats: TXT, MARKDOWN, MDX, PDF, HTML, XLSX, XLS, DOCX, CSV, MD, HTM",
+    "selectedFiles": "Selected files:",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "share": {
+    "title": "Share",
+    "manageCollaborators": "Manage Collaborators",
+    "inviteCollaborators": "Invite Collaborators",
+    "searchUsers": "Search users",
+    "inviteSuccess": "Invitation successful",
+    "inviteSuccessDesc": "Successfully invited selected users",
+    "inviteFailed": "Invitation failed",
+    "inviteFailedDesc": "Error occurred while inviting users",
+    "allowSubpage": "Allow collaborators to access subpages",
+    "sendNotification": "Send notification",
+    "addNote": "Add note",
+    "cancel": "Cancel",
+    "invite": "Invite",
+    "copyLink": "Copy link",
+    "copySuccess": "Copy successful",
+    "copySuccessDesc": "Link copied to clipboard",
+    "copyFailed": "Copy failed",
+    "copyFailedDesc": "Unable to copy link to clipboard",
+    "userAdded": "After users are added",
+    "canRead": "Can read"
+  },
+  "chatpdf": {
+    "title": "Online ChatPDF",
+    "description": "Use AI capabilities to help you read better",
+    "enterUrl": "Enter PDF file link",
+    "confirm": "Confirm",
+    "backToUpload": "Back to file upload",
+    "uploading": "Uploading...",
+    "dragUpload": "Click or drag files here to upload",
+    "uploadByLink": "Upload using link",
+    "supportedTypes": "Supported file types: PDF | Max file size: 50MB",
+    "maxTokens": "Maximum Token count 100K (approximately 70,000 characters)",
+    "mindMap": "Mind Map",
+    "translatePdf": "Translate PDF",
+    "onlyPdf": "Only PDF files are supported",
+    "fileTooLarge": "File size cannot exceed 50MB",
+    "uploadSuccess": "File \"{{name}}\" has been uploaded",
+    "uploadFailed": "Upload failed",
+    "uploadError": "File upload failed, please try again",
+    "enterUrlError": "Please enter URL",
+    "onlyPdfUrl": "Only PDF file links are supported",
+    "urlSubmitted": "URL has been submitted"
+  },
+  "explore": {
+    "title": "Explore ChatAnyAI Applications",
+    "description": "Use these template applications, or customize your own based on templates",
+    "recommended": "Recommended"
+  }
+}
