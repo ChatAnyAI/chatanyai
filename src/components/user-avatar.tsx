@@ -13,10 +13,11 @@ export function MyUserAvatar() {
 }
 
 export function UserAvatar({ user }: {user: UserProfile}) {
+    console.log("userAvatar",user)
     return (
         <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback className="rounded-full bg-gradient-to-br from-green-400 to-blue-500 text-white">{user?.name.charAt(0)}</AvatarFallback>
+            {user && <AvatarImage src={user.avatar} alt={user.name} />}
+            {user &&<AvatarFallback className="rounded-full bg-gradient-to-br from-green-400 to-blue-500 text-white">{user?.name.charAt(0)}</AvatarFallback>}
         </Avatar>
     )
 }

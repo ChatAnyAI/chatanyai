@@ -6,11 +6,6 @@ interface ResponseData<T> {
   data: T;
 }
 
-export interface DataPage<T> {
-  list: T;
-  pagination: Pagination;
-}
-
 export interface Pagination {
   total?: number;
   currentPage: number;

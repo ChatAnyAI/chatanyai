@@ -273,16 +273,25 @@ export type ApiHomeRecentAppItem = {
 export type ApiHomeRecentChatItem = {
   id: string;
   title: string;
-  createdAt: number;
+  msgCount: number;
   updatedAt: number;
   appId: string;
   uid: number;
-  name: string;
+  appName: string;
   icon: string;
   type: AppType;
   subType: AppSubType;
   visibility: AppVisibility;
+  collaborators: Collaborator[];
 }
+
+export type Collaborator = {
+    uid: number;
+    name: string;
+    email: string;
+    avatar: string;
+}
+
 
 export const ApiHomeRecent = () => {
   return get<ApiHomeRecentRes>('/api/home/recent');

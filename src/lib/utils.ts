@@ -18,24 +18,6 @@ interface ApplicationError extends Error {
     status: number;
 }
 
-export const fetcher = async (url: string) => {
-    // const domain = 'http://localhost:9088';
-    // const fullUrl = `${domain}${url}`;
-    const res = await fetch(url);
-
-    if (!res.ok) {
-        const error = new Error(
-            'An error occurred while fetching the data.',
-        ) as ApplicationError;
-
-        error.info = await res.json();
-        error.status = res.status;
-
-        throw error;
-    }
-
-    return res.json();
-};
 
 export function getAnnotations(message: RespChatHistoryMessage) {
     if (message.ragContent && message.role === 'assistant') {
