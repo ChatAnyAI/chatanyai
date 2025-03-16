@@ -13,8 +13,8 @@ export default function RootLayout() {
       attribute="class"
       enableSystem
     >
-      <Outlet />
-      <Toaster />
+        <Outlet />
+        <Toaster />
     </ThemeProvider>
   );
 }

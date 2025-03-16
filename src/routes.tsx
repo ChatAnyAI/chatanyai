@@ -5,6 +5,7 @@ import {
 import { Suspense, lazy } from 'react';
 import Loading from './components/loading';
 import Layout1 from '@/app/layout';
+import { ErrorBoundary } from './components/error-boundary';
 
 const Component2 = lazy(() => import('@/app/auth/login/page'));
 const Component3 = lazy(() => import('@/app/auth/register/page'));
@@ -19,6 +20,7 @@ const HomePage = lazy(() => import('@/app/front/home/page'));
 const Meeting = lazy(() => import('@/app/front/meeting/page'));
 const MeetingInfo = lazy(() => import('@/app/front/meeting/info/page'));
 const SpaceSetting = lazy(() => import('@/app/front/space/page'));
+const NotFound = lazy(() => import('@/app/not-found'));
 
 const AdminLayout = lazy(() => import('@/app/admin/layout'));
 const AdminOverview = lazy(() => import('@/app/admin/overview/page'));
@@ -35,7 +37,11 @@ const UserSettingGeneral = lazy(() => import('@/app/userSetting/general/general'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      element={<Layout1 />}>
+      element={<Layout1 />}
+      errorElement={
+        <ErrorBoundary />
+      }
+    >
       <Route
         path="/login"
         element={
@@ -64,14 +70,6 @@ const router = createBrowserRouter(
             </Suspense>
           }>
         </Route>
-        {/*<Route*/}
-        {/*  path="/explore"*/}
-        {/*  element={*/}
-        {/*    <Suspense fallback={<Loading />}>*/}
-        {/*      <Explore />*/}
-        {/*    </Suspense>*/}
-        {/*  }>*/}
-        {/*</Route>*/}
         <Route
           path="/dataset/:datasetId/docList"
           element={
@@ -149,7 +147,7 @@ const router = createBrowserRouter(
             </Suspense>
           } />
 
-        <Route path='*' element={<Navigate to={'/home'} />} />
+        <Route path='/' element={<Navigate to={'/home'} />} />
       </Route>
       {/* admin */}
       <Route
@@ -202,20 +200,28 @@ const router = createBrowserRouter(
           } />
       </Route>
       {/* user setting */}
+      <Route
+        element={
+          <Suspense fallback={<Loading />}>
+            <UserSettingLayout />
+          </Suspense>
+        }>
         <Route
-            element={
-                <Suspense fallback={<Loading />}>
-                    <UserSettingLayout />
-                </Suspense>
-            }>
-            <Route
-                path="/userSetting/general"
-                element={
-                    <Suspense fallback={<Loading />} >
-                        <UserSettingGeneral />
-                    </Suspense>
-                } />
-        </Route>
+          path="/userSetting/general"
+          element={
+            <Suspense fallback={<Loading />} >
+              <UserSettingGeneral />
+            </Suspense>
+          } />
+      </Route>
+
+      <Route
+        path="*"
+        element={
+          <Suspense fallback={<Loading />}>
+            <NotFound />
+          </Suspense>
+        } />
     </Route>
   )
 );
