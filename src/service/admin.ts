@@ -180,3 +180,28 @@ export const ApiUpdateAdminTeamLicense = (req: ApiUpdateAdminTeamLicenseRequest)
     return put<void>(`/api/admin/team/license`,req);
 }
 
+
+export interface ApiAdminTeamPreference {
+    id: number;
+    emailEnable: boolean;
+    emailConfig: string;
+}
+
+export const ApiGetAdminTeamPreference = () => {
+    return get<ApiAdminTeamPreference>(`/api/admin/preference`);
+}
+
+export const ApiUpdateAdminTeamPreference = (req: ApiAdminTeamPreference) => {
+    return post<ApiAdminTeamPreference>(`/api/admin/preference`, req);
+}
+
+export interface EmailConfig {
+    host?: string | "";
+    port?: number | "";
+    username?: string | "";
+    password?: string | "";
+    from?: string | "";
+    subject?: string | "";
+    fromEmail?: string | "";
+    fromName?: string | "";
+}

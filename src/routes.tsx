@@ -6,6 +6,7 @@ import { Suspense, lazy } from 'react';
 import Loading from './components/loading';
 import Layout1 from '@/app/layout';
 import { ErrorBoundary } from './components/error-boundary';
+import TeamPreferencesPage from "@/app/admin/preference/page";
 
 const Component2 = lazy(() => import('@/app/auth/login/page'));
 const Component3 = lazy(() => import('@/app/auth/register/page'));
@@ -28,6 +29,7 @@ const AdminApplication = lazy(() => import('@/app/admin/application/page'));
 const AdminModelProvider = lazy(() => import('@/app/admin/modelProvider/page'));
 const AdminTeamMember = lazy(() => import('@/app/admin/teamMember/page'));
 const AdminSetting = lazy(() => import('@/app/admin/setting/page'));
+const AdminTeamPreferences = lazy(() => import('@/app/admin/preference/page'));
 const AdminLicense = lazy(() => import('@/app/admin/license/page'));
 
 
@@ -198,6 +200,13 @@ const router = createBrowserRouter(
               <AdminSetting />
             </Suspense>
           } />
+          <Route
+              path="/admin/preference"
+              element={
+                  <Suspense fallback={<Loading />} >
+                      <AdminTeamPreferences />
+                  </Suspense>
+              } />
       </Route>
       {/* user setting */}
       <Route

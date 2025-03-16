@@ -5,7 +5,7 @@ import {
     ArrowLeft,
     AppWindowMac,
     Copyright,
-    Moon, Sun
+    Moon, Sun, Cog
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom";
@@ -35,6 +35,7 @@ const menuItems: NavMenuItem[] = [
     // { icon: Bell, name: "WebHook", url: "#" },
     { icon: Copyright, name: "License", url: "/admin/license" },
     // { icon: Settings, name: "General Setting", url: "/admin/setting" },
+    {icon: Cog, name: "Preference", url: "/admin/preference"}
 ]
 
 export function AdminSidebar() {
