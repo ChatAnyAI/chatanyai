@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { useChatStore } from "@/store/chatStore"
 import { useEffect } from "react"
 import { Outlet, useParams } from 'react-router-dom'
+import { Guide } from "@/components/newbie-guide"
 
 const Layout = () => {
     const fetchModels = useChatStore(state => state.fetchModels);
@@ -29,11 +30,13 @@ const Layout = () => {
     return (
         <AppSideBarHistoryListContextProvider>
             <SidebarProvider>
+                <Guide />
                 <AppSidebar />
                 <SidebarToggleMobile />
                 <Outlet />
             </SidebarProvider>
         </AppSideBarHistoryListContextProvider>
+
     )
 }
 

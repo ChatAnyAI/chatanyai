@@ -49,7 +49,7 @@ export default function DashboardPage() {
     const { data: homeList, error } = useSWR<ApiHomeRecentRes>('ApiHomeRecent', ApiHomeRecent);
     if (error) return <div>Failed to load homeList</div>;
     if (!homeList) return (
-        <div className="flex items-center justify-center h-[50vh]">
+        <div className="w-full flex items-center justify-center h-[50vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );

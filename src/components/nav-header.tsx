@@ -94,7 +94,7 @@ export function NavHeader({
             <SidebarMenu>
                 {items.map((item) => {
                     return <Collapsible key={item.name} asChild defaultOpen={item.isActive}>
-                        <SidebarMenuItem>
+                        <SidebarMenuItem data-name={item.name}>
                             <SidebarMenuButton isActive={new RegExp(item.url).test(location.pathname)}
                                 asChild tooltip={item.name}
                                 onClick={() => {

@@ -119,7 +119,7 @@ export function NavGroup({
     <SidebarGroup className={className}>
       {
         groupName ?
-          <div className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-sm rounded-md cursor-pointer" : "")} onClick={() => {
+          <div data-name={groupName} className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-sm rounded-md cursor-pointer" : "")} onClick={() => {
             if (!groupRoute) return;
             onClickMenu(null);
             navigator(groupRoute);
@@ -135,7 +135,7 @@ export function NavGroup({
           : null
       }
 
-      <SidebarMenu>
+      <SidebarMenu data-name={groupName + '-sub'}>
         {items.map((item) => {
           const isDragging = draggedItem === item.id;
           const isDragOver = dragOverItem?.id === item.id;
@@ -148,6 +148,7 @@ export function NavGroup({
               defaultOpen={item.isActive}
             >
               <SidebarMenuItem
+                data-name={item.name}
                 data-marked={maked ? 'true' : 'false'}
                 draggable={draggable && Boolean(item.id)}
                 onDragStart={(e) => item.id && handleDragStart(e, item.id)}
