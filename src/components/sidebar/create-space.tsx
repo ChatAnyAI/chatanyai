@@ -58,7 +58,7 @@ export function CreateSpace() {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <SidebarGroupAction className="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 transition-opacity">
+                    <SidebarGroupAction data-name="create-icon" className="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 transition-opacity">
                         <Plus className="h-4 w-4" />
                     </SidebarGroupAction>
                 </DropdownMenuTrigger>
