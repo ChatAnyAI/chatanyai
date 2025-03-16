@@ -20,8 +20,7 @@ export function AppUpdate({ appId, initialName, initialIcon, onSuccess }: AppUpd
 
     const handleUpdate = async () => {
         try {
-            await ApiUpdateAppInfo({
-                id: appId,
+            await ApiUpdateAppInfo(appId,{
                 name: newName,
                 icon: newIcon,
             });

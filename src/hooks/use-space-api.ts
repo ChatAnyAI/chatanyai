@@ -20,8 +20,8 @@ export const useSpaceDrag = () => {
 
 export function useSpaceApi() {
   const fetchAppList = useChatStore((state) => state.fetchAppList)
-  const onUpdate = async (data: UpdateAppInfoRequest) => {
-    await ApiUpdateAppInfo(data);
+  const onUpdate = async (appId: string,data: UpdateAppInfoRequest) => {
+    await ApiUpdateAppInfo(appId,data);
     fetchAppList();
   }
 

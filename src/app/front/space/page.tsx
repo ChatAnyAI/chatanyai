@@ -117,8 +117,7 @@ export default function SpaceSettings() {
       setSaving(true)
 
       // Convert string values to numbers
-      await handleSpaceUpdate({
-        id: appId!,
+      await handleSpaceUpdate(appId!, {
         icon: data.icon,
         name: data.name,
         description: data.description,

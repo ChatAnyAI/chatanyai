@@ -11,7 +11,7 @@ import { useVisibility } from '@/hooks/use-visibility';
 import { useParams } from 'react-router-dom';
 import ShareDialog from "@/components/sharev2";
 import {RespChat} from "@/service/api";
-import {AppVisibility} from "@/lib/constants/constants";
+import {AppVisibility, AppVisibilityEnum} from "@/lib/constants/constants";
 // import ShareDialog from "../share";
 
 export type VisibilityType = 1 | 2 //  'private' | 'public';
@@ -42,15 +42,15 @@ export function VisibilitySelector({
                   switch (visibility) {
                       case AppVisibility.Private:
                           return (
-                            <><Lock className="h-4 w-4 mr-2" /> Only people invited</>
+                            <><Lock className="h-4 w-4 mr-2" /> {AppVisibilityEnum[visibility]} </>
                           );
                       case AppVisibility.Internal:
                           return (
-                            <><Users className="h-4 w-4 mr-2" />Everyone at Your Team  </>
+                            <><Users className="h-4 w-4 mr-2" /> {AppVisibilityEnum[visibility]}  </>
                           );
                       case AppVisibility.Public:
                           return (
-                            <><Earth className="h-4 w-4 mr-2" /> Everyone with the link</>
+                            <><Earth className="h-4 w-4 mr-2" />  {AppVisibilityEnum[visibility]}</>
                           );
                       default:
                           return null;
