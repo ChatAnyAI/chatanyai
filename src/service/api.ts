@@ -204,7 +204,6 @@ export const ApiUpdateVisibility = (appId: string, visibility: AppVisibility) =>
 }
 
 export interface UpdateAppInfoRequest {
-  id: string;
   name: string;
   description?: string;
   icon?: string;
@@ -213,8 +212,8 @@ export interface UpdateAppInfoRequest {
   visibility?: 1 | 2; // Assuming Visibility is already defined in your constants
   fileIds?: string[];
 }
-export const ApiUpdateAppInfo = (data: UpdateAppInfoRequest) => {
-  return post<void>(`/api/app/info`, data);
+export const ApiUpdateAppInfo = (appId: string, data: UpdateAppInfoRequest) => {
+  return put<void>(`/api/app/${appId}/info`, data);
 }
 
 export const ApiShareWithMeList = () => {
@@ -226,7 +225,7 @@ export const ApiAppShareCreate = (appId: string, uids: number[]) => {
 }
 
 export const ApiAppShareDelete = (appId: string, uid: number) => {
-  return del<void>(`/api/app/share/${appId}/${uid}`);
+  return del<void>(`/api/app/${appId}/share/${uid}`);
 }
 
 export const ApiAppShareUserList = (appId: string) => {

@@ -76,13 +76,13 @@ function PureChatHeader({
     return (
         <header className="flex sticky top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2 justify-between shadow-md">
             <div className="flex flex-auto min-w-0 items-center gap-2">
-                <div>{chatInfo?.title || currentAppInfo?.name}</div>
-                {!isNew && !isReadonly && chatInfo && (
-                    <VisibilitySelector
-                        chatInfo={chatInfo}
-                        chatId={chatId}
-                    />
-                )}
+                {/*<div>{chatInfo?.title || currentAppInfo?.name}</div>*/}
+                {/*{!isNew && !isReadonly && chatInfo && (*/}
+                {/*    <VisibilitySelector*/}
+                {/*        chatInfo={chatInfo}*/}
+                {/*        chatId={chatId}*/}
+                {/*    />*/}
+                {/*)}*/}
             </div>
             <div className="flex items-center gap-2">
                 {
@@ -100,6 +100,12 @@ function PureChatHeader({
                             </Button>
                         </>
                 }
+                {!isNew && !isReadonly && chatInfo && (
+                    <VisibilitySelector
+                        chatInfo={chatInfo}
+                        chatId={chatId}
+                    />
+                )}
                 {!isReadonly && (
                     <ModelSelector
                     />

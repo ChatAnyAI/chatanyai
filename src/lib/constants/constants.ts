@@ -3,10 +3,10 @@
 import { BotMessageSquare, Database, FileText, BrainCircuit } from "lucide-react"
 
 export enum AppType {
-    KnowledgeBase = 1,
-    Copilot = 2,
-    ChatPDF = 3,
-    MeetingChat = 4,
+    Copilot = 1,
+    ChatPDF = 2,
+    MeetingChat = 3,
+    KnowledgeBase = 4,
 }
 
 export enum AppSubType {
@@ -27,10 +27,10 @@ export const AppVisibilityEnum = {
 }
 
 export const AppLabelEnum = {
-    [AppType.KnowledgeBase]: 'KnowledgeBase',
     [AppType.Copilot]: 'Copilot',
     [AppType.ChatPDF]: 'ChatPDF',
     [AppType.MeetingChat]: 'Brainstorm',
+    [AppType.KnowledgeBase]: 'KnowledgeBase',
 }
 
 
