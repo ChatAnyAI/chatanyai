@@ -48,7 +48,7 @@ export default function Login() {
     useEffect(() => {
         if (user?.id) {
             console.log("is login", user)
-            router("/");
+            // router("/");
         }
     }, [user]);
 
