@@ -39,4 +39,3 @@ yarn-error.log*
 next-env.d.ts
 logs
 .idea
-/pnpm-lock.yaml
