@@ -74,7 +74,7 @@ function PureChatHeader({
     };
 
     return (
-        <header className="flex sticky top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2 justify-between shadow-md">
+        <header data-name="chat-header" className="flex sticky top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2 justify-between shadow-md">
             <div className="flex flex-auto min-w-0 items-center gap-2">
                 {/*<div>{chatInfo?.title || currentAppInfo?.name}</div>*/}
                 {/*{!isNew && !isReadonly && chatInfo && (*/}

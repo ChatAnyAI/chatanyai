@@ -1,0 +1,35 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Chat header illustration -->
+  <rect x="100" y="40" width="280" height="40" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Timestamp -->
+  <rect x="120" y="55" width="80" height="10" rx="2" fill="#9CA3AF"/>
+  
+  <!-- Lock icon -->
+  <circle cx="220" cy="60" r="8" fill="#D1D5DB"/>
+  <rect x="217" y="57" width="6" height="6" rx="1" fill="#FFFFFF"/>
+  <rect x="219" y="54" width="2" height="3" rx="1" fill="#FFFFFF"/>
+  
+  <!-- Export button -->
+  <rect x="240" y="55" width="50" height="10" rx="2" fill="#9CA3AF"/>
+  
+  <!-- Model selector -->
+  <rect x="300" y="50" width="60" height="20" rx="4" fill="#8B5CF6" fill-opacity="0.2"/>
+  <circle cx="310" cy="60" r="6" fill="#8B5CF6"/>
+  <rect x="320" y="55" width="30" height="10" rx="2" fill="#8B5CF6" fill-opacity="0.6"/>
+  
+  <!-- Highlight effect -->
+  <rect x="95" y="35" width="290" height="50" rx="6" stroke="#3B82F6" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Explanation text -->
+  <rect x="100" y="100" width="280" height="60" rx="6" fill="#3B82F6" fill-opacity="0.1"/>
+  <text x="240" y="130" font-family="Arial" font-size="14" fill="#1E40AF" text-anchor="middle">Chat Header</text>
+  <text x="240" y="150" font-family="Arial" font-size="12" fill="#3B82F6" text-anchor="middle">View conversation details and sharing options</text>
+  
+  <!-- Arrow pointing to header -->
+  <path d="M240 90 L240 70" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+  <path d="M235 75 L240 70 L245 75" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

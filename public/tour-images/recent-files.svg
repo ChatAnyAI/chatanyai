@@ -1,0 +1,35 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Sidebar illustration -->
+  <rect x="100" y="40" width="120" height="160" rx="8" fill="#424B5A"/>
+  
+  <!-- Home navigation -->
+  <rect x="110" y="70" width="100" height="20" rx="4" fill="#D1D5DB" fill-opacity="0.3"/>
+  <circle cx="125" cy="80" r="6" fill="#6B7280"/>
+  <rect x="140" y="77" width="40" height="6" rx="3" fill="#D1D5DB"/>
+  
+  <!-- Recent files highlighted -->
+  <rect x="110" y="100" width="100" height="20" rx="4" fill="#EC4899"/>
+  <circle cx="125" cy="110" r="6" fill="white"/>
+  <path d="M125 106 L125 110 L129 110" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="125" cy="110" r="4" fill="none" stroke="white" stroke-width="1.5"/>
+  <rect x="140" y="107" width="50" height="6" rx="3" fill="white"/>
+  
+  <!-- Other menu items -->
+  <rect x="110" y="130" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="150" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="170" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  
+  <!-- Highlight effect -->
+  <rect x="105" y="95" width="110" height="30" rx="6" stroke="#EC4899" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Arrow pointing to recent files -->
+  <path d="M250 110 L230 110" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/>
+  <path d="M230 105 L220 110 L230 115" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Explanation text -->
+  <rect x="260" y="95" width="120" height="30" rx="6" fill="#EC4899" fill-opacity="0.2"/>
+  <text x="320" y="115" font-family="Arial" font-size="12" fill="#BE185D" text-anchor="middle">Recent Files</text>
+</svg>
+

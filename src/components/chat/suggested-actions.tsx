@@ -42,7 +42,7 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
   const {  chatId: cId } = useParams();
 
   return (
-    <div className="grid sm:grid-cols-2 gap-2 w-full">
+    <div data-name="suggested-actions" className="grid sm:grid-cols-2 gap-2 w-full">
       {suggestedActions.map((suggestedAction, index) => (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
