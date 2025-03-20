@@ -1,0 +1,30 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Sidebar illustration -->
+  <rect x="100" y="40" width="120" height="160" rx="8" fill="#424B5A"/>
+  
+  <!-- Menu items -->
+  <rect x="110" y="70" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="90" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="110" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  
+  <!-- Admin area highlighted -->
+  <rect x="110" y="140" width="100" height="20" rx="4" fill="#F43F5E"/>
+  <circle cx="125" cy="150" r="6" fill="white"/>
+  <path d="M125 146 C125 146 123 147 123 150 C123 153 125 154 125 154 C125 154 127 153 127 150 C127 147 125 146 125 146" stroke="white" stroke-width="1.5" fill="none"/>
+  <circle cx="125" cy="150" r="2" fill="white"/>
+  <rect x="140" y="147" width="50" height="6" rx="3" fill="white"/>
+  
+  <!-- Highlight effect -->
+  <rect x="105" y="135" width="110" height="30" rx="6" stroke="#F43F5E" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Arrow pointing to admin area -->
+  <path d="M250 150 L230 150" stroke="#F43F5E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M230 145 L220 150 L230 155" fill="none" stroke="#F43F5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Explanation text -->
+  <rect x="260" y="135" width="120" height="30" rx="6" fill="#F43F5E" fill-opacity="0.2"/>
+  <text x="320" y="155" font-family="Arial" font-size="12" fill="#9F1239" text-anchor="middle">Admin Area</text>
+</svg>
+

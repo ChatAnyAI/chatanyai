@@ -1,0 +1,31 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Sidebar illustration -->
+  <rect x="100" y="40" width="120" height="160" rx="8" fill="#424B5A"/>
+  
+  <!-- Menu items -->
+  <rect x="110" y="70" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="90" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="110" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="130" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  
+  <!-- User profile section highlighted -->
+  <rect x="105" y="160" width="110" height="35" rx="4" fill="#8B5CF6" fill-opacity="0.2"/>
+  <circle cx="125" cy="177" r="10" fill="#8B5CF6"/>
+  <text x="125" y="181" font-family="Arial" font-size="12" fill="white" text-anchor="middle">U</text>
+  <rect x="145" y="172" width="40" height="5" rx="2.5" fill="#8B5CF6"/>
+  <rect x="145" y="182" width="30" height="5" rx="2.5" fill="#8B5CF6" fill-opacity="0.7"/>
+  
+  <!-- Highlight effect -->
+  <rect x="105" y="160" width="110" height="35" rx="6" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Arrow pointing to profile -->
+  <path d="M250 177 L230 177" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/>
+  <path d="M230 172 L220 177 L230 182" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Explanation text -->
+  <rect x="260" y="162" width="120" height="30" rx="6" fill="#8B5CF6" fill-opacity="0.2"/>
+  <text x="320" y="182" font-family="Arial" font-size="12" fill="#5B21B6" text-anchor="middle">User Profile</text>
+</svg>
+

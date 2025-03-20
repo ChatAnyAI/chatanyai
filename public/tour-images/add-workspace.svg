@@ -1,0 +1,34 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Sidebar illustration -->
+  <rect x="100" y="40" width="120" height="160" rx="8" fill="#424B5A"/>
+  
+  <!-- Menu items -->
+  <rect x="110" y="70" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="90" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="110" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  
+  <!-- Workspace header -->
+  <rect x="110" y="140" width="80" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.7"/>
+  
+  <!-- Plus button highlighted -->
+  <circle cx="195" cy="144" r="8" fill="#F59E0B"/>
+  <path d="M195 141 L195 147 M192 144 L198 144" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Workspace items -->
+  <rect x="110" y="160" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="180" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  
+  <!-- Highlight effect -->
+  <rect x="187" y="136" width="16" height="16" rx="8" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Arrow pointing to plus button -->
+  <path d="M250 144 L230 144" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M230 139 L220 144 L230 149" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Explanation text -->
+  <rect x="260" y="129" width="120" height="30" rx="6" fill="#F59E0B" fill-opacity="0.2"/>
+  <text x="320" y="149" font-family="Arial" font-size="12" fill="#92400E" text-anchor="middle">Add Workspace</text>
+</svg>
+

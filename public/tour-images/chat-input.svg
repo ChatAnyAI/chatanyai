@@ -1,0 +1,26 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Input area -->
+  <rect x="100" y="100" width="280" height="60" rx="8" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Placeholder text -->
+  <text x="120" y="135" font-family="Arial" font-size="14" fill="#9CA3AF">Send a message...</text>
+  
+  <!-- Send button -->
+  <circle cx="360" cy="130" r="15" fill="#3B82F6"/>
+  <path d="M355 130 L365 130 M360 125 L360 135" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Highlight effect -->
+  <rect x="95" y="95" width="290" height="70" rx="10" stroke="#F59E0B" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Explanation text -->
+  <rect x="100" y="40" width="280" height="40" rx="6" fill="#F59E0B" fill-opacity="0.1"/>
+  <text x="240" y="60" font-family="Arial" font-size="14" fill="#92400E" text-anchor="middle">Message Input</text>
+  <text x="240" y="75" font-family="Arial" font-size="12" fill="#B45309" text-anchor="middle">Type your message and press Enter to send</text>
+  
+  <!-- Arrow pointing to input -->
+  <path d="M240 90 L240 110" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M235 105 L240 110 L245 105" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

@@ -1,0 +1,30 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Chat area background -->
+  <rect x="100" y="40" width="280" height="160" rx="4" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- AI message -->
+  <circle cx="120" cy="70" r="10" fill="#D1D5DB"/>
+  <rect x="140" y="60" width="120" height="20" rx="8" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- User message -->
+  <circle cx="360" cy="110" r="10" fill="#3B82F6"/>
+  <rect x="220" y="100" width="120" height="20" rx="8" fill="#3B82F6"/>
+  
+  <!-- AI response -->
+  <circle cx="120" cy="150" r="10" fill="#D1D5DB"/>
+  <rect x="140" y="140" width="160" height="20" rx="8" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Highlight effect -->
+  <rect x="95" y="35" width="290" height="170" rx="6" stroke="#EC4899" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Explanation text -->
+  <rect x="100" y="210" width="280" height="20" rx="6" fill="#EC4899" fill-opacity="0.1"/>
+  <text x="240" y="225" font-family="Arial" font-size="12" fill="#9D174D" text-anchor="middle">Your conversation with the AI assistant</text>
+  
+  <!-- Arrow pointing to messages -->
+  <path d="M50 120 L90 120" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/>
+  <path d="M85 115 L90 120 L85 125" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

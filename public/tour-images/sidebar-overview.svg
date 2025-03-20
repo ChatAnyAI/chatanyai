@@ -1,0 +1,76 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  <!-- Sidebar illustration -->
+  <rect x="100" y="40" width="120" height="160" rx="8" fill="#424B5A"/>
+  
+  <!-- Profile icon -->
+  <circle cx="130" cy="70" r="15" fill="#6B7280"/>
+  <rect x="155" y="60" width="40" height="6" rx="3" fill="#D1D5DB"/>
+  <rect x="155" y="72" width="30" height="6" rx="3" fill="#9CA3AF"/>
+  
+  <!-- Menu items -->
+  <rect x="110" y="100" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="120" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="140" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  <rect x="110" y="160" width="100" height="8" rx="4" fill="#D1D5DB" fill-opacity="0.5"/>
+  
+  <!-- Content area -->
+  <rect x="240" y="40" width="140" height="160" rx="8" fill="#E5E7EB"/>
+  
+  <!-- Content header -->
+  <circle cx="260" cy="60" r="10" fill="#9CA3AF"/>
+  <rect x="280" y="55" width="80" height="5" rx="2.5" fill="#9CA3AF"/>
+  <rect x="280" y="65" width="60" height="5" rx="2.5" fill="#9CA3AF"/>
+  
+  <!-- Content body -->
+  <rect x="250" y="90" width="120" height="6" rx="3" fill="#9CA3AF"/>
+  <rect x="250" y="105" width="120" height="6" rx="3" fill="#9CA3AF"/>
+  <rect x="250" y="120" width="80" height="6" rx="3" fill="#9CA3AF"/>
+  
+  <!-- Notification badge -->
+  <circle cx="320" cy="60" r="12" fill="#EF4444"/>
+  <text x="320" y="64" font-family="Arial" font-size="12" fill="white" text-anchor="middle">99+</text>
+  
+  <!-- Search box -->
+  <rect x="250" y="150" width="120" height="30" rx="15" fill="#6366F1"/>
+  <circle cx="265" cy="165" r="8" stroke="white" stroke-width="2"/>
+  <line x1="270" y1="170" x2="275" y2="175" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <rect x="280" y="162" width="70" height="6" rx="3" fill="white" fill-opacity="0.7"/>
+  
+  <!-- Gear icon -->
+  <circle cx="380" cy="120" r="20" fill="#4F46E5"/>
+  <circle cx="380" cy="120" r="10" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M380 105 L380 110 M380 130 L380 135 M395 120 L390 120 M370 120 L365 120 M391 109 L387 113 M373 127 L369 131 M391 131 L387 127 M373 113 L369 109" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Connection lines -->
+  <line x1="220" y1="80" x2="240" y2="60" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="220" y1="120" x2="240" y2="120" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="2 2"/>
+  <line x1="220" y1="160" x2="240" y2="180" stroke="#9CA3AF" stroke-width="1" stroke-dasharray="2 2"/>
+  
+  <!-- Cursor -->
+  <path d="M350 140 L360 150 L350 160 L350 140Z" fill="white" stroke="black" stroke-width="1"/>
+  
+  <!-- Grid icon -->
+  <rect x="340" y="180" width="10" height="10" rx="2" fill="#10B981"/>
+  <rect x="355" y="180" width="10" height="10" rx="2" fill="#10B981"/>
+  <rect x="370" y="180" width="10" height="10" rx="2" fill="#10B981"/>
+  <rect x="340" y="195" width="10" height="10" rx="2" fill="#10B981"/>
+  <rect x="355" y="195" width="10" height="10" rx="2" fill="#10B981"/>
+  <rect x="370" y="195" width="10" height="10" rx="2" fill="#10B981"/>
+  
+  <!-- People icon -->
+  <circle cx="300" cy="40" r="10" fill="#3B82F6"/>
+  <circle cx="315" cy="40" r="10" fill="#8B5CF6"/>
+  <path d="M300 35 C300 32 305 32 305 35 L305 45 L295 45 L295 35 C295 32 300 32 300 35" fill="#3B82F6"/>
+  <path d="M315 35 C315 32 320 32 320 35 L320 45 L310 45 L310 35 C310 32 315 32 315 35" fill="#8B5CF6"/>
+  
+  <!-- Triangle network -->
+  <circle cx="400" cy="60" r="3" fill="#EC4899"/>
+  <circle cx="380" cy="40" r="3" fill="#EC4899"/>
+  <circle cx="420" cy="40" r="3" fill="#EC4899"/>
+  <line x1="400" y1="60" x2="380" y2="40" stroke="#EC4899" stroke-width="1"/>
+  <line x1="400" y1="60" x2="420" y2="40" stroke="#EC4899" stroke-width="1"/>
+  <line x1="380" y1="40" x2="420" y2="40" stroke="#EC4899" stroke-width="1"/>
+</svg>
+

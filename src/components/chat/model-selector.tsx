@@ -36,6 +36,7 @@ export function ModelSelector({
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       {selectedModel && <DropdownMenuTrigger
+        data-name="model-selector"
         asChild
         className={cn(
           'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',

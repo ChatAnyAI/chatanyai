@@ -1,0 +1,11 @@
+<svg width="480" height="240" viewBox="0 0 480 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="240" fill="#F5F7FA"/>
+  
+  
+  <!-- App name -->
+  <text x="240" y="150" font-family="Arial" font-size="24" font-weight="bold" fill="#1F2937" text-anchor="middle">ChatAnyAI</text>
+  
+  <!-- Welcome message -->
+  <text x="240" y="180" font-family="Arial" font-size="16" fill="#4B5563" text-anchor="middle">Welcome to the guided tour</text>
+  <text x="240" y="200" font-family="Arial" font-size="14" fill="#6B7280" text-anchor="middle">Let's explore the main features together</text>
+</svg>
