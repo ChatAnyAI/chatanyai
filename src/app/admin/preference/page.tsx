@@ -21,7 +21,6 @@ import { Loader2 } from "lucide-react"
 
 // Form validation schema
 const formSchema = z.object({
-    id: z.number().optional(),
     emailEnable: z.boolean().default(false),
     host: z.string().min(1, { message: "Host is required" }).optional(),
     port: z.string().min(1, { message: "Port is required" }).optional(),
@@ -38,7 +37,6 @@ export default function TeamPreferencesPage() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            id: 0, // Default ID, replace with actual team ID
             emailEnable: false,
             host: "",
             port: "",
@@ -74,7 +72,6 @@ export default function TeamPreferencesPage() {
 
             // Reset form with the loaded values
             form.reset({
-                id: preference.id,
                 emailEnable: preference.emailEnable,
                 host,
                 port,
@@ -102,14 +99,17 @@ export default function TeamPreferencesPage() {
                     fromName: values.fromName,
                 })
                 : ""
-
-            const requestData:ApiAdminTeamPreference = {
-                id: values.id || 0,
-                emailEnable: values.emailEnable,
-                emailConfig: emailConfig,
+            let requestData:ApiAdminTeamPreference={}
+            if (values.emailEnable) {
+                 requestData = {
+                    emailEnable: values.emailEnable,
+                    emailConfig: emailConfig,
+                }
+            }else {
+                 requestData = {
+                    emailEnable: values.emailEnable,
+                }
             }
-
-            console.log("Submitting data:", requestData)
 
             await ApiUpdateAdminTeamPreference(requestData)
 

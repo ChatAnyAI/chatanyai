@@ -182,17 +182,16 @@ export const ApiUpdateAdminTeamLicense = (req: ApiUpdateAdminTeamLicenseRequest)
 
 
 export interface ApiAdminTeamPreference {
-    id: number;
-    emailEnable: boolean;
-    emailConfig: string;
+    emailEnable?: boolean;
+    emailConfig?: string;
 }
 
 export const ApiGetAdminTeamPreference = () => {
-    return get<ApiAdminTeamPreference>(`/api/admin/preference`);
+    return get<ApiAdminTeamPreference>(`/api/admin/team/preference`);
 }
 
 export const ApiUpdateAdminTeamPreference = (req: ApiAdminTeamPreference) => {
-    return post<ApiAdminTeamPreference>(`/api/admin/preference`, req);
+    return put<ApiAdminTeamPreference>(`/api/admin/team/preference`, req);
 }
 
 export interface EmailConfig {
