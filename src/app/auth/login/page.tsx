@@ -5,12 +5,12 @@ import React, { useState, useEffect } from "react"
 import { motion,AnimatePresence } from "framer-motion"
 import { ArrowRight, Mail, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {api} from "@/lib/api";
 import { useNavigate as useRouter } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useGlobalStore } from "@/store/globalStore";
 import Navbar from "./navbar";
 import { AlertCircle } from "lucide-react"
+import {ApiAuthLogin, ApiUserProfile} from "@/service/api";
 
 export default function Login() {
     const [email, setEmail] = useState("")
@@ -61,29 +61,25 @@ export default function Login() {
         } else {
             // Handle LDAP or email/password login
             const payload = { username: "", password: password, email: email, login_type: loginMethod }
-
             try {
-                const loginResponse = await api.auth.login({ ...payload })
-                if (loginResponse?.code === 0) {
-                    const profileResponse = await api.user.getProfile()
-                    const data = {
-                        ...profileResponse.data,
-                        accessToken: loginResponse.data.token,
-                    }
-                    setUser(data)
+                const loginResponse = await ApiAuthLogin({ ...payload })
+                if (loginResponse) {
+                    const profileResponse = await ApiUserProfile()
+                    setUser(profileResponse)
                     setIsLoading(false)
                     toast({
                         title: "Login successful",
                         description: "Welcome back!",
                     })
                     router("/")
-                } else {
-                    setIsLoading(false)
-                    setError(loginResponse.msg)
-                    return
                 }
             } catch (error) {
-                console.error("Login error:", error)
+                toast({
+                    title: "Login fail",
+                    description:  String(error),
+                    variant: "destructive",
+                })
+                setIsLoading(false)
             }
         }
     }

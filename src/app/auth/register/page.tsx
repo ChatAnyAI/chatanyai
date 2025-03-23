@@ -8,8 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { api } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
+import {ApiAuthRegister} from "@/service/api";
 
 export default function Register() {
   const [email, setEmail] = useState("")
@@ -22,17 +22,18 @@ export default function Register() {
   const handleCredentialSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    try {
+        const resp = await ApiAuthRegister({ email, password, name })
+        toast({
+            title: 'Register successfully',
+        });
 
-    const resp = await api.auth.register({ email, password, name })
-
-    if (resp?.code === 0) {
-      toast({
-        title: "verification email sent",
-        description: resp.data,
-      })
-      router("/login")
-    } else {
-      setError(resp.error)
+    } catch (error) {
+        toast({
+            title: "Register fail",
+            description:  String(error),
+            variant: "destructive",
+        })
     }
   }
 

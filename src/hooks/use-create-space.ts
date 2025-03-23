@@ -43,7 +43,11 @@ export const useCreateSpace = () => {
       });
       navigator(`/${RouteEnum[type]}/${res.id}`);
     } catch (error) {
-      console.error(error);
+        toast({
+            title: "Create fail",
+            description:  String(error),
+            variant: "destructive",
+        })
     }
   }
 

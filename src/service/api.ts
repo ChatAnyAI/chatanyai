@@ -148,9 +148,6 @@ export const ApiSpaceDrag = (data: SpaceChangeSortReq) => {
   return put('/api/space/-/changeSort', data);
 }
 
-export const ApiUserProfile = () => {
-  return get<UserProfile>('/api/user/profile');
-}
 
 // App APIs
 export interface AppResp {
@@ -577,6 +574,18 @@ export const ApiTemplateChoose = (templateId: number) => {
   return post<AppResp>(`/api/template/${templateId}/choose`);
 }
 
+
+export const ApiAuthLogin = (data: { email: string; password: string; username: string,login_type: string }) => {
+    return post<LoginResponse>('/api/user/login', data);
+}
+
+export const ApiAuthRegister = (userData: { email: string; password: string; name: string }) => {
+    return post<void>('/api/user/register', userData);
+}
+
+export const ApiUserProfile = () => {
+    return get<UserProfile>('/api/user/profile');
+}
 
 
 
