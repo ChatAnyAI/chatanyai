@@ -454,11 +454,7 @@ export const ApiUpdateChatInfo = (chatId: string, data: UpdateChatInfoRequest) =
 }
 
 export const ApiChatListByAppId = (appId: string) => {
-  return get<RespChat[]>('/api/chat/-/list', {
-    params: {
-      appId
-    }
-  });
+  return get<RespChat[]>(`/api/app/${appId}/chat/-/list`);
 }
 
 export const ApiChatShareList = (chatId: string) => {

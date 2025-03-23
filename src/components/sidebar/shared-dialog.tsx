@@ -36,7 +36,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
             onClose();
         } else if (item.app) {
             const route = RouteEnum[item.app.type as AppType] || 's';
-            router(`/${route}/${item.app.id}`);
+            router(`/${route}/${item.app.guid}`);
             onClose();
         }
     };
