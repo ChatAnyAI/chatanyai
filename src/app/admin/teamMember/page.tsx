@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -27,6 +26,8 @@ import {AdminPagination} from "@/app/admin/components/admin-pagination";
 import UpdateUserForm, {UserFormValues} from "@/app/admin/teamMember/components/edit-member";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {AdminSearch} from "@/app/admin/components/admin-search";
+import {UserProfile} from "@/service/api";
+import {UserAvatar} from "@/components/user-avatar";
 
 
 export default function TeamMember() {
@@ -185,10 +186,7 @@ export default function TeamMember() {
                             <TableRow key={item.teamMemberId}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
-                                        <Avatar className="h-8 w-8">
-                                            <AvatarImage src={item.avatar} alt={item.name}/>
-                                            <AvatarFallback className="bg-muted">{item.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
+                                        <UserAvatar user={item as UserProfile} />
                                         <div>
                                             <div className="font-medium">{item.name}</div>
                                             <div

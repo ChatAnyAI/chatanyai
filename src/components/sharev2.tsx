@@ -11,11 +11,17 @@ import {
 import { InviteScreen } from "@/components/share/invite-screen"
 import { AppType, AppVisibility, RouteEnum } from "@/lib/constants/constants";
 import { toast } from "@/hooks/use-toast";
-import { ApiAppShareUserList, ApiChatShareList, User, ApiAppShareDelete, ApiChatShareDelete } from "@/service/api";
+import {
+    ApiAppShareUserList,
+    ApiChatShareList,
+    User,
+    ApiAppShareDelete,
+    ApiChatShareDelete,
+    UserProfile
+} from "@/service/api";
 import useSWR from "swr";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AccessLevelDropdown } from "@/components/share/access-level-dropdown";
-// import { useVisibility } from "@/hooks/use-chat-visibility";
+import {UserAvatar} from "@/components/user-avatar";
 
 export default function ShareDialog({ appId, chatId, type, visibility: accessType, handleVisibilityChange }:
     {
@@ -92,10 +98,7 @@ export default function ShareDialog({ appId, chatId, type, visibility: accessTyp
                                     {shareUser.map((user) => (
                                         <div key={user.id} className="flex items-center justify-between py-2">
                                             <div className="flex items-center space-x-2">
-                                                <Avatar className="h-8 w-8 rounded-lg">
-                                                    <AvatarImage src={user.avatar} alt={user.name} />
-                                                    <AvatarFallback className="rounded-lg">{user.name.charAt(0)}</AvatarFallback>
-                                                </Avatar>
+                                                <UserAvatar user={user as UserProfile} />
                                                 <div>
                                                     <div className="flex items-center gap-1.5">
                                                         <span className="font-medium text-sm">{user.name}</span>

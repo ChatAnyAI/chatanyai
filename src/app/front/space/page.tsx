@@ -333,21 +333,21 @@ export default function SpaceSettings() {
                                 </FormControl>
                                 <SelectContent>
                                   <SelectItem value="1" className="flex items-center gap-2">
-                                    <Database className="h-4 w-4 text-emerald-500" />
-                                    <span>Dataset</span>
-                                  </SelectItem>
-                                  <SelectItem value="2" className="flex items-center gap-2">
                                     <MessageSquare className="h-4 w-4 text-orange-500" />
                                     <span>Copilot</span>
                                   </SelectItem>
-                                  <SelectItem value="3" className="flex items-center gap-2">
+                                  <SelectItem value="2" className="flex items-center gap-2">
                                     <FileText className="h-4 w-4 text-blue-500" />
-                                    <span>KnowledgeBase</span>
+                                    <span>ChatPDF</span>
                                   </SelectItem>
-                                  <SelectItem value="4" className="flex items-center gap-2">
+                                  <SelectItem value="3" className="flex items-center gap-2">
                                     <Brain className="h-4 w-4 text-purple-500" />
                                     <span>Brainstorm</span>
                                   </SelectItem>
+                                    <SelectItem value="4" className="flex items-center gap-2">
+                                        <Database className="h-4 w-4 text-emerald-500" />
+                                        <span>KnowledgeBase</span>
+                                    </SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />

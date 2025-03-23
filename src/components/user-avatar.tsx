@@ -13,7 +13,6 @@ export function MyUserAvatar() {
 }
 
 export function UserAvatar({ user }: {user: UserProfile}) {
-    console.log("userAvatar",user)
     return (
         <Avatar className="h-8 w-8 rounded-lg">
             {user && <AvatarImage src={user.avatar} alt={user.name} />}

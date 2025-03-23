@@ -3,7 +3,6 @@ import {ApiAllUserList, User, UserProfile} from "@/service/api"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Dialog,
@@ -142,10 +141,7 @@ export function MembersTab() {
                   className="flex items-center justify-between p-3 border-b last:border-0 hover:bg-muted/30"
                 >
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.avatar || "/placeholder-user.jpg"} alt={user.name} />
-                      <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
+                    <UserAvatar user={user as UserProfile} />
                     <div>
                       <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
@@ -170,10 +166,7 @@ export function MembersTab() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="flex items-center gap-3 py-4">
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={user.avatar || "/placeholder-user.jpg"} alt={user.name} />
-                          <AvatarFallback>{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                        </Avatar>
+                        <UserAvatar user={user as UserProfile} />
                         <div>
                           <p className="font-medium">{user.name}</p>
                           <p className="text-sm text-muted-foreground">{user.email}</p>
