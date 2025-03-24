@@ -17,7 +17,7 @@ import {
     User,
     ApiAppShareDelete,
     ApiChatShareDelete,
-    UserProfile
+    UserProfile, AvatarUser
 } from "@/service/api";
 import useSWR from "swr";
 import { AccessLevelDropdown } from "@/components/share/access-level-dropdown";
@@ -98,7 +98,7 @@ export default function ShareDialog({ appId, chatId, type, visibility: accessTyp
                                     {shareUser.map((user) => (
                                         <div key={user.id} className="flex items-center justify-between py-2">
                                             <div className="flex items-center space-x-2">
-                                                <UserAvatar user={user as UserProfile} />
+                                                <UserAvatar user={user as AvatarUser} />
                                                 <div>
                                                     <div className="flex items-center gap-1.5">
                                                         <span className="font-medium text-sm">{user.name}</span>

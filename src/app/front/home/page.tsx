@@ -8,7 +8,7 @@ import React from "react"
 import { motion } from "framer-motion"
 
 import useSWR from "swr";
-import {ApiHomeRecent, ApiHomeRecentChatItem, ApiHomeRecentRes, UserProfile} from "@/service/api";
+import {ApiHomeRecent, ApiHomeRecentChatItem, ApiHomeRecentRes, AvatarUser, UserProfile} from "@/service/api";
 import {Link} from "react-router-dom";
 import {AppLabelEnum, AppVisibility, AppVisibilityEnum, RouteEnum} from "@/lib/constants/constants";
 import {useGlobalStore} from "@/store/globalStore";
@@ -369,7 +369,7 @@ function HistoryItem({item}: { item: ApiHomeRecentChatItem }) {
 
                     <div className="flex -space-x-2">
                         {item.collaborators.slice(0, 3).map((collaborator) => (
-                            <UserAvatar user={collaborator as unknown as UserProfile}/>
+                            <UserAvatar user={collaborator as AvatarUser}/>
                         ))}
                         {item.collaborators.length > 3 && (
                             <div

@@ -81,6 +81,11 @@ export interface User {
   updatedAt: number;
 }
 
+export interface AvatarUser {
+    name: string;
+    avatar: string;
+}
+
 export interface UserProfile extends User {
   roleId: number;  // Assuming consts.UserRole is a number type
   teams: TeamMemberDto[];

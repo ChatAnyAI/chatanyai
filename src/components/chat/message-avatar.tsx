@@ -2,7 +2,7 @@
 
 import { SparklesIcon } from './icons';
 import { MyUserAvatar, UserAvatar as UAvatar } from "@/components/user-avatar";
-import { UserProfile } from '@/service/api';
+import {AvatarUser, UserProfile} from '@/service/api';
 
 export interface MessageAvatarProps {
   role: string;
@@ -32,5 +32,5 @@ export function UserAvatar({ user, role }: { user: { name: string; avatar: strin
 
   if (role !== 'user') return null;
   if (!user.name) return <MyUserAvatar />;
-  return <UAvatar user={user as UserProfile} />;
+  return <UAvatar user={user as AvatarUser} />;
 }

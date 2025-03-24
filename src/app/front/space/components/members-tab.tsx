@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {ApiAllUserList, User, UserProfile} from "@/service/api"
+import {ApiAllUserList, AvatarUser, User, UserProfile} from "@/service/api"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -106,7 +106,7 @@ export function MembersTab() {
                     >
                       <div className="flex items-center gap-3">
                         <UserAvatar
-                            user= {user as UserProfile}
+                            user= {user as AvatarUser}
                         />
                         <div>
                           <p className="text-sm font-medium">{user.name}</p>
@@ -141,7 +141,7 @@ export function MembersTab() {
                   className="flex items-center justify-between p-3 border-b last:border-0 hover:bg-muted/30"
                 >
                   <div className="flex items-center gap-3">
-                    <UserAvatar user={user as UserProfile} />
+                    <UserAvatar user={user as AvatarUser} />
                     <div>
                       <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-muted-foreground">{user.email}</p>
@@ -166,7 +166,7 @@ export function MembersTab() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="flex items-center gap-3 py-4">
-                        <UserAvatar user={user as UserProfile} />
+                        <UserAvatar user={user as AvatarUser} />
                         <div>
                           <p className="font-medium">{user.name}</p>
                           <p className="text-sm text-muted-foreground">{user.email}</p>

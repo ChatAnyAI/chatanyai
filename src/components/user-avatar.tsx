@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useGlobalStore} from "@/store/globalStore";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {UserProfile} from "@/service/api";
+import {AvatarUser, UserProfile} from "@/service/api";
 
 export function MyUserAvatar() {
     const user = useGlobalStore(state => state.user);
@@ -12,7 +12,7 @@ export function MyUserAvatar() {
     )
 }
 
-export function UserAvatar({ user }: {user: UserProfile}) {
+export function UserAvatar({ user }: {user: AvatarUser}) {
     return (
         <Avatar className="h-8 w-8 rounded-lg">
             {user && <AvatarImage src={user.avatar} alt={user.name} />}

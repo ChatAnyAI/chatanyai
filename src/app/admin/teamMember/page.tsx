@@ -26,7 +26,7 @@ import {AdminPagination} from "@/app/admin/components/admin-pagination";
 import UpdateUserForm, {UserFormValues} from "@/app/admin/teamMember/components/edit-member";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {AdminSearch} from "@/app/admin/components/admin-search";
-import {UserProfile} from "@/service/api";
+import {AvatarUser, UserProfile} from "@/service/api";
 import {UserAvatar} from "@/components/user-avatar";
 
 
@@ -186,7 +186,7 @@ export default function TeamMember() {
                             <TableRow key={item.teamMemberId}>
                                 <TableCell>
                                     <div className="flex items-center gap-3">
-                                        <UserAvatar user={item as UserProfile} />
+                                        <UserAvatar user={item as AvatarUser} />
                                         <div>
                                             <div className="font-medium">{item.name}</div>
                                             <div

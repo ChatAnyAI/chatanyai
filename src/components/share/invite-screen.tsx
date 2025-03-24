@@ -5,7 +5,7 @@ import { AccessDropdown } from "./access-dropdown"
 import {
     ApiAppShareCreate,
     ApiChatShareCreate,
-    ApiTeamUsers, User, UserProfile
+    ApiTeamUsers, AvatarUser, User, UserProfile
 } from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 import {useGlobalStore} from "@/store/globalStore";
@@ -166,7 +166,7 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                                             onClick={() => handleUserSelect(user)}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <UserAvatar user={user as UserProfile} />
+                                                <UserAvatar user={user as AvatarUser} />
                                                 <div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="font-medium text-sm">{user.email}</span>
