@@ -1,5 +1,5 @@
 import { get, post, del, put } from "@/lib/request";
-import { AppSubType, AppType, AppVisibility, ProductType } from "@/lib/constants/constants";
+import {AppSubType, AppType, AppVisibility, ProductType, UserRole} from "@/lib/constants/constants";
 
 // Common Types
 export interface Resp<T> {
@@ -87,7 +87,7 @@ export interface AvatarUser {
 }
 
 export interface UserProfile extends User {
-  roleId: number;  // Assuming consts.UserRole is a number type
+  roleId: UserRole;  // Assuming consts.UserRole is a number type
   teams: TeamMemberDto[];
   currentTeamId: number;
   currentTeam: TeamMemberDto;

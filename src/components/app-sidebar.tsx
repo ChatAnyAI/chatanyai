@@ -17,6 +17,7 @@ import { useInitialFetchRobots } from "@/hooks/use-initial-fetch-robots"
 import { NavHeader } from "@/components/nav-header";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { useSpaceDrag } from "@/hooks/use-space-api"
+import {UserRole} from "@/lib/constants/constants";
 
 const data = {
   navSupport: [
@@ -81,7 +82,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           <NavHeader />
           {/*<NavGroup items={favoriteAppList} groupName="Favorite" maked />*/}
           <NavGroup items={appList} groupName="Workspace" draggable onDragEnd={onDragEnd} showAdd maked />
-          <NavGroup items={data.navSupport} className="mt-auto" />
+          {user.roleId == UserRole.Admin && <NavGroup items={data.navSupport} className="mt-auto" />}
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={user} />
