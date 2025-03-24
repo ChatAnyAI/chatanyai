@@ -12,11 +12,6 @@ import { useParams } from 'react-router-dom';
 import ShareDialog from "@/components/sharev2";
 import {RespChat} from "@/service/api";
 import {AppVisibility, AppVisibilityEnum} from "@/lib/constants/constants";
-// import ShareDialog from "../share";
-
-export type VisibilityType = 1 | 2 //  'private' | 'public';
-export const VisibilityTypePrivate: VisibilityType = 1;
-// export const VisibilityTypePublic: VisibilityType = 2;
 
 
 export function VisibilitySelector({

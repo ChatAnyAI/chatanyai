@@ -245,7 +245,7 @@ export const ApiAllUserList = () => {
 
 // exclude dataset and copilot
 export const ApiAppCreate = (data: Omit<CreateCopilotRequest, 'copilotPrompt'> & { type: AppType }) => {
-  return post<{ id: string }>('/api/app', data);
+  return post<{ guid: string }>('/api/app', data);
 }
 
 export const ApiTeamUsers = () => {
@@ -311,8 +311,8 @@ export interface UpdateDatasetRequest {
   fileIds?: string[];
 }
 
-export const ApiDatasetCreate = (data: CreateDatasetRequest) => {
-  return post<{ id: string }>('/api/dataset', data);
+export const ApiKnowledgeCreate = (data: CreateDatasetRequest) => {
+  return post<{ guid: string }>('/api/knowledge', data);
 }
 
 export const ApiDatasetUpdate = (datasetId: string, data: UpdateDatasetRequest) => {
@@ -547,7 +547,7 @@ export interface CreateCopilotRequest {
 
 // copilot APIs
 export const ApiCopilotCreate = (data: CreateCopilotRequest) => {
-  return post<{ id: string }>('/api/copilot', data);
+  return post<{ guid: string }>('/api/copilot', data);
 }
 
 export interface Template {

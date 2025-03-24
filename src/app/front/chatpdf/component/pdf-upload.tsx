@@ -12,11 +12,13 @@ import { toast } from "@/hooks/use-toast"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface PDFUploaderProps {
+    appId: string
     onPdfUploaded: (fileUrl: string) => void
 }
 
 // Real API upload function using XMLHttpRequest for progress tracking
 const uploadAPI = (
+    appId: string,
     file: File,
     onProgress: (progress: number) => void,
 ): Promise<{ success: boolean; message: string; url?: string }> => {
@@ -28,7 +30,7 @@ const uploadAPI = (
         formData.append("file", file)
 
         // Set up the request
-        xhr.open("POST", "/api/files/upload", true)
+        xhr.open("POST", `/api/app/${appId}/files/upload`, true)
 
         // Set up progress tracking
         xhr.upload.onprogress = (event) => {
@@ -79,7 +81,7 @@ const uploadAPI = (
     })
 }
 
-export default function PDFUploader({ onPdfUploaded }: PDFUploaderProps) {
+export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps) {
     const [isDragging, setIsDragging] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [uploadProgress, setUploadProgress] = useState(0)
@@ -125,7 +127,7 @@ export default function PDFUploader({ onPdfUploaded }: PDFUploaderProps) {
         setSelectedFile(file)
         setUploadProgress(0)
         // Automatically start processing after file selection
-        processFile(file)
+        processFile(appId, file)
     }
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +139,7 @@ export default function PDFUploader({ onPdfUploaded }: PDFUploaderProps) {
         }
     }
 
-    const processFile = async (file: File) => {
+    const processFile = async (appId: string,file: File) => {
         if (!file) return
 
         setIsUploading(true)
@@ -145,7 +147,7 @@ export default function PDFUploader({ onPdfUploaded }: PDFUploaderProps) {
 
         try {
             // Call the real API
-            const result = await uploadAPI(file, (progress) => {
+            const result = await uploadAPI(appId, file, (progress) => {
                 setUploadProgress(progress)
             })
 

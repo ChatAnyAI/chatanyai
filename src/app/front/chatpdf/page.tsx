@@ -33,7 +33,7 @@ export default function Page() {
 
                 <div className="flex justify-center flex-1 overflow-hidden">
                     {!pdfUrl ? (
-                        <ChatPDFUpload onPdfUploaded={setPdfUrl} />
+                        appId && <ChatPDFUpload appId={appId}  onPdfUploaded={setPdfUrl} />
                     ) : (
                         <>
                             <PdfViewV2 url={"/" + pdfUrl} />

@@ -1,4 +1,4 @@
-import { ApiAppCreate, ApiDatasetCreate, ApiCopilotCreate, ApiTemplateChoose } from '@/service/api'
+import { ApiAppCreate, ApiKnowledgeCreate, ApiCopilotCreate, ApiTemplateChoose } from '@/service/api'
 import { AppType, RouteEnum } from '@/lib/constants/constants';
 import { useToast } from './use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -31,7 +31,7 @@ export const useCreateSpace = () => {
           });
           break;
         case AppType.KnowledgeBase:
-         res = await ApiDatasetCreate({
+         res = await ApiKnowledgeCreate({
             title: 'untitled',
             icon: '',
             description: '',
@@ -41,7 +41,7 @@ export const useCreateSpace = () => {
       toast({
         title: 'Space created successfully',
       });
-      navigator(`/${RouteEnum[type]}/${res.id}`);
+      navigator(`/${RouteEnum[type]}/${res.guid}`);
     } catch (error) {
         toast({
             title: "Create fail",
