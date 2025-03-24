@@ -125,13 +125,13 @@ export default function RecentlyFiles({ isOpen, onClose }: { isOpen: boolean, on
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-medium text-gray-900 truncate">{file.name}</h3>
+                    <h3 className="text-lg font-medium text-gray-900 truncate max-w-[270px]">{file.name}</h3>
                     <div className="flex items-center text-sm text-gray-500">
                       <span>{getFileTypeLabel(file.fileFormat)}</span>
                       <span className="mx-2">•</span>
                       <span>{dayjs.unix(file.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">{getDescription(file.contentKey)}</p>
+                    <p className="text-sm text-gray-500 mt-1 truncate max-w-[270px]">{getDescription(file.contentKey)}</p>
                   </div>
                   
                   <div 

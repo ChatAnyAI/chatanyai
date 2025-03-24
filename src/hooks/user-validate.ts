@@ -25,7 +25,7 @@ export const useUserValidate = () => {
         if (!isLoading && !data?.id && location.pathname !== '/login') {
             navigator('/login')
         }
-    }, [isLoading, data, location.pathname, navigator])
+    }, [isLoading, user, location.pathname, navigator])
 
 
     return user;

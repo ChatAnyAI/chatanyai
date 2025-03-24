@@ -11,6 +11,7 @@ import { useGlobalStore } from "@/store/globalStore";
 import Navbar from "./navbar";
 import { AlertCircle } from "lucide-react"
 import {ApiAuthLogin, ApiUserProfile} from "@/service/api";
+import { useSWRConfig } from "swr"
 
 export default function Login() {
     const [email, setEmail] = useState("")
@@ -23,6 +24,7 @@ export default function Login() {
     const { toast } = useToast()
     const user = useGlobalStore(({ user }) => user);
     const setUser = useGlobalStore(({ setUser }) => setUser);
+    const { mutate } = useSWRConfig()
 
 
     // Animation variants
@@ -71,6 +73,7 @@ export default function Login() {
                         title: "Login successful",
                         description: "Welcome back!",
                     })
+                    mutate("ApiUserProfile")
                     router("/home")
                 }
             } catch (error) {
