@@ -71,7 +71,7 @@ export default function Login() {
                         title: "Login successful",
                         description: "Welcome back!",
                     })
-                    router("/")
+                    router("/home")
                 }
             } catch (error) {
                 toast({

@@ -414,7 +414,7 @@ export interface PostChatMessageAttachment {
 }
 
 export const ApiPostChat = (data: PostChatRequest) => {
-  return post<void>('/api/chat', data);
+  return post<void>(`/api/app/${data.appId}/chat/${data.id}`, data);
 }
 
 
@@ -492,7 +492,7 @@ export interface MeetingRequest {
 }
 
 export const ApiMeetingCreate = (data: MeetingRequest) => {
-  return post<void>('/api/chat/meeting', data);
+  return post<void>(`/api/app/${data.appId}/chat/${data.id}/meeting`, data);
 }
 
 

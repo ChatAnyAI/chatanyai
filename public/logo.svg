@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bot-message-square 2备份</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="bot-message-square" transform="translate(1.000000, 1.000000)" stroke="#2563EB">
+            <polyline id="路径" stroke-width="2" points="10 4 10 0 13.7175977 0"></polyline>
+            <path d="M6,16 L2,20 L2,6 C2,4.8954305 2.8954305,4 4,4 L16,4 C17.1045695,4 18,4.8954305 18,6 L18,14 C18,15.1045695 17.1045695,16 16,16 L6,16 Z" id="路径" stroke-width="2"></path>
+            <line x1="0" y1="10" x2="2" y2="10" id="路径" stroke-width="2"></line>
+            <g id="编组" transform="translate(5.716407, 8.350780)" stroke-width="1.8">
+                <line x1="1.72529476" y1="0.0173303659" x2="0.193896086" y2="2.82710226" id="路径"></line>
+                <line x1="1.72529476" y1="0.0173303659" x2="3.14662833" y2="2.88435162" id="路径"></line>
+                <line x1="7.81480194" y1="0.0273741613" x2="7.81480194" y2="2.62737416" id="路径"></line>
+            </g>
+            <line x1="18" y1="10" x2="20" y2="10" id="路径" stroke-width="2"></line>
+        </g>
+    </g>
+</svg>
