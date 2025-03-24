@@ -458,7 +458,7 @@ export const ApiChatListByAppId = (appId: string) => {
 }
 
 export const ApiChatShareList = (chatId: string) => {
-  return get<User[]>(`/api/chat/${chatId}/share/userList`);
+  return get<User[]>(`/api/chat/${chatId}/share/-/userList`);
 }
 
 export const ApiChatShareCreate = (chatId: string, uids: number[]) => {
@@ -466,7 +466,7 @@ export const ApiChatShareCreate = (chatId: string, uids: number[]) => {
 }
 
 export const ApiChatShareDelete = (chatId: string, uid: number) => {
-  return del<void>(`/api/chat/share/${chatId}/${uid}`);
+  return del<void>(`/api/chat/${chatId}/share/${uid}`);
 }
 
 
