@@ -8,6 +8,7 @@ import { useBlockSelector } from '@/hooks/use-block';
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { MeetingData } from './meeting-setting';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Chat({
   id,
@@ -34,6 +35,7 @@ export default function Chat({
   const currentName = useRef("");
   const { chatId } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
 
   const {
@@ -148,7 +150,14 @@ export default function Chat({
   }, [id, chatId, isReadonly])
 
 
-  if (error) console.error(error);
+  if (error) {
+    console.error(error);
+    toast({
+      title: "Error",
+      description: "Failed to load chat. Please try again.",
+      variant: "destructive"
+    });
+  }
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);

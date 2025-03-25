@@ -12,6 +12,7 @@ import { Messages } from './messages';
 import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { RespChat } from "@/service/api";
+import { useToast } from '@/hooks/use-toast';
 
 export function Chat({
   hiddenHeader,
@@ -36,6 +37,7 @@ export function Chat({
 }) {
   const { settingData } = useRightSetting();
   const { mutate } = useSWRConfig();
+  const { toast } = useToast();
 
   const {
     messages,
@@ -70,7 +72,14 @@ export function Chat({
       mutate('ApiChatListByAppId');
     },
   });
-  if (error) console.error(error);
+  if (error) { 
+    console.error(error);
+    toast({
+      title: "Error",
+      description: "Failed to load chat. Please try again.",
+      variant: "destructive"
+    });
+  }
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
