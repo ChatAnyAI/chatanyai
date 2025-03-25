@@ -76,7 +76,6 @@ export default function SpaceSettings() {
       name: "",
       description: "",
       type: "2",
-      visibility: "1",
       copilotPrompt: "",
     },
   })
@@ -93,7 +92,6 @@ export default function SpaceSettings() {
           name: spaceData.name,
           description: spaceData.description || "",
           type: spaceData.type.toString() as "1" | "2" | "3" | "4",
-          visibility: spaceData.visibility.toString() as "1" | "2",
           copilotPrompt: spaceData.copilotPrompt || "",
         })
 

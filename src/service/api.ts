@@ -137,6 +137,7 @@ export type Space = {
   weight: number;
   createdBy: number;
   createdAt: number;
+  isFullAccess: boolean;
 }
 export const ApiSpaceList = () => {
   return get<Array<Space & {

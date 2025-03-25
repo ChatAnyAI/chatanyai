@@ -30,7 +30,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
         type?: AppType;
         visibility: AppVisibility;
         className?: string;
-        handleVisibilityChange?: (newVisibility: AppVisibility) => void;
+        handleVisibilityChange: (newVisibility: AppVisibility) => void;
     }) {
     const [showInviteScreen, setShowInviteScreen] = useState(false)
 
