@@ -140,6 +140,7 @@ export type Space = {
 }
 export const ApiSpaceList = () => {
   return get<Array<Space & {
+    isFullAccess: boolean;
     app: AppResp;
   }>>('/api/space/list');
 }

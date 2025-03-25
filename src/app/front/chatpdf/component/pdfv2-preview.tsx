@@ -181,7 +181,7 @@ function PdfViewV2({ url }: { url: string }) {
 
     return (
         <div className="flex flex-1 flex-col items-center w-full max-w-3xl mx-auto bg-background p-1 px-2 h-[100%] shadow-lg border-r border-gray-200">
-            <div className="sticky top-0 z-50 bg-gray-100 p-2 rounded-b-lg w-full max-w-6xl">
+            <div className="sticky top-0 z-5 bg-gray-100 p-2 rounded-b-lg w-full max-w-6xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-2">
                     <Button
                         variant="outline"

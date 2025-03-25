@@ -40,6 +40,7 @@ export const useChatStore = create<ChatStoreState>((set) => ({
             appList: data.map(d => {
                 return {
                     ...d.app,
+                    isFullAccess: d.isFullAccess,
                     spaceId: d.id,
                     url: `/${RouteEnum[d.app.type]}/${d.app.id}`,
                 } as NavMenuItem
@@ -91,7 +92,7 @@ export const useChatStore = create<ChatStoreState>((set) => ({
             }else{
                 toast({
                     title: "Error",
-                    description:  error.msg,
+                    description:  (error as {msg: string}).msg || "Unknown error",
                     variant: "destructive",
                 })
             }

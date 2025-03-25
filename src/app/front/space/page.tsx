@@ -40,6 +40,7 @@ const formSchema = z.object({
   description: z.string().optional(),
   type: z.enum(["1", "2", "3", "4"]),
   copilotPrompt: z.string().optional(),
+  visibility: z.enum(["1", "2"]),
 })
 
 // Helper function to get workspace type icon

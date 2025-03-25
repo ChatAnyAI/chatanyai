@@ -12,7 +12,7 @@ import { useVisibility } from "@/hooks/use-visibility";
 
 export default (
     { appInfo, children }:
-        { appInfo: AppResp; children: ReactNode; hiddenFavorite?: boolean }) => {
+        { appInfo: AppResp & { isFullAccess?: boolean }; children: ReactNode; hiddenFavorite?: boolean }) => {
     const navigator = useNavigate();
     // const { toast } = useToast();
     // const { toggleMenu: onClickMenu, activeMenu } = useAppSideBarHistoryListContext();
@@ -77,58 +77,40 @@ export default (
                             <MessageCircle className="h-4 w-4 mr-2" />
                             New Chat
                         </DropdownMenuItem>
-
-{/* 
                         {
-                            appInfo.id ?
-                                <DropdownMenuItem onClick={() => onClickMenu({
-                                    appId: appInfo.id,
-                                    name: appInfo.name,
-                                })}>
-                                    <MessageSquareText className="h-4 w-4 mr-2" />
-                                    {activeMenu?.appId === appInfo.id ? 'Hidden' : 'Show'} Chat List
-                                </DropdownMenuItem>
-                                : null
-                        } */}
-                        <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>
-                                <Users className="h-4 w-4 mr-2" />
-                                Share
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuSubContent>
-                                <div className="p-0">
-                                    <Share
-                                        className={"w-[400px]"}
-                                        appId={appInfo.id}
-                                        chatId=""
-                                        type={appInfo.type}
-                                        visibility={visibility}
-                                        handleVisibilityChange={handleVisibilityChange}
-                                    />
-                                </div>
-                            </DropdownMenuSubContent>
-                        </DropdownMenuSub>
+                            appInfo.isFullAccess ?
+                                <>
+                                    <DropdownMenuSub>
+                                        <DropdownMenuSubTrigger>
+                                            <Users className="h-4 w-4 mr-2" />
+                                            Share
+                                        </DropdownMenuSubTrigger>
+                                        <DropdownMenuSubContent>
+                                            <div className="p-0">
+                                                <Share
+                                                    className={"w-[400px]"}
+                                                    appId={appInfo.id}
+                                                    chatId=""
+                                                    type={appInfo.type}
+                                                    visibility={visibility}
+                                                    handleVisibilityChange={handleVisibilityChange}
+                                                />
+                                            </div>
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuSub>
 
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => {
-                            if (!appInfo.id) return;
-                            navigator(`/${RouteEnum[appInfo.type]}/${appInfo.id}/setting`);
-                        }}>
-                            <Settings className="h-4 w-4 mr-2" />
-                            Setting
-                        </DropdownMenuItem>
-                        {/* <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            setShowUpdatePopover(true)
-                        }}>
-                            <Pencil className="h-4 w-4 mr-2" />
-                            Edit
-                        </DropdownMenuItem> */}
-                        {/* <DropdownMenuItem onClick={handleDelete} className="text-red-600">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                        </DropdownMenuItem> */}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => {
+                                        if (!appInfo.id) return;
+                                        navigator(`/${RouteEnum[appInfo.type]}/${appInfo.id}/setting`);
+                                    }}>
+                                        <Settings className="h-4 w-4 mr-2" />
+                                        Setting
+                                    </DropdownMenuItem>
+                                </> : null
+                        }
+
+
                     </DropdownMenuContent>
             }
         </DropdownMenu>

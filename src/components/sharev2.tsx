@@ -196,7 +196,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                 <DropdownMenuContent align="start" className="w-[250px]">
                                                     <DropdownMenuItem
                                                         className="flex items-center space-x-2 py-2 px-3"
-                                                        onClick={() => handleVisibilityChange(AppVisibility.Private)}
+                                                        onClick={() => handleVisibilityChange?.(AppVisibility.Private)}
                                                     >
                                                         <Lock className="h-4 w-4 text-gray-500" />
                                                         <span className="flex-grow text-sm">Only people invited</span>
@@ -204,7 +204,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
                                                         className="flex items-center space-x-2 py-2 px-3"
-                                                        onClick={() => handleVisibilityChange(AppVisibility.Internal)}
+                                                        onClick={() => handleVisibilityChange?.(AppVisibility.Internal)}
                                                     >
                                                         <div className="w-4 h-4 rounded-full flex items-center justify-center">
                                                             <Users />
@@ -214,7 +214,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
                                                         className="flex items-center space-x-2 py-2 px-3"
-                                                        onClick={() => handleVisibilityChange(AppVisibility.Public)}
+                                                        onClick={() => handleVisibilityChange?.(AppVisibility.Public)}
                                                     >
                                                         <div className="w-4 h-4 rounded-full flex items-center justify-center">
                                                             <Earth />

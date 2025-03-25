@@ -25,6 +25,7 @@ export type NavMenuItem = Partial<Omit<AppResp, 'icon' | 'id'>> & {
   items?: NavMenuItem[]
   type?: AppType;
   spaceId?: number;
+  isFullAccess?: boolean;
 }
 
 export function NavGroup({
