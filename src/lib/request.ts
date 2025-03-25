@@ -57,15 +57,16 @@ export async function request<T>(
     const result = await response.json() as ResponseData<T>;
 
     if (result.code !== 0) {
-      // When code is not 0, throw an error
-      throw new Error(result.msg || 'Request failed');
+      // When code is not 0, throw the entire result object
+      throw result;
     }
 
     return result.data;
   } catch (error) {
     if (!options.skipErrorToast) {
       // Show error toast
-      toast.error(error instanceof Error ? error.message : 'Request failed');
+      toast.error(error instanceof Error ? error.message : 
+                 (error as ResponseData<any>)?.msg || 'Request failed');
     }
     throw error;
   }
