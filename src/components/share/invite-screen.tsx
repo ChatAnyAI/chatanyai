@@ -1,15 +1,12 @@
 "use client"
-import { useState, useEffect } from "react"
+import {useEffect, useState} from "react"
 import {ChevronLeft, Globe, X} from "lucide-react"
-import { AccessDropdown } from "./access-dropdown"
-import {
-    ApiAppShareCreate,
-    ApiChatShareCreate,
-    ApiTeamUsers, AvatarUser, User, UserProfile
-} from "@/service/api";
+import {AccessDropdown} from "./access-dropdown"
+import {ApiAppShareCreate, ApiChatShareCreate, ApiTeamUsers, AvatarUser, User} from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 import {useGlobalStore} from "@/store/globalStore";
 import {UserAvatar} from "@/components/user-avatar";
+import {PermissionType} from "@/lib/constants/constants";
 
 interface InviteScreenProps {
     appId: string
@@ -21,13 +18,13 @@ interface InviteScreenProps {
 export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }: InviteScreenProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-    const [message, setMessage] = useState("")
+    const [permission, setPermission] = useState<PermissionType>(PermissionType.Full)
+    // const [message, setMessage] = useState("")
 
     const myUser = useGlobalStore(state => state.user);
 
     const [teamUsers, setTeamUsers] = useState<User[]>([])
     const [filteredUsers, setFilteredUsers] = useState<User[]>([])
-    // const [shareUserList, setShareUserList] = useState<User[]>([])
 
     useEffect(() => {
         const resp =  ApiTeamUsers()
@@ -41,9 +38,15 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
         try {
             const userIds = selectedUsers.map(item => item.id);
             if (chatId) {
-                await ApiChatShareCreate(chatId, userIds);
+                await ApiChatShareCreate(chatId, {
+                    uids: userIds,
+                    permission: permission,
+                });
             } else {
-                await ApiAppShareCreate(appId, userIds);
+                await ApiAppShareCreate(appId, {
+                    uids: userIds,
+                    permission: permission,
+                });
             }
             toast({
                 title: 'Invite OK',
@@ -210,15 +213,15 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                 {/* Access level and Message input */}
                 <div className="border-t p-4 mt-auto">
                     <div className="flex justify-end mb-3">
-                        <AccessDropdown/>
+                        <AccessDropdown permission={permission} setPermission={setPermission}/>
                     </div>
-                    <textarea
-                        placeholder="Add a message to your invite..."
-                        className="w-full p-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        rows={3}
-                    />
+                    {/*<textarea*/}
+                    {/*    placeholder="Add a message to your invite..."*/}
+                    {/*    className="w-full p-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"*/}
+                    {/*    value={message}*/}
+                    {/*    onChange={(e) => setMessage(e.target.value)}*/}
+                    {/*    rows={3}*/}
+                    {/*/>*/}
                     <button className="w-full py-2 text-sm bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors" onClick={handleInvite}>
                         Invite
                     </button>

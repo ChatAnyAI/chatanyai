@@ -1,5 +1,5 @@
 import { get, post, del, put } from "@/lib/request";
-import {AppSubType, AppType, AppVisibility, ProductType, UserRole} from "@/lib/constants/constants";
+import {AppSubType, AppType, AppVisibility, PermissionType, ProductType, UserRole} from "@/lib/constants/constants";
 
 // Common Types
 export interface Resp<T> {
@@ -222,8 +222,13 @@ export const ApiShareWithMeList = () => {
   return get<Array<{ app?: AppResp, chat?: RespChat, fromUser: User }>>('/api/share/-/list');
 }
 
-export const ApiAppShareCreate = (appId: string, uids: number[]) => {
-  return put<void>(`/api/app/${appId}/share`, { uids });
+export interface ApiAppShareCreateRequest {
+    uids: number[];
+    permission: PermissionType;
+}
+
+export const ApiAppShareCreate = (appId: string,req: ApiAppShareCreateRequest) => {
+  return put<void>(`/api/app/${appId}/share`, req);
 }
 
 export const ApiAppShareDelete = (appId: string, uid: number) => {
@@ -466,8 +471,13 @@ export const ApiChatShareList = (chatId: string) => {
   return get<User[]>(`/api/chat/${chatId}/share/-/userList`);
 }
 
-export const ApiChatShareCreate = (chatId: string, uids: number[]) => {
-  return put<void>(`/api/chat/${chatId}/share`, { uids });
+export interface ApiChatShareCreateRequest {
+    uids: number[];
+    permission: PermissionType;
+}
+
+export const ApiChatShareCreate = (chatId: string, req: ApiChatShareCreateRequest) => {
+  return put<void>(`/api/chat/${chatId}/share`, req);
 }
 
 export const ApiChatShareDelete = (chatId: string, uid: number) => {

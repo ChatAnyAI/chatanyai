@@ -4,6 +4,7 @@ import { ApiAppFavoriteList, ApiAiModelList, RespModel } from "@/service/api";
 import { NavMenuItem } from "@/components/nav-group";
 import { RouteEnum } from "@/lib/constants/constants";
 import Cookies from "js-cookie";
+import {toast} from "@/hooks/use-toast";
 
 type NonFunctionProperties<T> = {
     [K in keyof T as T[K] extends Function ? never : K]: T[K];
@@ -75,10 +76,26 @@ export const useChatStore = create<ChatStoreState>((set) => ({
         });
     },
     fetchCurrentAppInfo: async (appId: string) => {
-        const res = await ApiAppInfo(appId);
-        set({
-            currentAppInfo: res,
-        });
+        try {
+            const res = await ApiAppInfo(appId);
+            set({
+                currentAppInfo: res,
+            });
+        }catch (error) {
+            if (error instanceof Error) {
+                toast({
+                    title: "Error",
+                    description:  String(error),
+                    variant: "destructive",
+                })
+            }else{
+                toast({
+                    title: "Error",
+                    description:  error.msg,
+                    variant: "destructive",
+                })
+            }
+        }
     },
     clearCurrentAppInfo: () => {
         set({

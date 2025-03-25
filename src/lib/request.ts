@@ -50,8 +50,10 @@ export async function request<T>(
       if (response.status === 401) {
         if (window.location.pathname !== '/login') window.location.href = '/login';
         throw new Error('Login expired, please login again');
+        // 512 custom 5xx
+      }else if (response.status > 499 && response.status != 512) {
+          throw new Error(`HTTP error! status: ${response.status}`);
       }
-      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const result = await response.json() as ResponseData<T>;

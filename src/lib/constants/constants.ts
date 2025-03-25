@@ -100,3 +100,17 @@ export const AppIcons = {
         color: "#9c27b0"
     }
 };
+
+export enum PermissionType {
+    Read = 1,
+    Comment = 2,
+    Edit = 3,
+    Full = 4,
+}
+
+export const PermissionTypeEnum = {
+    [PermissionType.Read]: 'Can view',
+    [PermissionType.Comment]: 'Can comment',
+    [PermissionType.Edit]: 'Can edit',
+    [PermissionType.Full]: 'Full access',
+}
