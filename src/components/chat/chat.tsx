@@ -49,6 +49,7 @@ export function Chat({
     reload,
     error,
   } = useChat({
+    api: `/api/app/${appId}/chat/${id}`,
     id,
     body: {
       id,
