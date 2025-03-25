@@ -170,7 +170,7 @@ export interface AppResp {
   copilotPrompt: string;
   datasetSource: 1 | 2 | 3; // Assuming DatasetSource is already defined in your constants
   enabled: number;
-  visibility: 1 | 2; // Assuming Visibility is already defined in your constants
+  visibility: AppVisibility; // Assuming Visibility is already defined in your constants
   teamId: number;
   providerModel: string;
 }

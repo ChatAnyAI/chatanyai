@@ -1,7 +1,7 @@
 "use client"
 import {useEffect, useState} from "react"
 import {ChevronLeft, Globe, X} from "lucide-react"
-import {AccessDropdown} from "./access-dropdown"
+import {BatchUserPermissionDropdown} from "./batch-user-permission-dropdown"
 import {ApiAppShareCreate, ApiChatShareCreate, ApiTeamUsers, AvatarUser, User} from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 import {useGlobalStore} from "@/store/globalStore";
@@ -10,8 +10,8 @@ import {PermissionType} from "@/lib/constants/constants";
 
 interface InviteScreenProps {
     appId: string
-    chatId: string
-    onBack: () => void
+    chatId?: string
+    onBack?: () => void
     shareUser: User[]
 }
 
@@ -52,7 +52,7 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                 title: 'Invite OK',
                 description: 'Invite OK'
             });
-            onBack();
+            onBack?.();
         } catch (error) {
             toast({
                 title: 'Invite Fail',
@@ -93,14 +93,14 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
 
     return (
         <>
-            <div className="border-b p-3">
-                <div className="flex items-center">
-                    <button onClick={onBack} className="p-0.5 mr-2 rounded-full hover:bg-gray-100">
-                        <ChevronLeft className="h-5 w-5 text-gray-500" />
-                    </button>
-                    <h2 className="text-base font-medium">Invite</h2>
-                </div>
-            </div>
+            {onBack && <div className="border-b p-3">
+                    <div className="flex items-center">
+                        <button onClick={onBack} className="p-0.5 mr-2 rounded-full hover:bg-gray-100">
+                            <ChevronLeft className="h-5 w-5 text-gray-500" />
+                        </button>
+                        <h2 className="text-base font-medium">Invite</h2>
+                    </div>
+                </div>}
 
             <div className="p-4">
                 {/* Email input and invite button */}
@@ -213,7 +213,7 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                 {/* Access level and Message input */}
                 <div className="border-t p-4 mt-auto">
                     <div className="flex justify-end mb-3">
-                        <AccessDropdown permission={permission} setPermission={setPermission}/>
+                        <BatchUserPermissionDropdown permission={permission} setPermission={setPermission}/>
                     </div>
                     {/*<textarea*/}
                     {/*    placeholder="Add a message to your invite..."*/}

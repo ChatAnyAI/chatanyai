@@ -10,7 +10,7 @@ interface AccessDropdownProps {
     buttonClassName?: string
 }
 
-export function AccessDropdown({ permission, setPermission, className = "", buttonClassName = "" }: AccessDropdownProps) {
+export function BatchUserPermissionDropdown({ permission, setPermission, className = "", buttonClassName = "" }: AccessDropdownProps) {
     const getAccessLevelText = (level: PermissionType): string => {
         return PermissionTypeEnum[level]
     }
@@ -34,7 +34,7 @@ export function AccessDropdown({ permission, setPermission, className = "", butt
                                 <span className="font-medium text-sm">Full access</span>
                                 {permission === PermissionType.Full && <Check className="h-3.5 w-3.5 ml-1.5" />}
                             </div>
-                            <p className="text-xs text-gray-500 mt-0.5">Edit, suggest, comment, and share with others</p>
+                            <p className="text-xs text-gray-500 mt-0.5">Edit, setting, comment, and share with others</p>
                         </div>
                     </DropdownMenuItem>
 

@@ -20,16 +20,17 @@ import {
     UserProfile, AvatarUser
 } from "@/service/api";
 import useSWR from "swr";
-import { AccessLevelDropdown } from "@/components/share/access-level-dropdown";
+import { SingleUserPermissionDropdown } from "@/components/share/single-user-permission-dropdown";
 import {UserAvatar} from "@/components/user-avatar";
 
-export default function ShareDialog({ appId, chatId, type, visibility: accessType, handleVisibilityChange }:
+export default function ShareDialog({ className, appId, chatId, type, visibility: accessType, handleVisibilityChange }:
     {
         appId: string;
-        chatId: string;
+        chatId?: string;
         type?: AppType;
         visibility: AppVisibility;
-        handleVisibilityChange: (newVisibility: AppVisibility) => void;
+        className?: string;
+        handleVisibilityChange?: (newVisibility: AppVisibility) => void;
     }) {
     const [showInviteScreen, setShowInviteScreen] = useState(false)
 
@@ -53,7 +54,7 @@ export default function ShareDialog({ appId, chatId, type, visibility: accessTyp
 
     return (
         <div className="">
-            <div className="w-[400px]">
+            <div className={className}>
                 {showInviteScreen ? (
                     <InviteScreen
                         shareUser={shareUser || []}
@@ -115,7 +116,7 @@ export default function ShareDialog({ appId, chatId, type, visibility: accessTyp
                                                     <div className="text-gray-500 text-xs">{user.email}</div>
                                                 </div>
                                             </div>
-                                            <AccessLevelDropdown onDelete={() => handleDelete(user)} />
+                                            <SingleUserPermissionDropdown onDelete={() => handleDelete(user)} />
                                         </div>
                                     ))}
                                 </div>
@@ -223,7 +224,7 @@ export default function ShareDialog({ appId, chatId, type, visibility: accessTyp
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
-                                            <AccessLevelDropdown />
+                                            <SingleUserPermissionDropdown />
                                         </div>
                                     </div>
                                 </div>

@@ -57,6 +57,7 @@ export function VisibilitySelector({
         <DropdownMenuContent align="start">
           <div className="p-0">
             <ShareDialog
+              className={"w-[400px]"}
               visibility={visibility}
               handleVisibilityChange={handleVisibilityChange}
               appId={appId!}

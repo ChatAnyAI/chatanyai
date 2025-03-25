@@ -1,8 +1,5 @@
 "use client"
-
-import type React from "react"
-
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -17,7 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "@/hooks/use-toast"
 import { Database, MessageSquare, FileText, Brain, Users, AlertTriangle } from "lucide-react"
 import { ApiAppInfo, AppResp as Space } from "@/service/api"
-import { AppLabelEnum, AppIcons, AppType } from "@/lib/constants/constants"
+import {AppLabelEnum, AppIcons, AppType, AppVisibility} from "@/lib/constants/constants"
 import { useSpaceApi } from "@/hooks/use-space-api"
 import { useParams, useNavigate } from "react-router-dom"
 // import { FilesTab } from "@/app/front/space/components/files-tab"
@@ -31,6 +28,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import ShareDialog from "@/components/sharev2";
+import {useVisibility} from "@/hooks/use-visibility";
 
 // Form schema for validation
 const formSchema = z.object({
@@ -40,7 +39,6 @@ const formSchema = z.object({
   }),
   description: z.string().optional(),
   type: z.enum(["1", "2", "3", "4"]),
-  visibility: z.enum(["1", "2"]),
   copilotPrompt: z.string().optional(),
 })
 
@@ -66,6 +64,8 @@ export default function SpaceSettings() {
   const { onUpdate: handleSpaceUpdate, onDelete: handleSpaceDelete } = useSpaceApi()
   const { appId } = useParams();
   const navigate = useNavigate();
+  const { visibility, handleVisibilityChange } = useVisibility(AppVisibility.Private, appId!, '');
+
 
   // Initialize form with zod resolver
   const form = useForm<z.infer<typeof formSchema>>({
@@ -111,6 +111,12 @@ export default function SpaceSettings() {
     fetchData()
   }, [form, appId])
 
+  useEffect(() => {
+      if (space) {
+          handleVisibilityChange(space.visibility);
+      }
+  }, [space]);
+
   // Handle form submission
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -121,7 +127,6 @@ export default function SpaceSettings() {
         icon: data.icon,
         name: data.name,
         description: data.description,
-        visibility: Number.parseInt(data.visibility) as 1 | 2,
         copilotPrompt: data.copilotPrompt,
       })
 
@@ -230,14 +235,12 @@ export default function SpaceSettings() {
                   Files
                 </TabsTrigger>
               )}
-              {Number.parseInt(form.watch("visibility")) === 1 && (
                 <TabsTrigger
                   value="members"
                   className="flex items-center justify-start w-full py-3 px-4 data-[state=active]:bg-background"
                 >
                   Members
                 </TabsTrigger>
-              )}
             </TabsList>
           </div>
 
@@ -355,38 +358,38 @@ export default function SpaceSettings() {
                           )}
                         />
 
-                        <FormField
-                          control={form.control}
-                          name="visibility"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Visibility</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select visibility" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="1" className="flex items-center gap-2">
-                                    <Users className="h-4 w-4" />
-                                    <span>Private</span>
-                                  </SelectItem>
-                                  <SelectItem value="2" className="flex items-center gap-2">
-                                    <Users className="h-4 w-4" />
-                                    <span>Public</span>
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormDescription>
-                                {Number.parseInt(field.value) === 1
-                                  ? "Only invited members can access this space"
-                                  : "Anyone in the team can access this space"}
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        {/*<FormField*/}
+                        {/*  control={form.control}*/}
+                        {/*  name="visibility"*/}
+                        {/*  render={({ field }) => (*/}
+                        {/*    <FormItem>*/}
+                        {/*      <FormLabel>Visibility</FormLabel>*/}
+                        {/*      <Select onValueChange={field.onChange} defaultValue={field.value}>*/}
+                        {/*        <FormControl>*/}
+                        {/*          <SelectTrigger>*/}
+                        {/*            <SelectValue placeholder="Select visibility" />*/}
+                        {/*          </SelectTrigger>*/}
+                        {/*        </FormControl>*/}
+                        {/*        <SelectContent>*/}
+                        {/*          <SelectItem value="1" className="flex items-center gap-2">*/}
+                        {/*            <Users className="h-4 w-4" />*/}
+                        {/*            <span>Private</span>*/}
+                        {/*          </SelectItem>*/}
+                        {/*          <SelectItem value="2" className="flex items-center gap-2">*/}
+                        {/*            <Users className="h-4 w-4" />*/}
+                        {/*            <span>Public</span>*/}
+                        {/*          </SelectItem>*/}
+                        {/*        </SelectContent>*/}
+                        {/*      </Select>*/}
+                        {/*      <FormDescription>*/}
+                        {/*        {Number.parseInt(field.value) === 1*/}
+                        {/*          ? "Only invited members can access this space"*/}
+                        {/*          : "Anyone in the team can access this space"}*/}
+                        {/*      </FormDescription>*/}
+                        {/*      <FormMessage />*/}
+                        {/*    </FormItem>*/}
+                        {/*  )}*/}
+                        {/*/>*/}
                       </div>
 
                       {Number.parseInt(form.watch("type")) === 2 && (
@@ -432,12 +435,14 @@ export default function SpaceSettings() {
                 {/* <FilesTab /> */}
               </TabsContent>
             )}
-
-            {Number.parseInt(form.watch("visibility")) === 1 && (
               <TabsContent value="members" className="mt-0">
-                <MembersTab />
+                <ShareDialog
+                    appId={appId!}
+                    type={space?.type}
+                    visibility={visibility}
+                    handleVisibilityChange={handleVisibilityChange}
+                />
               </TabsContent>
-            )}
           </div>
         </Tabs>
       </div>

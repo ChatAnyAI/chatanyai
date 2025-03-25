@@ -13,7 +13,7 @@ import {
 
 type AccessLevel = "full" | "edit" | "edit-content" | "comment" | "view"
 
-export function AccessLevelDropdown({ className = "", onDelete }: { className?: string; onDelete?: () => void }) {
+export function SingleUserPermissionDropdown({ className = "", onDelete }: { className?: string; onDelete?: () => void }) {
     const [accessLevel, setAccessLevel] = useState<AccessLevel>("view")
     // const [hideInSearch, setHideInSearch] = useState(false)
 

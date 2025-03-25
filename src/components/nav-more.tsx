@@ -98,6 +98,7 @@ export default (
                             <DropdownMenuSubContent>
                                 <div className="p-0">
                                     <Share
+                                        className={"w-[400px]"}
                                         appId={appInfo.id}
                                         chatId=""
                                         type={appInfo.type}
