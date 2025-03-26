@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog"
 import ShareDialog from "@/components/sharev2";
 import {useVisibility} from "@/hooks/use-visibility";
+import {usePermission} from "@/hooks/use-permission";
 
 // Form schema for validation
 const formSchema = z.object({
@@ -65,7 +66,8 @@ export default function SpaceSettings() {
   const { onUpdate: handleSpaceUpdate, onDelete: handleSpaceDelete } = useSpaceApi()
   const { appId } = useParams();
   const navigate = useNavigate();
-  const { visibility, handleVisibilityChange } = useVisibility(AppVisibility.Private, appId!, '');
+  const { visibility,setVisibility, handleVisibilityChange } = useVisibility(1, appId!, '');
+  const { permission,setPermission, handlePermissionChange } = usePermission(1,1, appId!,'');
 
 
   // Initialize form with zod resolver
@@ -86,6 +88,8 @@ export default function SpaceSettings() {
       try {
         const spaceData = await ApiAppInfo(appId!);
         setSpace(spaceData)
+        setVisibility(spaceData.visibility);
+        setPermission(spaceData.permission);
         // Set form values
         form.reset({
           icon: spaceData.icon || "",
@@ -110,11 +114,11 @@ export default function SpaceSettings() {
     fetchData()
   }, [form, appId])
 
-  useEffect(() => {
-      if (space) {
-          handleVisibilityChange(space.visibility);
-      }
-  }, [space]);
+  // useEffect(() => {
+  //     if (space) {
+  //         handleVisibilityChange(space.visibility);
+  //     }
+  // }, [space]);
 
   // Handle form submission
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -439,7 +443,9 @@ export default function SpaceSettings() {
                     appId={appId!}
                     type={space?.type}
                     visibility={visibility}
+                    permission={permission}
                     handleVisibilityChange={handleVisibilityChange}
+                    handlePermissionChange={handlePermissionChange}
                 />
               </TabsContent>
           </div>

@@ -14,27 +14,27 @@ import { toast } from "@/hooks/use-toast";
 import {
     ApiAppShareUserList,
     ApiChatShareList,
-    User,
     ApiAppShareDelete,
     ApiChatShareDelete,
-    UserProfile,
     AvatarUser,
     ShareUser,
     ApiAppShareUpdatePermission,
     ApiChatShareUpdatePermission,
-    ApiAppUpdatePermission, ApiChatUpdatePermission
 } from "@/service/api";
 import useSWR from "swr";
 import { SingleUserPermissionDropdown } from "@/components/share/single-user-permission-dropdown";
 import {UserAvatar} from "@/components/user-avatar";
+import {AppChatPermissionDropdown} from "@/components/share/app-chat-permission-dropdown";
 
-export default function ShareDialog({ className, appId, chatId, type, visibility: accessType, handleVisibilityChange }:
+export default function ShareDialog({ className, appId, chatId, type, visibility: accessType, handleVisibilityChange,permission,handlePermissionChange }:
     {
         appId: string;
         chatId?: string;
         type?: AppType;
         visibility: AppVisibility;
         className?: string;
+        permission: PermissionType;
+        handlePermissionChange: (newPermission: PermissionType) => void;
         handleVisibilityChange: (newVisibility: AppVisibility) => void;
     }) {
     const [showInviteScreen, setShowInviteScreen] = useState(false)
@@ -44,7 +44,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
         () => chatId ? ApiChatShareList(chatId) : ApiAppShareUserList(appId)
     )
 
-    const [permission, setPermission] = useState<PermissionType>(PermissionType.Full)
+    // const [permission, setPermission] = useState<PermissionType>(PermissionType.Full)
 
 
     const handleDeleteUser = useCallback(async (user: ShareUser) => {
@@ -73,17 +73,17 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
     }, [appId, chatId, mutate]);
 
 
-    const handleUpdateAppOrChatPermission = useCallback(async (permission: PermissionType) => {
-        if (chatId) {
-            await ApiChatUpdatePermission(chatId, permission);
-        } else {
-            await ApiAppUpdatePermission(appId, permission);
-        }
-        toast({
-            title: 'Update success',
-        });
-        mutate();
-    }, [appId, chatId, mutate]);
+    // const handleUpdateAppOrChatPermission = useCallback(async (permission: PermissionType) => {
+    //     if (chatId) {
+    //         await ApiChatUpdatePermission(chatId, permission);
+    //     } else {
+    //         await ApiAppUpdatePermission(appId, permission);
+    //     }
+    //     toast({
+    //         title: 'Update success',
+    //     });
+    //     mutate();
+    // }, [appId, chatId, mutate]);
 
 
     return (
@@ -263,13 +263,12 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
-                                            <SingleUserPermissionDropdown
+                                            {(accessType === AppVisibility.Internal || accessType === AppVisibility.Public) && <AppChatPermissionDropdown
                                                 permission={permission}
                                                 setPermission={(value: PermissionType)=>{
-                                                    setPermission(value)
-                                                    handleUpdateAppOrChatPermission(permission);
+                                                    handlePermissionChange(value);
                                                 }}
-                                            />
+                                            />}
                                         </div>
                                     </div>
                                 </div>

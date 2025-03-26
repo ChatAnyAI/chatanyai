@@ -8,6 +8,7 @@ import React from "react";
 import { AppUpdate } from "./app-update";
 import Share from "./sharev2";
 import { useVisibility } from "@/hooks/use-visibility";
+import {usePermission} from "@/hooks/use-permission";
 
 
 export default (
@@ -35,6 +36,7 @@ export default (
 
     const [showUpdatePopover, setShowUpdatePopover] = useState(false);
     const { visibility, handleVisibilityChange } = useVisibility(appInfo.visibility, appInfo.id, '');
+    const { permission, handlePermissionChange } = usePermission(appInfo.permission,visibility, appInfo.id, '');
 
     return <>
         <DropdownMenu onOpenChange={(state) => {
@@ -93,7 +95,9 @@ export default (
                                                     chatId=""
                                                     type={appInfo.type}
                                                     visibility={visibility}
+                                                    permission={permission}
                                                     handleVisibilityChange={handleVisibilityChange}
+                                                    handlePermissionChange={handlePermissionChange}
                                                 />
                                             </div>
                                         </DropdownMenuSubContent>

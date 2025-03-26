@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import ShareDialog from "@/components/sharev2";
 import {RespChat} from "@/service/api";
 import {AppVisibility, AppVisibilityEnum} from "@/lib/constants/constants";
+import {usePermission} from "@/hooks/use-permission";
 
 
 export function VisibilitySelector({
@@ -24,6 +25,7 @@ export function VisibilitySelector({
 } & React.ComponentProps<typeof Button>) {
   const { appId } = useParams();
   const { visibility, handleVisibilityChange } = useVisibility(chatInfo.visibility, appId!, chatId);
+  const { permission, handlePermissionChange } = usePermission(chatInfo.permission,visibility, appId!, chatId);
 
   return (
     <>
@@ -59,7 +61,9 @@ export function VisibilitySelector({
             <ShareDialog
               className={"w-[400px]"}
               visibility={visibility}
+              permission={permission}
               handleVisibilityChange={handleVisibilityChange}
+              handlePermissionChange={handlePermissionChange}
               appId={appId!}
               chatId={chatId}
             />
