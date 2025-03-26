@@ -1,5 +1,5 @@
 import { get, post, del, put } from "@/lib/request";
-import {AppSubType, AppType, AppVisibility, PermissionType, ProductType, UserRole} from "@/lib/constants/constants";
+import { AppSubType, AppType, AppVisibility, PermissionType, ProductType, UserRole } from "@/lib/constants/constants";
 
 // Common Types
 export interface Resp<T> {
@@ -48,6 +48,12 @@ export interface LoginResponse {
   token: string;
 }
 
+export const ApiUserSetting = (avatar: string) => {
+  put<void>(`/api/userSetting/general`, {
+    avatar
+  });
+}
+
 export const ApiUserRegister = (data: RegisterRequest) => {
   return post<void>('/api/user/register', data);
 }
@@ -82,8 +88,8 @@ export interface User {
 }
 
 export interface AvatarUser {
-    name: string;
-    avatar: string;
+  name: string;
+  avatar: string;
 }
 
 export interface UserProfile extends User {
@@ -225,11 +231,11 @@ export const ApiShareWithMeList = () => {
 }
 
 export interface ApiAppShareCreateRequest {
-    uids: number[];
-    permission: PermissionType;
+  uids: number[];
+  permission: PermissionType;
 }
 
-export const ApiAppShareCreate = (appId: string,req: ApiAppShareCreateRequest) => {
+export const ApiAppShareCreate = (appId: string, req: ApiAppShareCreateRequest) => {
   return put<void>(`/api/app/${appId}/share`, req);
 }
 
@@ -294,10 +300,10 @@ export type ApiHomeRecentChatItem = {
 }
 
 export type Collaborator = {
-    uid: number;
-    name: string;
-    email: string;
-    avatar: string;
+  uid: number;
+  name: string;
+  email: string;
+  avatar: string;
 }
 
 
@@ -474,8 +480,8 @@ export const ApiChatShareList = (chatId: string) => {
 }
 
 export interface ApiChatShareCreateRequest {
-    uids: number[];
-    permission: PermissionType;
+  uids: number[];
+  permission: PermissionType;
 }
 
 export const ApiChatShareCreate = (chatId: string, req: ApiChatShareCreateRequest) => {
@@ -588,16 +594,16 @@ export const ApiTemplateChoose = (templateId: number) => {
 }
 
 
-export const ApiAuthLogin = (data: { email: string; password: string; username: string,login_type: string }) => {
-    return post<LoginResponse>('/api/user/login', data);
+export const ApiAuthLogin = (data: { email: string; password: string; username: string, login_type: string }) => {
+  return post<LoginResponse>('/api/user/login', data);
 }
 
 export const ApiAuthRegister = (userData: { email: string; password: string; name: string }) => {
-    return post<void>('/api/user/register', userData);
+  return post<void>('/api/user/register', userData);
 }
 
 export const ApiUserProfile = () => {
-    return get<UserProfile>('/api/user/profile');
+  return get<UserProfile>('/api/user/profile');
 }
 
 

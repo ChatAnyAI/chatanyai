@@ -1,18 +1,30 @@
-import { Sun } from "lucide-react"
+import { Monitor, Moon, Sun, Camera, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ApiDriveUpload } from '@/service/api'
+import { ApiDriveUpload, ApiUserSetting } from '@/service/api'
 import { useState, FormEvent, useRef } from "react"
 import { toast } from "@/hooks/use-toast" // Assuming you have a toast component
+import { useGlobalStore } from "@/store/globalStore"
+import { useTheme } from "next-themes"
 
 export default function UserSettingsPage() {
-    const [username, setUsername] = useState("allentatakai")
-    const [team, setTeam] = useState("personal")
-    const [theme, setTheme] = useState("light")
-    const [profilePicture, setProfilePicture] = useState<string | null>(null)
+    const { theme, setTheme} = useTheme()
     const [isUploading, setIsUploading] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const user = useGlobalStore(state => state.user);
+    const setUser = useGlobalStore(state => state.setUser);
+    const [imageError, setImageError] = useState(false)
+    
+    // Function to generate initials from user name
+    const getInitials = (name: string) => {
+        return name
+            .split(' ')
+            .map(part => part[0])
+            .join('')
+            .toUpperCase()
+            .substring(0, 2);
+    }
     
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -23,7 +35,16 @@ export default function UserSettingsPage() {
             // Call the ApiDriveUpload function to upload the image
             const response = await ApiDriveUpload(file)
             if (response?.url) {
-                setProfilePicture(response.url)
+                // setProfilePicture(response.url)
+                await ApiUserSetting(response.url as string);
+                setUser({
+                    ...user,
+                    avatar: response.url
+                });
+                toast({
+                    title: "Upload Successful",
+                    description: "Profile picture uploaded successfully.",
+                })
             }
         } catch (error) {
             console.error("Error uploading profile picture:", error)
@@ -70,16 +91,36 @@ export default function UserSettingsPage() {
                             </div>
                             <div className="flex flex-col items-center gap-2">
                                 <div 
-                                    className="h-16 w-16 rounded-full bg-gradient-to-br from-green-400 to-blue-500 relative cursor-pointer"
-                                    style={profilePicture ? { backgroundImage: `url(${profilePicture})`, backgroundSize: 'cover' } : {}}
+                                    className="h-16 w-16 rounded-full bg-gradient-to-br from-green-400 to-blue-500 relative cursor-pointer group"
                                     onClick={() => fileInputRef.current?.click()}
                                 >
+                                    {/* Display user avatar with error handling */}
+                                    {user.avatar && !imageError ? (
+                                        <img 
+                                            src={user.avatar} 
+                                            alt="Profile"
+                                            className="h-full w-full object-cover rounded-full"
+                                            onError={() => setImageError(true)}
+                                        />
+                                    ) : (
+                                        <div className="h-full w-full rounded-full flex items-center justify-center text-white font-semibold text-xl">
+                                            {user.name ? getInitials(user.name) : <User className="h-8 w-8" />}
+                                        </div>
+                                    )}
+                                    
+                                    {/* Edit overlay that appears on hover */}
+                                    <div className="absolute inset-0 bg-black bg-opacity-40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <Camera className="text-white h-6 w-6" />
+                                    </div>
+                                    
+                                    {/* Uploading indicator */}
                                     {isUploading && (
                                         <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center">
                                             <span className="text-white text-xs">Uploading...</span>
                                         </div>
                                     )}
                                 </div>
+                                <span className="text-xs text-blue-500">Click to change</span>
                                 <input 
                                     type="file" 
                                     ref={fileInputRef}
@@ -98,9 +139,9 @@ export default function UserSettingsPage() {
                                 </p>
                             </div>
                             <Input 
-                                value={username} 
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="max-w-[250px] bg-gray-50" 
+                                value={user.name} 
+                                className="max-w-[250px]" 
+                                readOnly={true}
                             />
                         </div>
 
@@ -111,16 +152,27 @@ export default function UserSettingsPage() {
                                     New projects and deployments from your personal scope will be created in this team.
                                 </p>
                             </div>
-                            <Select value={team} onValueChange={setTeam}>
+                            <Select value={String(user.teams?.[0]?.teamId)} disabled={true}>
                                 <SelectTrigger className="w-[250px]">
                                     <SelectValue>
                                         <div className="flex items-center">
                                             <div className="h-5 w-5 rounded-full bg-gradient-to-br from-green-400 to-blue-500 mr-2" />
-                                            allentatakai's project
+                                            {user.teams?.[0]?.name}
                                         </div>
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
+                                    { 
+                                        // Assuming you have a list of teams
+                                        user.teams?.map(team => (
+                                            <SelectItem key={team.teamId} value={String(team.teamId)}>
+                                                <div className="flex items-center">
+                                                    <div className="h-5 w-5 rounded-full bg-gradient-to-br from-green-400 to-blue-500 mr-2" />
+                                                    {team.name}
+                                                </div>
+                                            </SelectItem>
+                                        ))
+                                    }
                                     <SelectItem value="personal">
                                         <div className="flex items-center">
                                             <div className="h-5 w-5 rounded-full bg-gradient-to-br from-green-400 to-blue-500 mr-2" />
@@ -152,17 +204,29 @@ export default function UserSettingsPage() {
                                             Light
                                         </div>
                                     </SelectItem>
+                                    <SelectItem value="dark">
+                                        <div className="flex items-center">
+                                            <Moon className="h-4 w-4 mr-2" />
+                                            Dark
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="system">
+                                        <div className="flex items-center">
+                                            <Monitor className="h-4 w-4 mr-2" />
+                                            System
+                                        </div>
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
                     </div>
                 </section>
 
-                <div className="mt-8 flex justify-end">
+                {/* <div className="mt-8 flex justify-end">
                     <Button type="submit" className="px-6">
                         Save Changes
                     </Button>
-                </div>
+                </div> */}
             </form>
         </div>
     )
