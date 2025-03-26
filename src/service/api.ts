@@ -623,7 +623,6 @@ export interface Template {
   group: string;
 }
 // templates
-<<<<<<< HEAD
 export const ApiTemplateList = (group: string, pageToLoad: number) => {
   // TODO: Implement pagination
   return get <ResponseWithPagination<Template[]>>('/api/template/-/list', {
@@ -633,18 +632,6 @@ export const ApiTemplateList = (group: string, pageToLoad: number) => {
         currentPage: pageToLoad,
         pageSize: 10
       })
-=======
-export const ApiTemplateList = (selectedCategory: string, pageToLoad: number) => {
-  // TODO: Implement pagination
-  return get<{
-    hasMore: boolean;
-    templates: Template[];
-    totalPages: number;
-  }>('/api/template/-/list', {
-    params: {
-      selectedCategory,
-      pageToLoad
->>>>>>> bd73503f75dc0ba74468cd635ad72272a720286d
     }
   });
 }
