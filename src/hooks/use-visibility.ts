@@ -40,6 +40,7 @@ export const useVisibility = (initialVisibility: AppVisibility = 1, appId: strin
 
   return {
     visibility,
+    setVisibility,
     handleVisibilityChange
   };
 };

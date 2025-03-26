@@ -66,8 +66,8 @@ export default function SpaceSettings() {
   const { onUpdate: handleSpaceUpdate, onDelete: handleSpaceDelete } = useSpaceApi()
   const { appId } = useParams();
   const navigate = useNavigate();
-  const { visibility, handleVisibilityChange } = useVisibility(appInfo.visibility, appId!, '');
-  const { permission, handlePermissionChange } = usePermission(appInfo.permission,appInfo.visibility, appInfo.id, '');
+  const { visibility,setVisibility, handleVisibilityChange } = useVisibility(1, appId!, '');
+  const { permission,setPermission, handlePermissionChange } = usePermission(1,1, appId!,'');
 
 
   // Initialize form with zod resolver
@@ -88,6 +88,8 @@ export default function SpaceSettings() {
       try {
         const spaceData = await ApiAppInfo(appId!);
         setSpace(spaceData)
+        setVisibility(spaceData.visibility);
+        setPermission(spaceData.permission);
         // Set form values
         form.reset({
           icon: spaceData.icon || "",

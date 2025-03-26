@@ -46,6 +46,7 @@ export const usePermission = (initialPermission: PermissionType = 1,visibility: 
 
   return {
       permission,
+      setPermission,
       handlePermissionChange
   };
 };
