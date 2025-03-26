@@ -1,5 +1,6 @@
 import { get, post, del, put } from "@/lib/request";
 import { AppSubType, AppType, AppVisibility, PermissionType, ProductType, UserRole } from "@/lib/constants/constants";
+import { Pagination } from "@/components/ui/pagination";
 
 // Common Types
 export interface Resp<T> {
@@ -620,8 +621,17 @@ export interface Template {
   group: string;
 }
 // templates
-export const ApiTemplateList = () => {
-  return get<Template[]>('/api/template/-/list');
+export const ApiTemplateList = (group: string, pageToLoad: number) => {
+  // TODO: Implement pagination
+  return get <ResponseWithPagination<Template[]>>('/api/template/-/list', {
+    params: {
+      group,
+      pagination: JSON.stringify({
+        currentPage: pageToLoad,
+        pageSize: 10
+      })
+    }
+  });
 }
 
 // templates
