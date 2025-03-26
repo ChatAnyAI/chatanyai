@@ -620,8 +620,18 @@ export interface Template {
   group: string;
 }
 // templates
-export const ApiTemplateList = () => {
-  return get<Template[]>('/api/template/-/list');
+export const ApiTemplateList = (selectedCategory: string, pageToLoad: number) => {
+  // TODO: Implement pagination
+  return get<{
+    hasMore: boolean;
+    templates: Template[];
+    totalPages: number;
+  }>('/api/template/-/list', {
+    params: {
+      selectedCategory,
+      pageToLoad
+    }
+  });
 }
 
 // templates
