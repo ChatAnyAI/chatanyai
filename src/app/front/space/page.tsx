@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog"
 import ShareDialog from "@/components/sharev2";
 import {useVisibility} from "@/hooks/use-visibility";
+import {usePermission} from "@/hooks/use-permission";
 
 // Form schema for validation
 const formSchema = z.object({
@@ -65,7 +66,8 @@ export default function SpaceSettings() {
   const { onUpdate: handleSpaceUpdate, onDelete: handleSpaceDelete } = useSpaceApi()
   const { appId } = useParams();
   const navigate = useNavigate();
-  const { visibility, handleVisibilityChange } = useVisibility(AppVisibility.Private, appId!, '');
+  const { visibility, handleVisibilityChange } = useVisibility(appInfo.visibility, appId!, '');
+  const { permission, handlePermissionChange } = usePermission(appInfo.permission,appInfo.visibility, appInfo.id, '');
 
 
   // Initialize form with zod resolver
@@ -110,11 +112,11 @@ export default function SpaceSettings() {
     fetchData()
   }, [form, appId])
 
-  useEffect(() => {
-      if (space) {
-          handleVisibilityChange(space.visibility);
-      }
-  }, [space]);
+  // useEffect(() => {
+  //     if (space) {
+  //         handleVisibilityChange(space.visibility);
+  //     }
+  // }, [space]);
 
   // Handle form submission
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -439,7 +441,9 @@ export default function SpaceSettings() {
                     appId={appId!}
                     type={space?.type}
                     visibility={visibility}
+                    permission={permission}
                     handleVisibilityChange={handleVisibilityChange}
+                    handlePermissionChange={handlePermissionChange}
                 />
               </TabsContent>
           </div>
