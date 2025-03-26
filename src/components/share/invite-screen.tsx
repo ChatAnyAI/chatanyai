@@ -2,7 +2,7 @@
 import {useEffect, useState} from "react"
 import {ChevronLeft, Globe, X} from "lucide-react"
 import {BatchUserPermissionDropdown} from "./batch-user-permission-dropdown"
-import {ApiAppShareCreate, ApiChatShareCreate, ApiTeamUsers, AvatarUser, User} from "@/service/api";
+import {ApiAppShareCreate, ApiChatShareCreate, ApiTeamUsers, AvatarUser, ShareUser, User} from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 import {useGlobalStore} from "@/store/globalStore";
 import {UserAvatar} from "@/components/user-avatar";
@@ -12,7 +12,7 @@ interface InviteScreenProps {
     appId: string
     chatId?: string
     onBack?: () => void
-    shareUser: User[]
+    shareUser: ShareUser[]
 }
 
 export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }: InviteScreenProps) {

@@ -37,7 +37,6 @@ export function BatchUserPermissionDropdown({ permission, setPermission, classNa
                             <p className="text-xs text-gray-500 mt-0.5">Edit, setting, comment, and share with others</p>
                         </div>
                     </DropdownMenuItem>
-
                     <DropdownMenuItem
                         className="flex items-start px-3 py-1.5 hover:bg-gray-50 cursor-pointer"
                         onClick={() => setPermission(PermissionType.Edit)}

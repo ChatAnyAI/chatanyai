@@ -81,6 +81,14 @@ export interface User {
   updatedAt: number;
 }
 
+export interface ShareUser {
+    id: number;
+    name: string;
+    avatar: string;
+    email: string;
+    permission: PermissionType;
+}
+
 export interface AvatarUser {
     name: string;
     avatar: string;
@@ -237,8 +245,20 @@ export const ApiAppShareDelete = (appId: string, uid: number) => {
   return del<void>(`/api/app/${appId}/share/${uid}`);
 }
 
+export const ApiAppShareUpdatePermission = (appId: string, uid: number, permission: PermissionType) => {
+    return put<void>(`/api/app/${appId}/share/${uid}/permission`,{
+        permission
+    });
+}
+
+export const ApiAppUpdatePermission = (appId: string,  permission: PermissionType) => {
+    return put<void>(`/api/app/${appId}/permission`,{
+        permission
+    });
+}
+
 export const ApiAppShareUserList = (appId: string) => {
-  return get<User[]>(`/api/app/${appId}/share/userList`);
+  return get<ShareUser[]>(`/api/app/${appId}/share/-/userList`);
 }
 export const ApiAppList = () => {
   return get<AppResp[]>(`/api/app/list`);
@@ -458,11 +478,15 @@ export const ApiChatHistory = (chatId: string) => {
 
 export interface UpdateChatInfoRequest {
   title?: string;
-  visibility?: number;
 }
 
 export const ApiUpdateChatInfo = (chatId: string, data: UpdateChatInfoRequest) => {
   return put<void>(`/api/chat/${chatId}/info`, data);
+}
+
+
+export const ApiUpdateChatVisibility = (chatId: string, visibility: AppVisibility) => {
+    return put<void>(`/api/chat/${chatId}/visibility`, { visibility });
 }
 
 export const ApiChatListByAppId = (appId: string) => {
@@ -470,7 +494,7 @@ export const ApiChatListByAppId = (appId: string) => {
 }
 
 export const ApiChatShareList = (chatId: string) => {
-  return get<User[]>(`/api/chat/${chatId}/share/-/userList`);
+  return get<ShareUser[]>(`/api/chat/${chatId}/share/-/userList`);
 }
 
 export interface ApiChatShareCreateRequest {
@@ -484,6 +508,18 @@ export const ApiChatShareCreate = (chatId: string, req: ApiChatShareCreateReques
 
 export const ApiChatShareDelete = (chatId: string, uid: number) => {
   return del<void>(`/api/chat/${chatId}/share/${uid}`);
+}
+
+export const ApiChatShareUpdatePermission = (chatId: string, uid: number, permission: PermissionType) => {
+    return put<void>(`/api/chat/${chatId}/share/${uid}/permission`,{
+        permission
+    });
+}
+
+export const ApiChatUpdatePermission = (chatId: string,  permission: PermissionType) => {
+    return put<void>(`/api/chat/${chatId}/permission`,{
+        permission
+    });
 }
 
 
