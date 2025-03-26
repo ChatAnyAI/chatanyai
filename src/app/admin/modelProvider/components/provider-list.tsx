@@ -46,10 +46,10 @@ export function ProviderList(props: ProviderListProps) {
 
                     </div>
                 ))}
-                <Button variant="outline" className="w-full mt-4">
+                {/* <Button variant="outline" className="w-full mt-4">
                     <Plus className="w-4 h-4 mr-2"/>
                     Add
-                </Button>
+                </Button> */}
             </div>
         </div>
     )

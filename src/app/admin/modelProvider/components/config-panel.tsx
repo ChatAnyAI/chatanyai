@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {ExternalLink, Eye, EyeOff, Settings} from "lucide-react"
+import {ExternalLink, Eye, EyeOff, Settings, Trash2} from "lucide-react"
 import {RespModelProviderInfo} from "@/service/admin";
 import {useForm}from "react-hook-form";
 import {zodResolver}from "@hookform/resolvers/zod";
@@ -22,11 +22,11 @@ const providerFormSchema = z.object({
     apiHost: z.string(),
     keepAliveTime: z.number(),
     enabled: z.number(),
-    // modelList: z.array(z.object({
-    //     modelId: z.string(),
-    //     modelName: z.string(),
-    //     enabled: z.number(),
-    // })),
+    modelList: z.array(z.object({
+        modelId: z.string(),
+        modelName: z.string(),
+        enabled: z.number(),
+    })),
 })
 
 /**
@@ -44,16 +44,75 @@ export type ProviderFormValues = z.infer<typeof providerFormSchema>
 
 export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListProps) {
     const [isActive, setIsActive] = useState(false)
+    const [showApiKey, setShowApiKey] = useState(false)
+    const [isAddingModel, setIsAddingModel] = useState(false)
+    const [newModel, setNewModel] = useState({
+        modelId: '',
+        modelName: '',
+        enabled: 1
+    })
+    const [modelErrors, setModelErrors] = useState({
+        modelId: false,
+        modelName: false
+    })
+    const [localModelList, setLocalModelList] = useState<any[]>([])
 
-  
-  const [showApiKey, setShowApiKey] = useState(false)
+    const handleSubmit = async (data: ProviderFormValues) => {
+        // Set the modelList in the form data before submitting
+        const formData = {
+            ...data,
+            modelList: localModelList
+        };
+        
+        onSubmit(provider?.id!, formData);
+    }
 
-  const handleSubmit = async (data: ProviderFormValues) => {
-        onSubmit(provider?.id!, data)
-  }
+    const handleDeleteModel = (modelId: string) => {
+        if (!provider) return
+        
+        const updatedModelList = localModelList.filter(model => model.modelId !== modelId)
+        setLocalModelList(updatedModelList)
+        // You might need to update the form value as well if you're sending the model list in the form
+    }
 
+    const handleToggleModelEnabled = (modelId: string) => {
+        if (!provider) return
+        
+        const updatedModelList = localModelList.map(model => {
+            if (model.modelId === modelId) {
+                return {
+                    ...model,
+                    enabled: model.enabled === 1 ? 0 : 1
+                }
+            }
+            return model
+        })
+        setLocalModelList(updatedModelList)
+    }
 
-
+    const handleAddModel = () => {
+        const errors = {
+            modelId: newModel.modelId.trim() === '',
+            modelName: newModel.modelName.trim() === ''
+        };
+        
+        setModelErrors(errors);
+        
+        if (errors.modelId || errors.modelName) {
+            return; // Stop execution if validation fails
+        }
+        
+        const updatedModelList = [...localModelList, newModel]
+        setLocalModelList(updatedModelList)
+        // Reset the form and hide it
+        setNewModel({
+            modelId: '',
+            modelName: '',
+            enabled: 1
+        })
+        setIsAddingModel(false)
+        setModelErrors({ modelId: false, modelName: false })
+    }
 
     // Add form-related code in the component
     const form = useForm<ProviderFormValues>({
@@ -61,7 +120,7 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
         defaultValues: {},
     })
 
-    // Update default form values
+    // Update default form values and initialize model list
     useEffect(() => {
         if (provider) {
             form.reset({
@@ -69,11 +128,21 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
                 apiHost: provider.apiHost,
                 keepAliveTime: provider.keepAliveTime,
                 enabled: provider.enabled,
-            })
+                modelList: provider.modelList || []
+            });
             // Initialize state in useEffect
-            setIsActive(provider.enabled === 1)
+            setIsActive(provider.enabled === 1);
+            // Initialize local model list
+            setLocalModelList(provider.modelList || []);
         }
-    }, [provider, form])
+    }, [provider, form]);
+
+    // Update form value whenever localModelList changes
+    useEffect(() => {
+        if (localModelList) {
+            form.setValue("modelList", localModelList);
+        }
+    }, [localModelList, form]);
 
     if (!provider) {
         return null
@@ -126,8 +195,9 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
           <div className="space-y-4">
               <h2 className="text-lg font-semibold">API Host</h2>
               <div className="flex gap-2">
-                  <Input value={provider?.apiHost}/>
-                  <Button  type="button"  variant="outline">Reset</Button>
+                  <Input {...form.register("apiHost")} />
+                  <Button type="button" variant="outline" 
+                    onClick={() => form.setValue("apiHost", provider.apiHost)}>Reset</Button>
               </div>
               <p className="text-sm text-muted-foreground">
                   Ending with /v1/ ignores v1, ending with # forces use of input address
@@ -153,36 +223,79 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
 
           <div className="space-y-4">
               <h2 className="text-lg font-semibold">Models</h2>
-              {provider?.modelList?.map((model) => (
+              {localModelList.map((model, i) => (
                   <div key={model.modelId} className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
                       <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded bg-blue-500"/>
+                          <div className="w-6 h-6 rounded bg-blue-500 flex items-center justify-center text-white">{i}</div>
                           <span>{model.modelName}</span>
-                          <Button  type="button"  variant="ghost" size="icon">
-                              <Settings className="w-4 h-4"/>
+                      </div>
+                      <div className="flex items-center gap-2">
+                          {!!model.enabled ? (
+                              <Button type="button" variant="ghost" size="icon" className="text-emerald-500"
+                                     onClick={() => handleToggleModelEnabled(model.modelId)}>
+                                  <Eye className="w-4 h-4"/>
+                              </Button>
+                          ) : (
+                              <Button type="button" variant="ghost" size="icon" className="text-destructive"
+                                     onClick={() => handleToggleModelEnabled(model.modelId)}>
+                                  <EyeOff className="w-4 h-4"/>
+                              </Button>
+                          )}
+                          <Button type="button" variant="ghost" size="icon" className="text-destructive" 
+                              onClick={() => handleDeleteModel(model.modelId)}>
+                              <Trash2 className="w-4 h-4"/>
                           </Button>
                       </div>
-                      {!!model.enabled ? (
-                          <Button  type="button"  variant="ghost" size="icon" className="text-emerald-500">
-                              <Eye className="w-4 h-4"/>
-                          </Button>
-                      ) : (
-                          <Button  type="button"  variant="ghost" size="icon" className="text-destructive">
-                              <EyeOff className="w-4 h-4"/>
-                          </Button>
-                      )}
                   </div>
               ))}
 
+              {isAddingModel && (
+                  <div className="p-3 border rounded-lg space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                          <div>
+                              <label className="text-sm font-medium">Model ID <span className="text-red-500">*</span></label>
+                              <Input 
+                                  value={newModel.modelId}
+                                  onChange={(e) => setNewModel({...newModel, modelId: e.target.value})}
+                                  placeholder="Enter model ID"
+                                  className={modelErrors.modelId ? "border-red-500" : ""}
+                              />
+                              {modelErrors.modelId && (
+                                  <p className="text-sm text-red-500 mt-1">Model ID is required</p>
+                              )}
+                          </div>
+                          <div>
+                              <label className="text-sm font-medium">Model Name <span className="text-red-500">*</span></label>
+                              <Input 
+                                  value={newModel.modelName}
+                                  onChange={(e) => setNewModel({...newModel, modelName: e.target.value})}
+                                  placeholder="Enter model name"
+                                  className={modelErrors.modelName ? "border-red-500" : ""}
+                              />
+                              {modelErrors.modelName && (
+                                  <p className="text-sm text-red-500 mt-1">Model Name is required</p>
+                              )}
+                          </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                          <Button type="button" onClick={handleAddModel}>
+                              Save Model
+                          </Button>
+                          <Button type="button" variant="outline" onClick={() => setIsAddingModel(false)}>
+                              Cancel
+                          </Button>
+                      </div>
+                  </div>
+              )}
+
               <div className="flex gap-2">
-                  <Button type="submit"  className="bg-emerald-500 hover:bg-emerald-600">Save</Button>
-                  <Button type="button" variant="outline">Add</Button>
+                  <Button type="button" variant="outline" onClick={() => setIsAddingModel(true)}>Add</Button>
               </div>
 
               <p className="text-sm text-muted-foreground">
                   Check{" "}
                   <a className="text-blue-500">
-                      Ollama Docs
+                      {provider.name} Docs
                   </a>{" "}
                   and{" "}
                   <a className="text-blue-500">
@@ -190,6 +303,9 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
                   </a>{" "}
                   for more details
               </p>
+              <div className="flex gap-2">
+                  <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600">Save</Button>
+              </div>
           </div>
       </form>
   )
