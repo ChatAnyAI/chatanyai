@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { ApiUpdateChatInfo, ApiUpdateVisibility } from '@/service/api';
+import {ApiUpdateChatInfo, ApiUpdateChatVisibility, ApiUpdateVisibility} from '@/service/api';
 import { AppVisibility } from '@/lib/constants/constants';
 
 export const useVisibility = (initialVisibility: AppVisibility = 1, appId: string, chatId: string) => {
@@ -10,9 +10,7 @@ export const useVisibility = (initialVisibility: AppVisibility = 1, appId: strin
   const handleVisibilityChange = async (newVisibility: AppVisibility) => {
     if (chatId) {
       try {
-        await ApiUpdateChatInfo(chatId, {
-          visibility: newVisibility
-        });
+        await ApiUpdateChatVisibility(chatId, newVisibility);
         toast({
           title: "change visibility success",
         });

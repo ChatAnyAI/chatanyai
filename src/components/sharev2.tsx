@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { InviteScreen } from "@/components/share/invite-screen"
-import { AppType, AppVisibility, RouteEnum } from "@/lib/constants/constants";
+import {AppType, AppVisibility, PermissionType, RouteEnum} from "@/lib/constants/constants";
 import { toast } from "@/hooks/use-toast";
 import {
     ApiAppShareUserList,
@@ -17,7 +17,12 @@ import {
     User,
     ApiAppShareDelete,
     ApiChatShareDelete,
-    UserProfile, AvatarUser
+    UserProfile,
+    AvatarUser,
+    ShareUser,
+    ApiAppShareUpdatePermission,
+    ApiChatShareUpdatePermission,
+    ApiAppUpdatePermission, ApiChatUpdatePermission
 } from "@/service/api";
 import useSWR from "swr";
 import { SingleUserPermissionDropdown } from "@/components/share/single-user-permission-dropdown";
@@ -39,7 +44,10 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
         () => chatId ? ApiChatShareList(chatId) : ApiAppShareUserList(appId)
     )
 
-    const handleDelete = useCallback(async (user: User) => {
+    const [permission, setPermission] = useState<PermissionType>(PermissionType.Full)
+
+
+    const handleDeleteUser = useCallback(async (user: ShareUser) => {
         if (chatId) {
             await ApiChatShareDelete(chatId, user.id);
         } else {
@@ -47,6 +55,32 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
         }
         toast({
             title: 'Delete user success',
+        });
+        mutate();
+    }, [appId, chatId, mutate]);
+
+
+    const handleUpdateUserPermission = useCallback(async (user: ShareUser,permission: PermissionType) => {
+        if (chatId) {
+            await ApiChatShareUpdatePermission(chatId, user.id,permission);
+        } else {
+            await ApiAppShareUpdatePermission(appId, user.id,permission);
+        }
+        toast({
+            title: 'Update user success',
+        });
+        mutate();
+    }, [appId, chatId, mutate]);
+
+
+    const handleUpdateAppOrChatPermission = useCallback(async (permission: PermissionType) => {
+        if (chatId) {
+            await ApiChatUpdatePermission(chatId, permission);
+        } else {
+            await ApiAppUpdatePermission(appId, permission);
+        }
+        toast({
+            title: 'Update success',
         });
         mutate();
     }, [appId, chatId, mutate]);
@@ -96,15 +130,15 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                             {/* Users list - with visible scrollbar */}
                             {shareUser && <div className="overflow-y-auto px-4 max-h-[280px]">
                                 <div className="space-y-1">
-                                    {shareUser.map((user) => (
-                                        <div key={user.id} className="flex items-center justify-between py-2">
+                                    {shareUser.map((shareUser) => (
+                                        <div key={shareUser.id} className="flex items-center justify-between py-2">
                                             <div className="flex items-center space-x-2">
-                                                <UserAvatar user={user as AvatarUser} />
+                                                <UserAvatar user={shareUser as AvatarUser} />
                                                 <div>
                                                     <div className="flex items-center gap-1.5">
-                                                        <span className="font-medium text-sm">{user.name}</span>
-                                                        {/*{user.isYou && <span className="text-gray-400 text-xs">(You)</span>}*/}
-                                                        {/*{user.isGuest && (*/}
+                                                        <span className="font-medium text-sm">{shareUser.name}</span>
+                                                        {/*{shareUser.isYou && <span className="text-gray-400 text-xs">(You)</span>}*/}
+                                                        {/*{shareUser.isGuest && (*/}
                                                         {/*    <Badge*/}
                                                         {/*        variant="secondary"*/}
                                                         {/*        className="bg-orange-100 text-orange-800 hover:bg-orange-100 px-1.5 py-0 text-[10px]"*/}
@@ -113,10 +147,15 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                         {/*    </Badge>*/}
                                                         {/*)}*/}
                                                     </div>
-                                                    <div className="text-gray-500 text-xs">{user.email}</div>
+                                                    <div className="text-gray-500 text-xs">{shareUser.email}</div>
                                                 </div>
                                             </div>
-                                            <SingleUserPermissionDropdown onDelete={() => handleDelete(user)} />
+                                            <SingleUserPermissionDropdown
+                                                permission={shareUser.permission}
+                                                setPermission={(value: PermissionType)=>{
+                                                    handleUpdateUserPermission(shareUser,value);
+                                                }}
+                                                onDelete={() => handleDeleteUser(shareUser)} />
                                         </div>
                                     ))}
                                 </div>
@@ -224,7 +263,13 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
-                                            <SingleUserPermissionDropdown />
+                                            <SingleUserPermissionDropdown
+                                                permission={permission}
+                                                setPermission={(value: PermissionType)=>{
+                                                    setPermission(value)
+                                                    handleUpdateAppOrChatPermission(permission);
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
