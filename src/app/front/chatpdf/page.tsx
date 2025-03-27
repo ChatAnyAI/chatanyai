@@ -16,7 +16,6 @@ export default function Page() {
     const { appId } = useParams();
     const [pdfUrl, setPdfUrl] = useState<string>("");
 
-    console.log('pdfUrl', pdfUrl);
 
     return (
         <RightSettingProvider>

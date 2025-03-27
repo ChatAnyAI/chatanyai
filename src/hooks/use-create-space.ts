@@ -36,6 +36,13 @@ export const useCreateSpace = () => {
             icon: '',
             description: '',
           });
+        case AppType.Note:
+          res = await ApiAppCreate({
+              type,
+              name: 'untitled',
+              icon: '',
+              description: '',
+          });
       }
       fetchAppList();
       toast({

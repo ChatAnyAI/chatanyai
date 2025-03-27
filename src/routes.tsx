@@ -74,14 +74,7 @@ const router = createBrowserRouter(
             </Suspense>
           }>
         </Route>
-          <Route
-              path="/note"
-              element={
-                  <Suspense fallback={<Loading />}>
-                      <NotePage />
-                  </Suspense>
-              }>
-          </Route>
+
         <Route
           path="/dataset/:datasetId/docList"
           element={
@@ -120,7 +113,14 @@ const router = createBrowserRouter(
               <Component6 />
             </Suspense>
           } />
-
+      <Route
+          path="/note/:appId"
+          element={
+              <Suspense fallback={<Loading />}>
+                  <NotePage />
+              </Suspense>
+          }>
+      </Route>
         <Route
           path="/chatpdf/:appId"
           element={

@@ -1,9 +1,12 @@
 import {PlateEditor} from "@/components/editor/plate-editor";
+import {RightSettingProvider} from "@/app/front/aichat/component/rightSetting";
 
-export default function BasicEditor() {
+export default function Page() {
     return (
-        <div style={{ width: '100%',     height: '100vh'}}>
-            <PlateEditor />
-        </div>
+        <RightSettingProvider>
+            <div className="flex flex-col h-screen flex-1">
+                    <PlateEditor />
+            </div>
+        </RightSettingProvider>
     );
 }

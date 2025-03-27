@@ -1,12 +1,13 @@
 
 
-import { BotMessageSquare, Database, FileText, BrainCircuit } from "lucide-react"
+import {BotMessageSquare, Database, FileText, BrainCircuit, NotebookPen} from "lucide-react"
 
 export enum AppType {
     Copilot = 1,
     ChatPDF = 2,
     MeetingChat = 3,
     KnowledgeBase = 4,
+    Note = 5,
 }
 
 export enum AppSubType {
@@ -31,6 +32,7 @@ export const AppLabelEnum = {
     [AppType.ChatPDF]: 'ChatPDF',
     [AppType.MeetingChat]: 'Brainstorm',
     [AppType.KnowledgeBase]: 'KnowledgeBase',
+    [AppType.Note]: 'Note',
 }
 
 
@@ -39,6 +41,7 @@ export const RouteEnum = {
     [AppType.Copilot]: 's',
     [AppType.ChatPDF]: 'chatpdf',
     [AppType.MeetingChat]: 'meeting',
+    [AppType.Note]: 'note',
 }
 
 export enum UserStatus {
@@ -98,7 +101,12 @@ export const AppIcons = {
     [AppType.MeetingChat]: {
         icon: BrainCircuit,
         color: "#9c27b0"
+    },
+    [AppType.Note]: {
+        icon: NotebookPen,
+        color: "#bd2781"
     }
+
 };
 
 export enum PermissionType {

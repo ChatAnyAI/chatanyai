@@ -17,7 +17,7 @@ import { useCreateSpace } from "@/hooks/use-create-space";
 
 
 
-export const documentTypes = [1, 2, 3].map((k) => {
+export const documentTypes = [1, 2, 3, 5].map((k) => {
     return {
         name: AppLabelEnum[k as unknown as AppType],
         icon: AppIcons[k as unknown as AppType].icon,
