@@ -48,15 +48,15 @@ export const useChatStore = create<ChatStoreState>((set) => ({
         });
     },
     fetchFavoriteAppList: async () => {
-        const data: AppResp[] = await ApiAppFavoriteList();
-        set({
-            favoriteAppList: data.map(d => {
-                return {
-                    ...d,
-                    url: `/${RouteEnum[d.type]}/${d.id}`,
-                } as NavMenuItem
-            }),
-        });
+        // const data: AppResp[] = await ApiAppFavoriteList();
+        // set({
+        //     favoriteAppList: data.map(d => {
+        //         return {
+        //             ...d,
+        //             url: `/${RouteEnum[d.type]}/${d.id}`,
+        //         } as NavMenuItem
+        //     }),
+        // });
     },
     setModelSelectedId: (id: string) => {
         Cookies.set('model-id', id);

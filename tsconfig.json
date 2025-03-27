@@ -26,6 +26,16 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.cts",
+    "**/*.ctsx",
+    "**/*.mts",
+    "**/*.mtsx",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.cjs",
+    "**/*.cjsx",
+    "**/*.mjs",
+    "**/*.mjsx"
   ],
   "exclude": [
     "node_modules",
