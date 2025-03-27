@@ -14,7 +14,7 @@ import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/righ
 import { RespChat } from "@/service/api";
 import { toast } from '@/hooks/use-toast';
 
- function Chat({
+function Chat({
   hiddenHeader,
   id,
   initialMessages,
@@ -24,8 +24,12 @@ import { toast } from '@/hooks/use-toast';
   pdfLink,
   isNew,
   chatInfo,
+  className,
+  hiddenMessage,
 }: {
+  className?: string;
   hiddenHeader?: boolean;
+  hiddenMessage?: boolean;
   pdfLink?: string;
   id: string;
   initialMessages: Array<Message>;
@@ -71,7 +75,7 @@ import { toast } from '@/hooks/use-toast';
       mutate('ApiChatListByAppId');
     },
   });
-  if (error) { 
+  if (error) {
     console.error(error);
     stop();
     toast({
@@ -86,7 +90,7 @@ import { toast } from '@/hooks/use-toast';
 
   return (
     <>
-      <div className="flex flex-auto flex-col min-w-0 bg-background">
+      <div className={`flex flex-auto flex-col min-w-0 bg-background ${className}`}>
         {
           hiddenHeader ? null :
             <ChatHeader
@@ -98,15 +102,18 @@ import { toast } from '@/hooks/use-toast';
         }
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 flex flex-col overflow-hidden overflow-y-auto">
-            <Messages
-              chatId={id}
-              isLoading={isLoading}
-              messages={messages}
-              setMessages={setMessages}
-              reload={reload}
-              isReadonly={isReadonly}
-              isBlockVisible={isBlockVisible}
-            />
+            {
+              hiddenMessage ? null :
+                <Messages
+                  chatId={id}
+                  isLoading={isLoading}
+                  messages={messages}
+                  setMessages={setMessages}
+                  reload={reload}
+                  isReadonly={isReadonly}
+                  isBlockVisible={isBlockVisible}
+                />
+            }
 
             <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
               {!isReadonly && (

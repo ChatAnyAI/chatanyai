@@ -171,7 +171,7 @@ export function NavGroup({
                   asChild
                   tooltip={item.name}
                   onClick={() => {
-                    onClickMenu(item.id ? {
+                    onClickMenu(item.id && item.type !== AppType.Copilot ? {
                       appId: item.id,
                       name: item.name!,
                     } : null);
