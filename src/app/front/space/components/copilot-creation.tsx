@@ -8,36 +8,18 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ApiTemplateList, Template } from '@/service/api'
 import { cn } from "@/lib/utils"
+import { useCreateSpace } from "@/hooks/use-create-space"
+import { AppType } from "@/lib/constants/constants"
 
 export const BLANK_TEMPLATE = {
-    id: "blank",
+    id: 0,
     name: "Create Blank",
     description: "",
     icon: "➕",
-}
-
-// Template category data
-// Template category type definition
-// type CategoryIcon = JSX.Element | null;
-
-// type Category = {
-//     id: string;
-//     name: string;
-//     icon?: CategoryIcon;
-//     isDivider?: boolean;
-// }
-
-// Format number with Chinese units
-const formatNumber = (num: number) => {
-    if (num >= 10000) {
-        return `${(num / 10000).toFixed(1).replace(/\.0$/, "")} 10k`
-    }
-    return num.toString()
-}
+} as unknown as Template
 
 interface TemplateDialogProps {
     onClose: () => void
-    chooseCopilotTemplate: (template: number) => void
 }
 
 // Sidebar categories
@@ -68,8 +50,7 @@ const categories = [
     "Selection",
 ]
 
-export default function TemplateDialog({
-                                           onClose = () => { }, chooseCopilotTemplate }: TemplateDialogProps) {
+export default function TemplateDialog({ onClose = () => { } }: TemplateDialogProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedCategory, setSelectedCategory] = useState(categories[0])
     const [templates, setTemplates] = useState<Template[]>([])
@@ -78,6 +59,7 @@ export default function TemplateDialog({
     const [totalPages, setTotalPages] = useState(1)
     const [hasMore, setHasMore] = useState(true)
     const modalContentRef = useRef<HTMLDivElement>(null)
+    const { createSpace, chooseCopilotTemplate } = useCreateSpace()
 
     // 加载模板数据
     const loadTemplates = async (reset = false, newPage: number | null = null) => {
@@ -133,6 +115,17 @@ export default function TemplateDialog({
         if (scrollHeight - scrollTop - clientHeight < 100) {
             loadTemplates()
         }
+    }
+
+    const onCreateSpace = async (data: Template | null) => {
+
+        if (!data) {
+            await createSpace(AppType.Copilot);
+        } else {
+            await chooseCopilotTemplate(data.id)
+        }
+        onClose()
+
     }
 
     // Add scroll event listener
@@ -222,11 +215,11 @@ export default function TemplateDialog({
                         <div className="flex-1 p-6 overflow-y-auto" ref={modalContentRef} onScroll={handleScroll}>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {/* Blank template always displayed first */}
-                                <TemplateCard template={BLANK_TEMPLATE} />
+                                <TemplateCard template={BLANK_TEMPLATE} chooseCopilotTemplate={() => onCreateSpace(null)} />
 
                                 {/* API returned templates */}
                                 {templates?.map((template) => (
-                                    <TemplateCard key={template.id} template={template} chooseCopilotTemplate={chooseCopilotTemplate}/>
+                                    <TemplateCard key={template.id} template={template} chooseCopilotTemplate={onCreateSpace}/>
                                 ))}
 
                                 {/* Loading state */}
@@ -274,10 +267,10 @@ export default function TemplateDialog({
 }
 
 // Template card component
-function TemplateCard({ template,chooseCopilotTemplate }: { template: Template | typeof BLANK_TEMPLATE,chooseCopilotTemplate: (template: number) => void }) {
+function TemplateCard({ template,chooseCopilotTemplate }: { template: Template | typeof BLANK_TEMPLATE,chooseCopilotTemplate: (template: Template) => void }) {
     const [isHovered, setIsHovered] = useState(false)
 
-    const isBlank = template.id === "blank"
+    const isBlank = template.id === 0
 
     return (
         <div
@@ -318,7 +311,7 @@ function TemplateCard({ template,chooseCopilotTemplate }: { template: Template |
                 )}
             >
                 <Button className="w-full transition-colors hover:bg-primary/90 hover:text-primary-foreground" size="lg" onClick={()=>{
-                    chooseCopilotTemplate(template.id)
+                    chooseCopilotTemplate(template)
                 }}>
                     Use
                 </Button>

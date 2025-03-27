@@ -29,7 +29,7 @@ export const documentTypes = [1, 2, 3].map((k) => {
 export function CreateSpace() {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedType, setSelectedType] = useState<AppType | null>(null)
-    const {createSpace, chooseCopilotTemplate} = useCreateSpace()
+    const {createSpace} = useCreateSpace()
 
     const handleItemClick = (type: AppType) => {
         if (+type !== AppType.Copilot) {
@@ -46,7 +46,6 @@ export function CreateSpace() {
             //     return <DatasetCreation />
             case AppType.Copilot:
                 return <CopilotCreation
-                    chooseCopilotTemplate={chooseCopilotTemplate}
                     onClose={() => {
                         setSelectedType(null)
                         setIsOpen(false)
