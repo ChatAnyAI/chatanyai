@@ -21,6 +21,8 @@ const HomePage = lazy(() => import('@/app/front/home/page'));
 const Meeting = lazy(() => import('@/app/front/meeting/page'));
 const MeetingInfo = lazy(() => import('@/app/front/meeting/info/page'));
 const SpaceSetting = lazy(() => import('@/app/front/space/page'));
+const NotePage = lazy(() => import('@/app/front/note/page'));
+
 const NotFound = lazy(() => import('@/app/not-found'));
 
 const AdminLayout = lazy(() => import('@/app/admin/layout'));
@@ -72,6 +74,14 @@ const router = createBrowserRouter(
             </Suspense>
           }>
         </Route>
+          <Route
+              path="/note"
+              element={
+                  <Suspense fallback={<Loading />}>
+                      <NotePage />
+                  </Suspense>
+              }>
+          </Route>
         <Route
           path="/dataset/:datasetId/docList"
           element={
