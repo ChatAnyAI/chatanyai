@@ -174,6 +174,7 @@ export const ApiSpaceDrag = (data: SpaceChangeSortReq) => {
 // App APIs
 export interface AppResp {
   id: string;
+  guid: string;
   name: string;
   description: string;
   icon: string;

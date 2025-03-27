@@ -1,5 +1,5 @@
 import { useState } from "react"
-import {ApiAllUserList, ApiChatShareList, AvatarUser, User, UserProfile} from "@/service/api"
+import {ApiAllUserList, ApiChatShareList, AvatarUser, ShareUser, User, UserProfile} from "@/service/api"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -21,8 +21,8 @@ import {InviteScreen} from "@/components/share/invite-screen";
 import useSWR from "swr";
 
 export function MembersTab() {
-  const [users, setUsers] = useState<User[]>([])
-  const [spaceUsers, setSpaceUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<ShareUser[]>([])
+  const [spaceUsers, setSpaceUsers] = useState<ShareUser[]>([])
   // const [searchQuery, setSearchQuery] = useState("")
   // const [searching, setSearching] = useState(false)
   const { appId } = useParams()
@@ -71,7 +71,7 @@ export function MembersTab() {
   // }
 
   // Remove user from space
-  const removeUserFromSpace = async (user: User) => {
+  const removeUserFromSpace = async (user: ShareUser) => {
     await ApiAppShareDelete(appId!, user.id)
     setSpaceUsers(spaceUsers.filter((u) => u.id !== user.id))
     setUsers([...users, user])

@@ -57,7 +57,7 @@ export const useCreateSpace = () => {
     toast({
       title: 'Space created successfully',
     });
-    navigator(`/${RouteEnum[AppType.Copilot]}/${res.id}`);
+    navigator(`/${RouteEnum[AppType.Copilot]}/${res.guid}`);
 
   }
 

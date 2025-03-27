@@ -37,6 +37,7 @@ const formatNumber = (num: number) => {
 
 interface TemplateDialogProps {
     onClose: () => void
+    chooseCopilotTemplate: (template: number) => void
 }
 
 // Sidebar categories
@@ -67,7 +68,8 @@ const categories = [
     "Selection",
 ]
 
-export default function TemplateDialog({ onClose = () => { } }: TemplateDialogProps) {
+export default function TemplateDialog({
+                                           onClose = () => { }, chooseCopilotTemplate }: TemplateDialogProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedCategory, setSelectedCategory] = useState(categories[0])
     const [templates, setTemplates] = useState<Template[]>([])
@@ -224,7 +226,7 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
 
                                 {/* API returned templates */}
                                 {templates?.map((template) => (
-                                    <TemplateCard key={template.id} template={template} />
+                                    <TemplateCard key={template.id} template={template} chooseCopilotTemplate={chooseCopilotTemplate}/>
                                 ))}
 
                                 {/* Loading state */}
@@ -272,7 +274,7 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
 }
 
 // Template card component
-function TemplateCard({ template }: { template: Template | typeof BLANK_TEMPLATE }) {
+function TemplateCard({ template,chooseCopilotTemplate }: { template: Template | typeof BLANK_TEMPLATE,chooseCopilotTemplate: (template: number) => void }) {
     const [isHovered, setIsHovered] = useState(false)
 
     const isBlank = template.id === "blank"
@@ -315,7 +317,9 @@ function TemplateCard({ template }: { template: Template | typeof BLANK_TEMPLATE
                     isHovered && "opacity-100",
                 )}
             >
-                <Button className="w-full transition-colors hover:bg-primary/90 hover:text-primary-foreground" size="lg">
+                <Button className="w-full transition-colors hover:bg-primary/90 hover:text-primary-foreground" size="lg" onClick={()=>{
+                    chooseCopilotTemplate(template.id)
+                }}>
                     Use
                 </Button>
             </div>
