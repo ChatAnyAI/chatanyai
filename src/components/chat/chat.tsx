@@ -2,7 +2,7 @@
 
 import type { Attachment, Message } from 'ai';
 import { useChat } from 'ai/react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useSWRConfig } from 'swr';
 
 import { ChatHeader } from '@/components/chat/chat-header';
@@ -12,9 +12,9 @@ import { Messages } from './messages';
 import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { RespChat } from "@/service/api";
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 
-export function Chat({
+ function Chat({
   hiddenHeader,
   id,
   initialMessages,
@@ -37,7 +37,6 @@ export function Chat({
 }) {
   const { settingData } = useRightSetting();
   const { mutate } = useSWRConfig();
-  const { toast } = useToast();
 
   const {
     messages,
@@ -74,9 +73,10 @@ export function Chat({
   });
   if (error) { 
     console.error(error);
+    stop();
     toast({
       title: "Error",
-      description: "Failed to load chat. Please try again.",
+      description: "Failed to chat. Please check model provider setting.",
       variant: "destructive"
     });
   }
@@ -132,3 +132,6 @@ export function Chat({
     </>
   );
 }
+
+const MemoizedChat = memo(Chat);
+export { MemoizedChat as Chat };

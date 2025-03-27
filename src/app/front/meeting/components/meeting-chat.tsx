@@ -8,7 +8,7 @@ import { useBlockSelector } from '@/hooks/use-block';
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { MeetingData } from './meeting-setting';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export default function Chat({
   id,
@@ -35,8 +35,6 @@ export default function Chat({
   const currentName = useRef("");
   const { chatId } = useParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
-
 
   const {
     messages,
@@ -154,7 +152,7 @@ export default function Chat({
     console.error(error);
     toast({
       title: "Error",
-      description: "Failed to load chat. Please try again.",
+      description: "Failed to chat. Please check model provider setting.",
       variant: "destructive"
     });
   }
