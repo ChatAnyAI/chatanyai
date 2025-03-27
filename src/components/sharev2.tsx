@@ -117,7 +117,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                         <input
                                             type="text"
                                             placeholder="Email or group, separated by commas"
-                                            className="w-full px-3 py-2 text-sm border rounded-lg border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                            className="w-full px-3 py-2 text-sm border rounded-lg border-blue-300 focus:outline-hidden focus:ring-2 focus:ring-blue-300"
                                             onClick={() => setShowInviteScreen(true)}
                                         />
                                     </div>
@@ -238,7 +238,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                         onClick={() => handleVisibilityChange?.(AppVisibility.Private)}
                                                     >
                                                         <Lock className="h-4 w-4 text-gray-500" />
-                                                        <span className="flex-grow text-sm">Only people invited</span>
+                                                        <span className="grow text-sm">Only people invited</span>
                                                         {accessType === AppVisibility.Private && <Check className="h-3.5 w-3.5" />}
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
@@ -248,7 +248,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                         <div className="w-4 h-4 rounded-full flex items-center justify-center">
                                                             <Users />
                                                         </div>
-                                                        <span className="flex-grow text-sm">Everyone at Your Team</span>
+                                                        <span className="grow text-sm">Everyone at Your Team</span>
                                                         {accessType === AppVisibility.Internal && <Check className="h-3.5 w-3.5" />}
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
@@ -258,7 +258,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                                         <div className="w-4 h-4 rounded-full flex items-center justify-center">
                                                             <Earth />
                                                         </div>
-                                                        <span className="flex-grow text-sm">Everyone with the link</span>
+                                                        <span className="grow text-sm">Everyone with the link</span>
                                                         {accessType === AppVisibility.Public && <Check className="h-3.5 w-3.5" />}
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>

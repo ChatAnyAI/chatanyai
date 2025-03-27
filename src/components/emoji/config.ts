@@ -24753,7 +24753,7 @@ export const alias = {
         "ban"
     ],
     "🖖": [
-        "raised hand with part between middle and ring fingers",
+        "raised hand with part between middle and ring-3 fingers",
         "spock hand",
         "vulcan salute",
         "finger",
@@ -30914,7 +30914,7 @@ export const alias = {
         "boat"
     ],
     "🛟": [
-        "ring buoy"
+        "ring-3 buoy"
     ],
     "⛵": [
         "sailboat",
@@ -33061,7 +33061,7 @@ export const alias = {
         "woman"
     ],
     "💍": [
-        "ring",
+        "ring-3",
         "diamond",
         "wedding",
         "propose",

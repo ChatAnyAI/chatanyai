@@ -116,7 +116,7 @@ export function SidebarOverlay({ onClick }: SidebarOverlayProps) {
   const sidebarWidth = isMobile ? 0 : isCollapsed ? "var(--sidebar-width-icon)" : "var(--sidebar-width)"
   return (
     <div
-      className="fixed top-0 bottom-0 right-0 z-40 bg-black/10 backdrop-blur-sm"
+      className="fixed top-0 bottom-0 right-0 z-40 bg-black/10 backdrop-blur-xs"
       style={{ left: sidebarWidth, zIndex: isMobile ? 998 : 48, }}
       onClick={onClick}
     />

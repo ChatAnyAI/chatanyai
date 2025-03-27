@@ -70,7 +70,7 @@ export default function DashboardPage() {
                     initial={{opacity: 0, y: 10}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.5}}
-                    className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 p-5 sm:p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
+                    className="mb-8 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 p-5 sm:p-6 rounded-xl shadow-xs hover:shadow-md transition-shadow duration-300"
                 >
                     <h1 className="text-xl sm:text-2xl font-bold mb-2">Hello, {user.name}</h1>
                     <p className="text-muted-foreground">Welcome back to your workspace</p>
@@ -119,7 +119,7 @@ export default function DashboardPage() {
                                     key={index}
                                 >
                                     <Link to={`/${RouteEnum[application.type!]}/${application.id}`}
-                                          className={`block border rounded-lg p-4 shadow-sm transition-all duration-300 ${color}`}
+                                          className={`block border rounded-lg p-4 shadow-xs transition-all duration-300 ${color}`}
                                     >
                                         <div className="flex items-start justify-between">
                                             <div className="w-full">
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                 {/*            <span className="hidden sm:inline">Refresh</span>*/}
                 {/*        </Button>*/}
                 {/*    </div>*/}
-                {/*    <div className="border rounded-lg p-4 sm:p-5 bg-background shadow-sm">*/}
+                {/*    <div className="border rounded-lg p-4 sm:p-5 bg-background shadow-xs">*/}
                 {/*        <div className="space-y-3 sm:space-y-4">*/}
                 {/*            {[*/}
                 {/*                {*/}
@@ -306,7 +306,7 @@ export default function DashboardPage() {
                 {/*                transition={{ duration: 0.3, delay: 0.1 * i + 0.6 }}*/}
                 {/*                whileHover={{ y: -5, transition: { duration: 0.2 } }}*/}
                 {/*            >*/}
-                {/*                <Card className="p-3 sm:p-4 space-y-3 sm:space-y-4 h-full shadow-sm hover:shadow-md transition-all duration-300">*/}
+                {/*                <Card className="p-3 sm:p-4 space-y-3 sm:space-y-4 h-full shadow-xs hover:shadow-md transition-all duration-300">*/}
                 {/*                    <div className="aspect-video bg-muted rounded-lg overflow-hidden">*/}
                 {/*                        <img src={tutorial.image} alt={tutorial.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />*/}
                 {/*                    </div>*/}
@@ -343,7 +343,7 @@ function HistoryItem({item}: { item: ApiHomeRecentChatItem }) {
                         <div className="flex items-center">
                             <div className="text-sm font-medium truncate mr-2">{item.title}</div>
                             <div
-                                className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0">{new Date(item.updatedAt * 1000).toLocaleString()}</div>
+                                className="text-xs text-zinc-500 dark:text-zinc-400 shrink-0">{new Date(item.updatedAt * 1000).toLocaleString()}</div>
                         </div>
                         <div>
                             <span className="text-xs text-zinc-600 dark:text-zinc-300 truncate">From {item.appName}</span>
@@ -361,7 +361,7 @@ function HistoryItem({item}: { item: ApiHomeRecentChatItem }) {
                     </div>
                 </div>
 
-                <div className="flex items-center space-x-4 ml-4 flex-shrink-0">
+                <div className="flex items-center space-x-4 ml-4 shrink-0">
                     <div className="flex items-center space-x-1">
                         <MessageSquare className="h-3.5 w-3.5 text-zinc-500"/>
                         <span className="text-xs text-zinc-500 dark:text-zinc-400">{item.msgCount}</span>

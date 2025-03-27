@@ -68,7 +68,7 @@ export function NavHeader({
         <SidebarGroup className={cn(className)}>
             {
                 groupName ?
-                    <div className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-sm rounded-md cursor-pointer" : "")} onClick={() => {
+                    <div className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-xs rounded-md cursor-pointer" : "")} onClick={() => {
                         if (!groupRoute) return;
                         onClickMenu(null);
                         navigator(groupRoute);

@@ -122,7 +122,7 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                         ))}
                         <input
                             type="text"
-                            className="flex-1 min-w-[200px] outline-none text-sm"
+                            className="flex-1 min-w-[200px] outline-hidden text-sm"
                             placeholder={selectedUsers.length ? "" : "Email or group, separated by commas"}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -217,7 +217,7 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                     </div>
                     {/*<textarea*/}
                     {/*    placeholder="Add a message to your invite..."*/}
-                    {/*    className="w-full p-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300"*/}
+                    {/*    className="w-full p-3 text-sm border rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-300 focus:border-blue-300"*/}
                     {/*    value={message}*/}
                     {/*    onChange={(e) => setMessage(e.target.value)}*/}
                     {/*    rows={3}*/}

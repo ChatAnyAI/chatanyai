@@ -91,7 +91,7 @@ export default function UserSettingsPage() {
                             </div>
                             <div className="flex flex-col items-center gap-2">
                                 <div 
-                                    className="h-16 w-16 rounded-full bg-gradient-to-br from-green-400 to-blue-500 relative cursor-pointer group"
+                                    className="h-16 w-16 rounded-full bg-linear-to-br from-green-400 to-blue-500 relative cursor-pointer group"
                                     onClick={() => fileInputRef.current?.click()}
                                 >
                                     {/* Display user avatar with error handling */}
@@ -156,7 +156,7 @@ export default function UserSettingsPage() {
                                 <SelectTrigger className="w-[250px]">
                                     <SelectValue>
                                         <div className="flex items-center">
-                                            <div className="h-5 w-5 rounded-full bg-gradient-to-br from-green-400 to-blue-500 mr-2" />
+                                            <div className="h-5 w-5 rounded-full bg-linear-to-br from-green-400 to-blue-500 mr-2" />
                                             {user.teams?.[0]?.name}
                                         </div>
                                     </SelectValue>
@@ -167,7 +167,7 @@ export default function UserSettingsPage() {
                                         user.teams?.map(team => (
                                             <SelectItem key={team.teamId} value={String(team.teamId)}>
                                                 <div className="flex items-center">
-                                                    <div className="h-5 w-5 rounded-full bg-gradient-to-br from-green-400 to-blue-500 mr-2" />
+                                                    <div className="h-5 w-5 rounded-full bg-linear-to-br from-green-400 to-blue-500 mr-2" />
                                                     {team.name}
                                                 </div>
                                             </SelectItem>
@@ -175,7 +175,7 @@ export default function UserSettingsPage() {
                                     }
                                     <SelectItem value="personal">
                                         <div className="flex items-center">
-                                            <div className="h-5 w-5 rounded-full bg-gradient-to-br from-green-400 to-blue-500 mr-2" />
+                                            <div className="h-5 w-5 rounded-full bg-linear-to-br from-green-400 to-blue-500 mr-2" />
                                             allentatakai's project
                                         </div>
                                     </SelectItem>

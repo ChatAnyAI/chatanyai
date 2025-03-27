@@ -198,7 +198,7 @@ export default function LicensePage() {
 
                     <CardContent className="grid gap-8">
                         {/* License Status Area */}
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border rounded-lg p-6">
+                        <div className="bg-linear-to-br from-blue-50 to-indigo-50 border rounded-lg p-6">
                             <h3 className="text-lg font-medium mb-4 text-blue-800">License Status</h3>
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-4">
@@ -344,7 +344,7 @@ export default function LicensePage() {
                         </div>
 
                         {/* Included Features */}
-                        <div className="border rounded-lg p-6 bg-gradient-to-br from-gray-50 to-gray-100">
+                        <div className="border rounded-lg p-6 bg-linear-to-br from-gray-50 to-gray-100">
                             <h3 className="text-lg font-medium mb-4 text-gray-800">Included Features</h3>
                             <div className="grid md:grid-cols-2 gap-4">
                                 {licenseInfo.features.map((feature, index) => (
@@ -359,7 +359,7 @@ export default function LicensePage() {
                         </div>
                     </CardContent>
 
-                    <CardFooter className="bg-gradient-to-br from-gray-50 to-blue-50 border-t px-6 py-4">
+                    <CardFooter className="bg-linear-to-br from-gray-50 to-blue-50 border-t px-6 py-4">
                         <div className="flex justify-between items-center w-full text-sm text-gray-500">
                             <div>
                                 <p>

@@ -73,7 +73,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
                     <div className="p-4 space-y-4 w-full">
                         {Array(3).fill(0).map((_, i) => (
                             <div key={i} className="flex items-start gap-3 w-full">
-                                <Skeleton className="h-10 w-10 flex-shrink-0 rounded-md" />
+                                <Skeleton className="h-10 w-10 shrink-0 rounded-md" />
                                 <div className="space-y-2 flex-1 min-w-0">
                                     <Skeleton className="h-5 w-full" />
                                     <Skeleton className="h-4 w-3/4" />
@@ -96,7 +96,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
                                             className="flex items-center p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors w-full"
                                             onClick={() => handleItemClick(item)}
                                         >
-                                            <div className="flex items-center gap-2 flex-shrink-0">
+                                            <div className="flex items-center gap-2 shrink-0">
                                                 {getItemIcon(item)}
                                             </div>
                                             <div className="flex-1 min-w-0 ml-2">

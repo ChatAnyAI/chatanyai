@@ -120,7 +120,7 @@ export function NavGroup({
     <SidebarGroup className={className}>
       {
         groupName ?
-          <div data-name={groupName} className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-sm rounded-md cursor-pointer" : "")} onClick={() => {
+          <div data-name={groupName} className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-xs rounded-md cursor-pointer" : "")} onClick={() => {
             if (!groupRoute) return;
             onClickMenu(null);
             navigator(groupRoute);

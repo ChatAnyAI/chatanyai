@@ -91,7 +91,7 @@ export default function Login() {
     return (
         <>
         <Navbar />
-        <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 via-white to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="flex flex-col min-h-screen bg-linear-to-b from-blue-50 via-white to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
             <div className="flex-1 flex items-center justify-center px-4 py-24">
                 <div className="w-full max-w-md">
                     {/* Background decoration */}
@@ -104,7 +104,7 @@ export default function Login() {
                     {/* Floating Error Modal */}
                     <AnimatePresence>
                         {error && (
-                            <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                            <div className="fixed inset-0 bg-black/20 dark:bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center">
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     animate={{ opacity: 1, scale: 1 }}
@@ -123,7 +123,7 @@ export default function Login() {
                                     <div className="flex justify-end">
                                         <Button
                                             onClick={() => setError("")}
-                                            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
+                                            className="bg-linear-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
                                         >
                                             OK
                                         </Button>
@@ -162,7 +162,7 @@ export default function Login() {
                                             required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
                                             placeholder="you@example.com"
                                         />
                                     </div>
@@ -191,7 +191,7 @@ export default function Login() {
                                             required
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
                                             placeholder="••••••••"
                                         />
                                     </div>
@@ -200,7 +200,7 @@ export default function Login() {
                                 <div>
                                     <Button
                                         type="submit"
-                                        className="w-full bg-gradient-to-r from-blue-400 to-purple-400 text-white hover:from-blue-500 hover:to-purple-500 border-none transition-all duration-300"
+                                        className="w-full bg-linear-to-r from-blue-400 to-purple-400 text-white hover:from-blue-500 hover:to-purple-500 border-none transition-all duration-300"
                                         disabled={isLoading}
                                     >
                                         {isLoading ? (
@@ -222,8 +222,8 @@ export default function Login() {
                     </motion.div>
 
                     {/* Decorative elements */}
-                    <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
-                    <div className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
+                    <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-linear-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
+                    <div className="absolute -top-4 -left-4 w-24 h-24 bg-linear-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
                 </div>
             </div>
         </div>

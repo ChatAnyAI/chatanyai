@@ -135,7 +135,7 @@ export default function DiscussionSetup({
           </div>
 
           {/* Topic Section */}
-          <Card className="shadow-sm">
+          <Card className="shadow-xs">
             <CardHeader className="space-y-1 py-3 px-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 bg-primary/20 rounded-lg flex items-center justify-center">
@@ -163,7 +163,7 @@ export default function DiscussionSetup({
           </Card>
 
           {/* MaxRounds Setting */}
-          <Card className="shadow-sm">
+          <Card className="shadow-xs">
             <CardHeader className="space-y-1 py-3 px-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 bg-primary/20 rounded-lg flex items-center justify-center">
@@ -188,7 +188,7 @@ export default function DiscussionSetup({
           </Card>
 
           {/* Character Settings */}
-          <Card className="shadow-sm">
+          <Card className="shadow-xs">
             <CardHeader className="space-y-1 py-3 px-4">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 bg-primary/20 rounded-lg flex items-center justify-center">
@@ -210,7 +210,7 @@ export default function DiscussionSetup({
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {/* Character Cards */}
                 {members.map((character) => (
-                    <Card key={character.id} className="shadow-sm">
+                    <Card key={character.id} className="shadow-xs">
                       <CardContent className="p-3 space-y-3">
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">

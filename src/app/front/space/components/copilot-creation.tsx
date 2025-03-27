@@ -285,7 +285,7 @@ function TemplateCard({ template,chooseCopilotTemplate }: { template: Template |
             {/* Card header */}
             <div className="p-5 border-b border-border bg-muted/10">
                 <div className="flex items-center space-x-4">
-                    <div className="flex-shrink-0 h-14 w-14 flex items-center justify-center rounded-full bg-background border border-border shadow-sm">
+                    <div className="shrink-0 h-14 w-14 flex items-center justify-center rounded-full bg-background border border-border shadow-xs">
                         <span className="text-2xl">{template.icon}</span>
                     </div>
                     <h3 className="font-medium line-clamp-2">{template.name}</h3>
@@ -306,7 +306,7 @@ function TemplateCard({ template,chooseCopilotTemplate }: { template: Template |
             {/* Use button shown on hover */}
             <div
                 className={cn(
-                    "absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-background via-background/95 to-transparent opacity-0 transition-opacity duration-200",
+                    "absolute inset-x-0 bottom-0 p-4 bg-linear-to-t from-background via-background/95 to-transparent opacity-0 transition-opacity duration-200",
                     isHovered && "opacity-100",
                 )}
             >

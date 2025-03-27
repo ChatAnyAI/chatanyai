@@ -36,7 +36,7 @@ export function ChatList({ chats, onMenuOpen }: ChatListProps) {
 
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center">
-                <div className="w-6 h-6 rounded bg-gradient-to-br from-pink-400 to-orange-300 mr-2"></div>
+                <div className="w-6 h-6 rounded bg-linear-to-br from-pink-400 to-orange-300 mr-2"></div>
                 <span className="text-gray-600">username</span>
                 <span className="text-gray-400 text-sm ml-2">{dayjs.unix(chat.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
               </div>

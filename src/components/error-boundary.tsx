@@ -51,7 +51,7 @@ function ErrorDisplay({ error, reset }: ErrorDisplayProps) {
   }, [error])
 
   return (
-    <div className="flex items-center justify-center min-h-[500px] p-4 bg-gradient-to-b from-background to-muted/30">
+    <div className="flex items-center justify-center min-h-[500px] p-4 bg-linear-to-b from-background to-muted/30">
       <div className="w-full max-w-md mx-auto text-center">
         {/* Error Icon */}
         <div className="mb-6 relative">
@@ -72,7 +72,7 @@ function ErrorDisplay({ error, reset }: ErrorDisplayProps) {
 
           {/* Error Details (collapsible for developers) */}
           <details className="mt-4 text-left bg-background border rounded-lg overflow-hidden">
-            <summary className="px-4 py-2 cursor-pointer font-medium text-sm hover:bg-muted/50 focus:outline-none">
+            <summary className="px-4 py-2 cursor-pointer font-medium text-sm hover:bg-muted/50 focus:outline-hidden">
               View Technical Details
             </summary>
             <div className="p-4 bg-muted/30 border-t text-sm font-mono overflow-auto max-h-[150px]">

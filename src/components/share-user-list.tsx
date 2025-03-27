@@ -70,7 +70,7 @@ export default function UserList({ appId, chatId }: { appId: string, chatId: str
                     />
                 </div>
             </div>
-            <ScrollArea className="flex-grow">
+            <ScrollArea className="grow">
                 <div className="p-2">
                     {filteredUsers.length === 0 ? (
                         <div className="text-center text-muted-foreground py-4 text-sm">No users found</div>

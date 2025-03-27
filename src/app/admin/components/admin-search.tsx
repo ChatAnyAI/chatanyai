@@ -25,7 +25,7 @@ export function AdminSearch({searchQuery, setSearchQuery} : AdminSearchProps) {
             {searchQuery && (
                 <button
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-sm"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-sm"
                     type="button"
                 >
                     <X className="h-4 w-4"/>

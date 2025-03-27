@@ -183,7 +183,7 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
     return (
         <div className="container mx-auto p-4 md:p-20 min-h-screen flex flex-col">
             <header className="mb-8">
-                <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold text-center bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                     AI PDF Chat Assistant
                 </h1>
                 <p className="text-center text-gray-500 mt-2">
