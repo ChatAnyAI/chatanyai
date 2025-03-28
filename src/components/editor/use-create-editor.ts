@@ -209,3 +209,39 @@ export const useCreateEditor = (
     deps
   );
 };
+
+
+
+export const useCoreEditor = (content: Value, {
+        components,
+        override,
+        readOnly,
+        ...options
+    }: {
+        components?: Record<string, any>;
+        plugins?: any[];
+        readOnly?: boolean;
+    } & Omit<CreatePlateEditorOptions, 'plugins'> = {},
+    deps: any[] = []
+) => {
+    return usePlateEditor<Value>(
+        {
+            override: {
+                components: {
+                    ...(readOnly ? viewComponents : withPlaceholders(editorComponents)),
+                    ...components,
+                },
+                ...override,
+            },
+            plugins: [
+                ...copilotPlugins,
+                ...editorPlugins,
+                FixedToolbarPlugin,
+                FloatingToolbarPlugin,
+            ],
+            value: content,
+            ...options,
+        },
+        deps
+    );
+};
