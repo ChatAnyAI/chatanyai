@@ -7,6 +7,8 @@ import { useState, FormEvent, useRef } from "react"
 import { toast } from "@/hooks/use-toast" // Assuming you have a toast component
 import { useGlobalStore } from "@/store/globalStore"
 import { useTheme } from "next-themes"
+import {DefaultAvatar} from "@/components/user-avatar";
+import * as React from "react";
 
 export default function UserSettingsPage() {
     const { theme, setTheme} = useTheme()
@@ -34,6 +36,7 @@ export default function UserSettingsPage() {
             setIsUploading(true)
             // Call the ApiDriveUpload function to upload the image
             const response = await ApiDriveUpload(file)
+            console.log("response",response)
             if (response?.url) {
                 // setProfilePicture(response.url)
                 await ApiUserSetting(response.url as string);
@@ -41,6 +44,7 @@ export default function UserSettingsPage() {
                     ...user,
                     avatar: response.url
                 });
+
                 toast({
                     title: "Upload Successful",
                     description: "Profile picture uploaded successfully.",
@@ -57,7 +61,7 @@ export default function UserSettingsPage() {
             setIsUploading(false)
         }
     }
-    
+    console.log("user",user)
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
         try {
@@ -91,7 +95,7 @@ export default function UserSettingsPage() {
                             </div>
                             <div className="flex flex-col items-center gap-2">
                                 <div 
-                                    className="h-16 w-16 rounded-full bg-linear-to-br from-green-400 to-blue-500 relative cursor-pointer group"
+                                    className="h-16 w-16 rounded-full bg-linear-to-br  relative cursor-pointer group"
                                     onClick={() => fileInputRef.current?.click()}
                                 >
                                     {/* Display user avatar with error handling */}
@@ -104,7 +108,8 @@ export default function UserSettingsPage() {
                                         />
                                     ) : (
                                         <div className="h-full w-full rounded-full flex items-center justify-center text-white font-semibold text-xl">
-                                            {user.name ? getInitials(user.name) : <User className="h-8 w-8" />}
+                                            {/*{user.name ? getInitials(user.name) : <User className="h-8 w-8" />}*/}
+                                            {user.avatar.includes("default://") ? <DefaultAvatar user={user} />:null}
                                         </div>
                                     )}
                                     
