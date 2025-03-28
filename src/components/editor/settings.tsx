@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, createContext, useContext, useState } from 'react';
+import { type ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 import { cn } from '@udecode/cn';
 import { CopilotPlugin } from '@udecode/plate-ai/react';
@@ -38,158 +38,149 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/plate-ui/popover';
+import { useChatStore } from '@/store/chatStore';
 
-interface Model {
-  label: string;
-  value: string;
-}
 
-interface SettingsContextType {
-  keys: Record<string, string>;
-  model: Model;
-  setKey: (service: string, key: string) => void;
-  setModel: (model: Model) => void;
-}
+// interface SettingsContextType {
+//   keys: Record<string, string>;
+//   model: string;
+//   setKey: (service: string, key: string) => void;
+//   setModel: (model: string) => void;
+// }
 
-export const models: Model[] = [
-  { label: 'gpt-4o-mini', value: 'gpt-4o-mini' },
-  { label: 'gpt-4o', value: 'gpt-4o' },
-  { label: 'gpt-4-turbo', value: 'gpt-4-turbo' },
-  { label: 'gpt-4', value: 'gpt-4' },
-  { label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo' },
-  { label: 'gpt-3.5-turbo-instruct', value: 'gpt-3.5-turbo-instruct' },
-];
 
-const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined
-);
 
-export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [keys, setKeys] = useState({
-    openai: '',
-    uploadthing: '',
-  });
-  const [model, setModel] = useState<Model>(models[0]);
+// const SettingsContext = createContext<SettingsContextType | undefined>(
+//   undefined
+// );
 
-  const setKey = (service: string, key: string) => {
-    setKeys((prev) => ({ ...prev, [service]: key }));
-  };
+// export function SettingsProvider({ children }: { children: ReactNode }) {
 
-  return (
-    <SettingsContext.Provider value={{ keys, model, setKey, setModel }}>
-      {children}
-    </SettingsContext.Provider>
-  );
-}
+//   return (
+//     <SettingsContext.Provider>
+//       {children}
+//     </SettingsContext.Provider>
+//   );
+// }
 
-export function useSettings() {
-  const context = useContext(SettingsContext);
+// export function useSettings() {
+//   const context = useContext(SettingsContext);
 
-  return (
-    context ?? {
-      keys: {
-        openai: '',
-        uploadthing: '',
-      },
-      model: models[0],
-      setKey: () => {},
-      setModel: () => {},
-    }
-  );
-}
+//   return (
+//     context ?? {
+//       keys: {
+//         openai: '',
+//         uploadthing: '',
+//       },
+//       model: models[0],
+//       setKey: () => {},
+//       setModel: () => {},
+//     }
+//   );
+// }
 
 export function SettingsDialog() {
-  const { keys, model, setKey, setModel } = useSettings();
-  const [tempKeys, setTempKeys] = useState(keys);
-  const [showKey, setShowKey] = useState<Record<string, boolean>>({});
+  // const { keys, model, setKey, setModel } = useSettings();
+  // const [tempKeys, setTempKeys] = useState(keys);
+  // const [showKey, setShowKey] = useState<Record<string, boolean>>({});
+  const models = useChatStore((s) => s.models);
+  const _model = useChatStore((s) => s.modelSelectedId);
+  const setModelSelectedId = useChatStore((s) => s.setModelSelectedId);
   const [open, setOpen] = useState(false);
   const [openModel, setOpenModel] = useState(false);
+  const [model, setModel] = useState<string>();
+
+
+  useEffect(() => { 
+    setModel(_model);
+  }, [_model])
 
   const { getOptions, setOption } = useEditorPlugin(CopilotPlugin);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    Object.entries(tempKeys).forEach(([service, key]) => {
-      setKey(service, key);
-    });
+    // Object.entries(tempKeys).forEach(([service, key]) => {
+    //   setKey(service, key);
+    // });
     setOpen(false);
+    setModelSelectedId(model!);
 
-    // Update AI options if needed
+    // // Update AI options if needed
     const completeOptions = getOptions().completeOptions ?? {};
     setOption('completeOptions', {
       ...completeOptions,
       body: {
         ...completeOptions.body,
-        apiKey: tempKeys.openai,
-        model: model.value,
+        // apiKey: tempKeys.openai,
+        model: model,
       },
     });
   };
 
-  const toggleKeyVisibility = (key: string) => {
-    setShowKey((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  // const toggleKeyVisibility = (key: string) => {
+  //   setShowKey((prev) => ({ ...prev, [key]: !prev[key] }));
+  // };
 
-  const renderApiKeyInput = (service: string, label: string) => (
-    <div className="group relative">
-      <div className="flex items-center justify-between">
-        <label
-          className="absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm text-muted-foreground/70 transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-foreground"
-          htmlFor={label}
-        >
-          <span className="inline-flex bg-background px-2">{label}</span>
-        </label>
-        <Button
-          asChild
-          size="icon"
-          variant="ghost"
-          className="absolute top-0 right-[28px] h-full"
-        >
-          <a
-            className="flex items-center"
-            href={
-              service === 'openai'
-                ? 'https://platform.openai.com/api-keys'
-                : 'https://uploadthing.com/dashboard'
-            }
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <ExternalLinkIcon className="size-4" />
-            <span className="sr-only">Get {label}</span>
-          </a>
-        </Button>
-      </div>
+  // const renderApiKeyInput = (service: string, label: string) => (
+  //   <div className="group relative">
+  //     <div className="flex items-center justify-between">
+  //       <label
+  //         className="absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm text-muted-foreground/70 transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-foreground"
+  //         htmlFor={label}
+  //       >
+  //         <span className="inline-flex bg-background px-2">{label}</span>
+  //       </label>
+  //       <Button
+  //         asChild
+  //         size="icon"
+  //         variant="ghost"
+  //         className="absolute top-0 right-[28px] h-full"
+  //       >
+  //         <a
+  //           className="flex items-center"
+  //           href={
+  //             service === 'openai'
+  //               ? 'https://platform.openai.com/api-keys'
+  //               : 'https://uploadthing.com/dashboard'
+  //           }
+  //           rel="noopener noreferrer"
+  //           target="_blank"
+  //         >
+  //           <ExternalLinkIcon className="size-4" />
+  //           <span className="sr-only">Get {label}</span>
+  //         </a>
+  //       </Button>
+  //     </div>
 
-      <Input
-        id={label}
-        className="pr-10"
-        value={tempKeys[service]}
-        onChange={(e) =>
-          setTempKeys((prev) => ({ ...prev, [service]: e.target.value }))
-        }
-        placeholder=""
-        data-1p-ignore
-        type={showKey[service] ? 'text' : 'password'}
-      />
-      <Button
-        size="icon"
-        variant="ghost"
-        className="absolute top-0 right-0 h-full"
-        onClick={() => toggleKeyVisibility(service)}
-        type="button"
-      >
-        {showKey[service] ? (
-          <EyeOff className="size-4" />
-        ) : (
-          <Eye className="size-4" />
-        )}
-        <span className="sr-only">
-          {showKey[service] ? 'Hide' : 'Show'} {label}
-        </span>
-      </Button>
-    </div>
-  );
+  //     <Input
+  //       id={label}
+  //       className="pr-10"
+  //       value={tempKeys[service]}
+  //       onChange={(e) =>
+  //         setTempKeys((prev) => ({ ...prev, [service]: e.target.value }))
+  //       }
+  //       placeholder=""
+  //       data-1p-ignore
+  //       type={showKey[service] ? 'text' : 'password'}
+  //     />
+  //     <Button
+  //       size="icon"
+  //       variant="ghost"
+  //       className="absolute top-0 right-0 h-full"
+  //       onClick={() => toggleKeyVisibility(service)}
+  //       type="button"
+  //     >
+  //       {showKey[service] ? (
+  //         <EyeOff className="size-4" />
+  //       ) : (
+  //         <Eye className="size-4" />
+  //       )}
+  //       <span className="sr-only">
+  //         {showKey[service] ? 'Hide' : 'Show'} {label}
+  //       </span>
+  //     </Button>
+  //   </div>
+  // );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -237,7 +228,7 @@ export function SettingsDialog() {
             </div>
 
             <div className="space-y-4">
-              {renderApiKeyInput('openai', 'OpenAI API key')}
+              {/* {renderApiKeyInput('openai', 'OpenAI API key')} */}
 
               <div className="group relative">
                 <label
@@ -255,7 +246,7 @@ export function SettingsDialog() {
                       aria-expanded={openModel}
                       role="combobox"
                     >
-                      <code>{model.label}</code>
+                      <code>{models.find(m => m.model === model)?.label}</code>
                       <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
@@ -267,17 +258,17 @@ export function SettingsDialog() {
                         <CommandGroup>
                           {models.map((m) => (
                             <CommandItem
-                              key={m.value}
-                              value={m.value}
+                              key={m.model}
+                              value={m.model}
                               onSelect={() => {
-                                setModel(m);
+                                setModel(m.model);
                                 setOpenModel(false);
                               }}
                             >
                               <Check
                                 className={cn(
                                   'mr-2 size-4',
-                                  model.value === m.value
+                                  model === m.model
                                     ? 'opacity-100'
                                     : 'opacity-0'
                                 )}

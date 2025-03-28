@@ -3,18 +3,28 @@
 import { faker } from '@faker-js/faker';
 import { useChat as useBaseChat } from 'ai/react';
 
-import { useSettings } from '@/components/editor/settings';
+// import { useSettings } from '@/components/editor/settings';
+import { useParams } from 'react-router-dom';
 
 export const useChat = () => {
-  const { keys, model } = useSettings();
+  // const { keys, model } = useSettings();
+
+  const { chatId: id, appId } = useParams();
 
   return useBaseChat({
     id: 'editor',
-    api: '/api/ai/command',
+    api: `/api/app/${appId}/chat/${id}`,
     body: {
-      // !!! DEMO ONLY: don't use API keys client-side
-      apiKey: keys.openai,
-      model: model.value,
+      id,
+      modelId: 'openai-gpt-4o-mini',
+      options: {
+        // frequency_penalty: settingData.frequencyPenalty, // Optional: Frequency penalty, >= -2 and <= 2
+        // max_tokens: settingData.maxTokens,        // Optional: Maximum tokens, > 1
+        // presence_penalty: settingData.presencePenalty,  // Optional: Presence penalty, >= -2 and <= 2
+        // temperature: settingData.temperature,      // Optional: Sampling temperature, <= 2
+        // topP: settingData.topP,            // Optional: Nucleus sampling parameter, <= 1
+      },
+      appId,
     },
     fetch: async (input, init) => {
       const res = await fetch(input, init);
