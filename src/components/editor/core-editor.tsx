@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -10,22 +10,35 @@ import {useCoreEditor} from '@/components/editor/use-create-editor';
 import { SettingsDialog } from '@/components/editor/settings';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 import {Operation, withHistory} from "@udecode/plate";
+import {useNavigate, useParams} from "react-router-dom";
 
 interface EditorProps {
+    appId: string;
+    chatId: string;
     readOnly?: boolean;
-    uid: number;
     initialValue?: any;
     onChange?: (value: any) => void;
-    spaceGuid?: string;
     topHeader?: boolean;
     headerDom: React.ReactNode;
 }
 
 export function CoreEditor(props: EditorProps) {
-  const editor = useCoreEditor([]);
-    const { readOnly, uid, onChange, spaceGuid, initialValue, headerDom } = props;
+    const { readOnly, appId, onChange, chatId, initialValue, headerDom } = props;
+    const editor = useCoreEditor(initialValue);
     const historyEditor = withHistory(editor);
     const [changes, setChanges] = useState<Operation[]>([]);
+
+    // const navigate = useNavigate();
+    // const param = useParams();
+    //
+    // const submitForm = useCallback(() => {
+    //     // if (chatId !== param.chatId) {
+    //     //     navigate(`c/${chatId}`, { replace: true });
+    //     // }
+    // }, [
+    //     chatId,
+    // ]);
+
 
     const handleChange = (newValue: any) => {
         const operations = historyEditor.operations;
@@ -33,6 +46,7 @@ export function CoreEditor(props: EditorProps) {
         console.log('operations',operations)
         console.log('changes',changes)
         console.log('newValue',newValue)
+        // submitForm()
         onChange?.(newValue);
     };
 

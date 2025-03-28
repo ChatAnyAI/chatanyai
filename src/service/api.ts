@@ -206,7 +206,6 @@ export const ApiAppFavoriteDelete = (appId: string) => {
   return del<void>(`/api/app/favorite/${appId}`);
 }
 
-
 export type ExploreListRequest = {
   name: string;
   pagination: Pagination;
@@ -229,8 +228,6 @@ export interface UpdateAppInfoRequest {
   description?: string;
   icon?: string;
   copilotPrompt?: string;
-  datasetSource?: 1 | 2 | 3; // Assuming DatasetSource is already defined in your constants
-  visibility?: 1 | 2; // Assuming Visibility is already defined in your constants
   fileIds?: string[];
 }
 export const ApiUpdateAppInfo = (appId: string, data: UpdateAppInfoRequest) => {
@@ -636,6 +633,33 @@ export const ApiTemplateList = (group: string, pageToLoad: number) => {
     }
   });
 }
+
+export interface ApiCreateDocResp {
+    guid: string;
+}
+
+export const ApiCreateDoc = (appId: string) => {
+    return post<ApiCreateDocResp>(`/api/app/${appId}/doc`);
+}
+
+export interface DocInfo {
+    chatId: number;
+    name: string;
+}
+
+// /api/app/:appId/doc/-/list
+export const ApiDocList = (appId: string) => {
+    return get<DocInfo[]>(`/api/app/${appId}/doc/-/list`);
+}
+
+export interface ApiCreateDocResp {
+    content: string;
+}
+
+export const ApiGetDoc = (chatId: string) => {
+    return get<ApiCreateDocResp>(`/api/doc/${chatId}`);
+}
+
 
 // templates
 export const ApiTemplateChoose = (templateId: number) => {

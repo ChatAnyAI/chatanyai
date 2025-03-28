@@ -22,6 +22,7 @@ const Meeting = lazy(() => import('@/app/front/meeting/page'));
 const MeetingInfo = lazy(() => import('@/app/front/meeting/info/page'));
 const SpaceSetting = lazy(() => import('@/app/front/space/page'));
 const NotePage = lazy(() => import('@/app/front/note/page'));
+const NoteInfoPage = lazy(() => import('@/app/front/note/info/page'));
 
 const NotFound = lazy(() => import('@/app/not-found'));
 
@@ -118,6 +119,14 @@ const router = createBrowserRouter(
           element={
               <Suspense fallback={<Loading />}>
                   <NotePage />
+              </Suspense>
+          }>
+      </Route>
+      <Route
+          path="/note/:appId/c/:chatId"
+          element={
+              <Suspense fallback={<Loading />}>
+                  <NoteInfoPage />
               </Suspense>
           }>
       </Route>
