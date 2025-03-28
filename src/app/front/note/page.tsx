@@ -21,10 +21,10 @@ export default function Page() {
                 <DocList />
                 {/* Main content */}
                 <div className="h-screen " data-registry="plate">
-                    <CoreEditor
-                        appId={appId!}
-                        chatId={chatId}
-                    />
+                    {/*<CoreEditor*/}
+                    {/*    appId={appId!}*/}
+                    {/*    chatId={chatId}*/}
+                    {/*/>*/}
                 </div>
             </div>
         </RightSettingProvider>

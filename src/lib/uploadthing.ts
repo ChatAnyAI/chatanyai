@@ -34,7 +34,7 @@ export function useUploadFile({
   async function uploadThing(file: File) {
     setIsUploading(true);
     setUploadingFile(file);
-
+    console.log("11111")
     try {
       const res = await uploadFiles('editorUploader', {
         ...props,
@@ -43,6 +43,8 @@ export function useUploadFile({
           setProgress(Math.min(progress, 100));
         },
       });
+
+      console.log("res",res)
 
       setUploadedFile(res[0]);
 

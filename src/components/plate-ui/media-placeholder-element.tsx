@@ -67,8 +67,7 @@ export const MediaPlaceholderElement = withHOC(
 
       const { api } = useEditorPlugin(PlaceholderPlugin);
 
-      const { isUploading, progress, uploadedFile, uploadFile, uploadingFile } =
-        useUploadFile();
+      const { isUploading, progress, uploadedFile, uploadFile, uploadingFile } = useUploadFile();
 
       const loading = isUploading && uploadingFile;
 
