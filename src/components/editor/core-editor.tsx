@@ -11,6 +11,9 @@ import { SettingsDialog } from '@/components/editor/settings';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 import {Operation, withHistory} from "@udecode/plate";
 import {useNavigate, useParams} from "react-router-dom";
+import {ApiCreateDoc, ApiDocContent} from "@/service/api";
+import {RouteEnum} from "@/lib/constants/constants";
+import {toast} from "@/hooks/use-toast";
 
 interface EditorProps {
     appId: string;
@@ -48,6 +51,19 @@ export function CoreEditor(props: EditorProps) {
         console.log('newValue',newValue)
         // submitForm()
         onChange?.(newValue);
+
+
+        try {
+            ApiDocContent(appId,chatId,{
+                content: newValue.value
+            });
+        } catch (error) {
+            toast({
+                title: 'ApiDocContent Fail',
+                description: 'ApiDocContent Fail'+String(error),
+                variant: 'destructive'
+            });
+        }
     };
 
   return (

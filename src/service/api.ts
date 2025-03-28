@@ -642,6 +642,10 @@ export const ApiCreateDoc = (appId: string) => {
     return post<ApiCreateDocResp>(`/api/app/${appId}/doc`);
 }
 
+export const ApiDocContent = (appId: string,chatId: string,req:{content: string}) => {
+    return put<void>(`/api/app/${appId}/doc/${chatId}/content`,req);
+}
+
 export interface DocInfo {
     chatId: number;
     name: string;
