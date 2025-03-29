@@ -118,8 +118,10 @@ export const MediaPlaceholderElement = withHOC(
           };
 
           editor.tf.insertNodes(node, { at: path });
-
-          updateUploadHistory(editor, node);
+            // console.log("node",node)
+            // console.log("editor",editor.history.undos)
+            // todo 这里有bug
+          // updateUploadHistory(editor, node);
         });
 
         api.placeholder.removeUploadingFile(element.id as string);

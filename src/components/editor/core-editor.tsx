@@ -69,7 +69,7 @@ export function CoreEditor(props: EditorProps) {
   return (
       <DndProvider backend={HTML5Backend}>
           <Plate
-              editor={historyEditor}
+              editor={editor}
               readOnly={readOnly}
               onValueChange={handleChange}
           >

@@ -9,6 +9,7 @@ import type {
 import { generateReactHelpers } from '@uploadthing/react';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import {ApiDriveUpload, DriveCreateResponse} from "@/service/api";
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
 
@@ -26,7 +27,7 @@ export function useUploadFile({
   onUploadError,
   ...props
 }: UseUploadFileProps = {}) {
-  const [uploadedFile, setUploadedFile] = React.useState<UploadedFile>();
+  const [uploadedFile, setUploadedFile] = React.useState<DriveCreateResponse>();
   const [uploadingFile, setUploadingFile] = React.useState<File>();
   const [progress, setProgress] = React.useState<number>(0);
   const [isUploading, setIsUploading] = React.useState(false);
@@ -36,19 +37,20 @@ export function useUploadFile({
     setUploadingFile(file);
     console.log("11111")
     try {
-      const res = await uploadFiles('editorUploader', {
-        ...props,
-        files: [file],
-        onUploadProgress: ({ progress }) => {
-          setProgress(Math.min(progress, 100));
-        },
-      });
+      // const res = await uploadFiles('editorUploader', {
+      //   ...props,
+      //   files: [file],
+      //   onUploadProgress: ({ progress }) => {
+      //     setProgress(Math.min(progress, 100));
+      //   },
+      // });
+      const res = await ApiDriveUpload(file)
 
       console.log("res",res)
 
-      setUploadedFile(res[0]);
+      setUploadedFile(res);
 
-      onUploadComplete?.(res[0]);
+      onUploadComplete?.(res);
 
       return uploadedFile;
     } catch (error) {
@@ -67,7 +69,6 @@ export function useUploadFile({
       // toast.info('User not logged in. Mocking upload process.');
       const mockUploadedFile = {
         key: 'mock-key-0',
-        appUrl: `https://mock-app-url.com/${file.name}`,
         name: file.name,
         size: file.size,
         type: file.type,

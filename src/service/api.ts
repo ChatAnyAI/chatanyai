@@ -406,6 +406,7 @@ export const ApiDatasetDocumentPageList = (datasetId: string, fileId: string) =>
 
 // Drive APIs
 export interface DriveCreateResponse {
+  name: string;
   url: string;
   downloadUrl: string;
   pathname: string;
