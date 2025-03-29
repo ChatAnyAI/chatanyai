@@ -22,6 +22,7 @@ import React, { useState } from "react"
 import { cn } from "@/lib/utils"
 import { SharedDialog } from "@/components/sidebar/shared-dialog";
 import RecentlyFiles from "@/components/sidebar/recently-files";
+import { useTranslation } from "react-i18next"
 
 export type NavMenuItem = Partial<Omit<AppResp, 'icon' | 'id'>> & {
     id?: string;
@@ -47,19 +48,20 @@ export function NavHeader({
     const { toggleMenu: onClickMenu } = appSideBarContext;
     const [sharedDialogOpen, setSharedDialogOpen] = useState(false)
     const [recentFilesOpen, setRecentFilesOpen] = useState(false)
+    const { t } = useTranslation();
     const items: NavMenuItem[] = [{
         id: "home",
-        name: "Home",
+        name: t("Home"),
         url: "/home",
         icon: House,
     }, {
         id: "files",
-        name: "Recently Files",
+        name: t("Recently Files"),
         url: "#",
         icon: Folder
     }, {
         id: "shared",
-        name: "Shared with me",
+        name: t("Shared with me"),
         url: "#",
         icon: Share2,
     }]
@@ -94,15 +96,15 @@ export function NavHeader({
             <SidebarMenu>
                 {items.map((item) => {
                     return <Collapsible key={item.name} asChild defaultOpen={item.isActive}>
-                        <SidebarMenuItem data-name={item.name}>
+                        <SidebarMenuItem data-name={item.id}>
                             <SidebarMenuButton isActive={new RegExp(item.url).test(location.pathname)}
                                 asChild tooltip={item.name}
                                 onClick={() => {
                                     onClickMenu(null);
                                 }}>
                                 {(() => {
-                                    switch (item.name) {
-                                        case 'Recently Files':
+                                    switch (item.id) {
+                                        case 'files':
                                             return (
                                               <div className="cursor-pointer" onClick={() => {
                                                   setRecentFilesOpen(true)
@@ -111,7 +113,7 @@ export function NavHeader({
                                                   <span>{item.name}</span>
                                               </div>
                                             );
-                                        case 'Shared with me':
+                                        case 'shared':
                                             return (
                                                 <div className="cursor-pointer" onClick={() => {
                                                     setSharedDialogOpen(true)

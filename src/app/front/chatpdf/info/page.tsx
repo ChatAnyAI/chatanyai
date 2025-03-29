@@ -10,8 +10,10 @@ import { useGlobalStore } from '@/store/globalStore';
 import useSWR from 'swr';
 import { ApiChatHistory, ApiGetChat, RespChat, RespChatHistoryMessage } from '@/service/api';
 import { ChatHeader } from '@/components/chat/chat-header';
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+    const { t } = useTranslation();
     const { appId, chatId: id } = useParams();
     const user = useGlobalStore(state => state.user);
     const selectedModelId = useChatStore(state => state.modelSelectedId)
@@ -28,7 +30,7 @@ export default function Page() {
 
 
     if (isLoading) {
-        return <div>Loading...</div>
+        return <div>{t('chatpdf-info-page.Loading...')}</div>
     }
 
     console.log("chatResp", chatResp)

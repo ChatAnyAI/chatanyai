@@ -14,6 +14,7 @@ import {
     ZoomOutIcon,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from 'react-i18next';
 
 // We need to configure CORS
 // gsutil cors set cors.json gs://<app-name>.appspot.com
@@ -26,6 +27,7 @@ import { Input } from '@/components/ui/input';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function PdfViewV2({ url }: { url: string }) {
+    const { t } = useTranslation();
     const [numPages, setNumPages] = useState<number>();
     const [pageNumber, setPageNumber] = useState<number>(1);
     const [file, setFile] = useState<Blob | null>(null);
@@ -189,7 +191,7 @@ function PdfViewV2({ url }: { url: string }) {
                         onClick={goToPreviousPage}
                         aria-label="Previous page"
                     >
-                        Previous
+                        {t('pdfv2-preview.Previous')}
                     </Button>
 
                     <div className="flex items-center justify-center space-x-1">
@@ -201,7 +203,7 @@ function PdfViewV2({ url }: { url: string }) {
                             onKeyDown={handlePageInputKeyDown}
                             aria-label="Current page"
                         />
-                        <span>of {numPages || '?'}</span>
+                        <span>{t('pdfv2-preview.of')} {numPages || '?'}</span>
                     </div>
 
                     <Button
@@ -210,7 +212,7 @@ function PdfViewV2({ url }: { url: string }) {
                         onClick={goToNextPage}
                         aria-label="Next page"
                     >
-                        Next
+                        {t('pdfv2-preview.Next')}
                     </Button>
 
                     <Button
@@ -219,7 +221,7 @@ function PdfViewV2({ url }: { url: string }) {
                         aria-label="Rotate document"
                     >
                         <RotateCw className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Rotate</span>
+                        <span className="hidden sm:inline">{t('pdfv2-preview.Rotate')}</span>
                     </Button>
 
                     <Button
@@ -229,7 +231,7 @@ function PdfViewV2({ url }: { url: string }) {
                         aria-label="Zoom out"
                     >
                         <ZoomOutIcon className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Zoom Out</span>
+                        <span className="hidden sm:inline">{t('pdfv2-preview.Zoom Out')}</span>
                     </Button>
 
                     <Button
@@ -239,7 +241,7 @@ function PdfViewV2({ url }: { url: string }) {
                         aria-label="Zoom in"
                     >
                         <ZoomInIcon className="h-4 w-4 mr-1" />
-                        <span className="hidden sm:inline">Zoom In</span>
+                        <span className="hidden sm:inline">{t('pdfv2-preview.Zoom In')}</span>
                     </Button>
                 </div>
             </div>
@@ -247,13 +249,13 @@ function PdfViewV2({ url }: { url: string }) {
             {error ? (
                 <div className="flex flex-col items-center justify-center p-8 text-red-500">
                     <AlertCircle className="h-12 w-12 mb-2" />
-                    <h3 className="text-lg font-semibold">Error Loading PDF</h3>
+                    <h3 className="text-lg font-semibold">{t('pdfv2-preview.Error Loading PDF')}</h3>
                     <p>{error}</p>
                 </div>
             ) : !file ? (
                 <div className="flex flex-col items-center justify-center p-8">
                     <Loader2Icon className="animate-spin h-20 w-20 text-indigo-600 mt-20" />
-                    <p className="mt-4 text-gray-600">Loading PDF document...</p>
+                    <p className="mt-4 text-gray-600">{t('pdfv2-preview.Loading PDF document...')}</p>
                 </div>
             ) : (
                 <div className="pdf-container w-full h-[calc(100vh-180px)] overflow-auto">
@@ -296,9 +298,7 @@ function PdfViewV2({ url }: { url: string }) {
             )}
 
             <div className="text-xs text-gray-500 mt-2 mb-4">
-                Use arrow keys to navigate between pages. Press + to zoom in and - to
-                zoom out. When zoomed in, scroll horizontally and vertically to see
-                different parts of the page.
+                {t('pdfv2-preview.Navigation help')}
             </div>
         </div>
     );

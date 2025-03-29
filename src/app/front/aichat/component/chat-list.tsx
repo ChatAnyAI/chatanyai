@@ -6,6 +6,7 @@ import { MoreVertical, LockIcon } from "lucide-react"
 import type { RespChat } from "@/service/api"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
+import { useTranslation } from 'react-i18next';
 
 interface ChatListProps {
   chats: RespChat[]
@@ -13,6 +14,7 @@ interface ChatListProps {
 }
 
 export function ChatList({ chats, onMenuOpen }: ChatListProps) {
+  const { t } = useTranslation();
   const handleMenuClick = (e: React.MouseEvent, chatId: string) => {
     e.preventDefault()
     onMenuOpen(chatId, e.clientX, e.clientY)
@@ -37,7 +39,7 @@ export function ChatList({ chats, onMenuOpen }: ChatListProps) {
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-6 h-6 rounded bg-linear-to-br from-pink-400 to-orange-300 mr-2"></div>
-                <span className="text-gray-600">username</span>
+                <span className="text-gray-600">{t('chat-list.username')}</span>
                 <span className="text-gray-400 text-sm ml-2">{dayjs.unix(chat.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
               </div>
               <button onClick={(e) => handleMenuClick(e, chat.id)} className="p-1 rounded-full hover:bg-gray-100">

@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useTranslation } from "react-i18next"
 
 interface PDFUploaderProps {
     appId: string
@@ -82,6 +83,7 @@ const uploadAPI = (
 }
 
 export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps) {
+    const { t } = useTranslation();
     const [isDragging, setIsDragging] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [uploadProgress, setUploadProgress] = useState(0)
@@ -153,17 +155,17 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
 
             // Handle successful upload
             toast({
-                title: "Upload successful",
+                title: t("pdf-upload.Upload successful"),
             })
 
             //@ts-ignore
             onPdfUploaded(result.pathname)
         } catch (error: any) {
             // Handle upload error
-            setError(error.message || "Failed to upload file. Please try again.")
+            setError(error.message || t("pdf-upload.Upload failed"))
             toast({
-                title: "Upload failed",
-                description: error.message || "An error occurred during upload",
+                title: t("pdf-upload.Upload failed"),
+                description: error.message || t("pdf-upload.Upload error"),
                 variant: "destructive",
             })
         } finally {
@@ -184,10 +186,10 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
         <div className="container mx-auto p-4 md:p-20 min-h-screen flex flex-col">
             <header className="mb-8">
                 <h1 className="text-3xl font-bold text-center bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    AI PDF Chat Assistant
+                    {t("pdf-upload.AI PDF Chat Assistant")}
                 </h1>
                 <p className="text-center text-gray-500 mt-2">
-                    Upload your PDF and chat with an AI that understands your document
+                    {t("pdf-upload.Upload description")}
                 </p>
             </header>
             <Card className="w-full max-w-3xl mx-auto">
@@ -195,7 +197,7 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                     {error && (
                         <Alert variant="destructive" className="mb-4">
                             <AlertCircle className="h-4 w-4" />
-                            <AlertTitle>Error</AlertTitle>
+                            <AlertTitle>{t("pdf-upload.Error")}</AlertTitle>
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
@@ -217,11 +219,11 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                                     <Upload className="h-8 w-8 text-indigo-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-medium">Upload your PDF</h3>
-                                    <p className="text-sm text-gray-500 mt-1">Drag and drop your PDF file here or click to browse</p>
+                                    <h3 className="text-lg font-medium">{t("pdf-upload.Upload your PDF")}</h3>
+                                    <p className="text-sm text-gray-500 mt-1">{t("pdf-upload.Drag and drop")}</p>
                                 </div>
                                 <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="mt-4">
-                                    Select PDF
+                                    {t("pdf-upload.Select PDF")}
                                 </Button>
                                 <input
                                     type="file"
@@ -230,7 +232,7 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                                     accept="application/pdf"
                                     className="hidden"
                                 />
-                                <p className="text-xs text-gray-400 mt-2">Maximum file size: 10MB</p>
+                                <p className="text-xs text-gray-400 mt-2">{t("pdf-upload.Maximum file size")}</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
@@ -257,7 +259,7 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                                     <div className="space-y-2">
                                         <Progress value={uploadProgress} className="h-2" />
                                         <p className="text-sm text-gray-500">
-                                            {uploadProgress < 100 ? <>Uploading... {uploadProgress}%</> : <>Processing document analysis...</>}
+                                            {uploadProgress < 100 ? <>{t("pdf-upload.Uploading...")} {uploadProgress}%</> : <>{t("pdf-upload.Processing")}</>}
                                         </p>
                                     </div>
                                 )}
@@ -266,19 +268,19 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                     </div>
 
                     <div className="mt-8">
-                        <h3 className="text-lg font-medium mb-4">Why use AI PDF Chat?</h3>
+                        <h3 className="text-lg font-medium mb-4">{t("pdf-upload.Why use AI PDF Chat?")}</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div className="p-4 bg-gray-50 rounded-lg">
-                                <h4 className="font-medium">Quick Analysis</h4>
-                                <p className="text-sm text-gray-500 mt-1">Get instant insights from your documents</p>
+                                <h4 className="font-medium">{t("pdf-upload.Quick Analysis")}</h4>
+                                <p className="text-sm text-gray-500 mt-1">{t("pdf-upload.Quick Analysis description")}</p>
                             </div>
                             <div className="p-4 bg-gray-50 rounded-lg">
-                                <h4 className="font-medium">Ask Questions</h4>
-                                <p className="text-sm text-gray-500 mt-1">Chat with AI about specific content in your PDF</p>
+                                <h4 className="font-medium">{t("pdf-upload.Ask Questions")}</h4>
+                                <p className="text-sm text-gray-500 mt-1">{t("pdf-upload.Ask Questions description")}</p>
                             </div>
                             <div className="p-4 bg-gray-50 rounded-lg">
-                                <h4 className="font-medium">Summarize</h4>
-                                <p className="text-sm text-gray-500 mt-1">Extract key points and generate summaries</p>
+                                <h4 className="font-medium">{t("pdf-upload.Summarize")}</h4>
+                                <p className="text-sm text-gray-500 mt-1">{t("pdf-upload.Summarize description")}</p>
                             </div>
                         </div>
                     </div>

@@ -9,6 +9,7 @@ import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { MeetingData } from './meeting-setting';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 export default function Chat({
   id,
@@ -29,6 +30,7 @@ export default function Chat({
   appId: string;
   isNew?: boolean;
 }) {
+  const { t } = useTranslation();
   const { settingData } = useRightSetting();
   const currentRound = useRef(0);
   const memberIndex = useRef(0);
@@ -123,7 +125,7 @@ export default function Chat({
       "content": "You are a multi-role teamwork dialogue model. Each role has its own responsibilities and revolves around a given topic."
     }, {
       "role": "system",
-      "content":`When constructing a response, consider:\n- Your initial thoughts on the topic?\n- Anything from previous remarks that caught your interest?\n- Any relevant experience to share?\n- How do you want to move the discussion forward?\n\nGuide:\n- Keep it natural and real, like a real conversation\n- One person speaks per turn, response length 10-500 words\n- Include main ideas, questions, insights, or replies\n- Express emotion or use humor as appropriate\n- You don’t need to mention your background each time unless it’s relevant`
+      "content":`When constructing a response, consider:\n- Your initial thoughts on the topic?\n- Anything from previous remarks that caught your interest?\n- Any relevant experience to share?\n- How do you want to move the discussion forward?\n\nGuide:\n- Keep it natural and real, like a real conversation\n- One person speaks per turn, response length 10-500 words\n- Include main ideas, questions, insights, or replies\n- Express emotion or use humor as appropriate\n- You don't need to mention your background each time unless it's relevant`
     }];
     meetingData?.members.forEach((member, i) => {
       msgs.push({
@@ -151,8 +153,8 @@ export default function Chat({
   if (error) {
     console.error(error);
     toast({
-      title: "Error",
-      description: "Failed to chat. Please check model provider setting.",
+      title: t('meeting-chat.error'),
+      description: t('meeting-chat.chat-failed'),
       variant: "destructive"
     });
   }

@@ -1,79 +1,208 @@
 {
-  "common": {
-    "create": "Create",
-    "search": "Search",
-    "loading": "Loading...",
-    "total": "Total {{total}} items",
-    "perPage": "{{count}} items/page"
+  "sidebar": {
+    "Admin Area": "Admin Area",
+    "Home": "Home",
+    "Recently Files": "Recently Files",
+    "Loading more files...": "Loading more files...",
+    "Shared with me": "Shared with me",
+    "New Chat": " New Chat",
+    "Share": "Share",
+    "Setting": "Setting"
   },
-  "error": {
-    "loadFailed": "Failed to load application list",
-    "loginExpired": "Login expired, please login again",
-    "requestFailed": "Request failed"
+  "sidebar-dialog": {
+    "Close": "Close"
   },
-  "dataset": {
-    "lastUpdated": "Created {{time}}",
-    "uploadTitle": "Please select files to upload",
-    "uploadSuccess": "File uploaded successfully",
-    "uploadError": "Upload operation failed",
-    "pleaseUpload": "Please upload files first",
-    "updateSuccess": "Dataset updated successfully",
-    "updateError": "Update operation failed",
-    "uploadFiles": "Upload Files",
-    "dragFiles": "Drag files here, or",
-    "selectFiles": "Select files",
-    "supportedFormats": "Supported formats: TXT, MARKDOWN, MDX, PDF, HTML, XLSX, XLS, DOCX, CSV, MD, HTM",
-    "selectedFiles": "Selected files:",
-    "confirm": "Confirm",
-    "cancel": "Cancel"
+  "shared-dialog": {
+    "shared": "shared",
+    "Nothing shared with you yet": "Nothing shared with you yet",
+    "When someone shares an app or chat with you, it will appear here.": "When someone shares an app or chat with you, it will appear here."
   },
-  "share": {
-    "title": "Share",
-    "manageCollaborators": "Manage Collaborators",
-    "inviteCollaborators": "Invite Collaborators",
-    "searchUsers": "Search users",
-    "inviteSuccess": "Invitation successful",
-    "inviteSuccessDesc": "Successfully invited selected users",
-    "inviteFailed": "Invitation failed",
-    "inviteFailedDesc": "Error occurred while inviting users",
-    "allowSubpage": "Allow collaborators to access subpages",
-    "sendNotification": "Send notification",
-    "addNote": "Add note",
-    "cancel": "Cancel",
-    "invite": "Invite",
-    "copyLink": "Copy link",
-    "copySuccess": "Copy successful",
-    "copySuccessDesc": "Link copied to clipboard",
-    "copyFailed": "Copy failed",
-    "copyFailedDesc": "Unable to copy link to clipboard",
-    "userAdded": "After users are added",
-    "canRead": "Can read"
+  "recently-files": {
+    "No more files to load": "No more files to load",
+    "No files found": "No files found"
   },
-  "chatpdf": {
-    "title": "Online ChatPDF",
-    "description": "Use AI capabilities to help you read better",
-    "enterUrl": "Enter PDF file link",
-    "confirm": "Confirm",
-    "backToUpload": "Back to file upload",
-    "uploading": "Uploading...",
-    "dragUpload": "Click or drag files here to upload",
-    "uploadByLink": "Upload using link",
-    "supportedTypes": "Supported file types: PDF | Max file size: 50MB",
-    "maxTokens": "Maximum Token count 100K (approximately 70,000 characters)",
-    "mindMap": "Mind Map",
-    "translatePdf": "Translate PDF",
-    "onlyPdf": "Only PDF files are supported",
-    "fileTooLarge": "File size cannot exceed 50MB",
-    "uploadSuccess": "File \"{{name}}\" has been uploaded",
-    "uploadFailed": "Upload failed",
-    "uploadError": "File upload failed, please try again",
-    "enterUrlError": "Please enter URL",
-    "onlyPdfUrl": "Only PDF file links are supported",
-    "urlSubmitted": "URL has been submitted"
+  "aichat-page": {
+    "Loading...": "Loading..."
   },
-  "explore": {
-    "title": "Explore ChatAnyAI Applications",
-    "description": "Use these template applications, or customize your own based on templates",
-    "recommended": "Recommended"
+  "info-page": {
+    "Loading...": "Loading..."
+  },
+  "rightSetting": {
+    "Model Settings": "Model Settings",
+    "Temperature": "Temperature",
+    "Max Tokens": "Max Tokens",
+    "Frequency Penalty": "Frequency Penalty",
+    "Presence Penalty": "Presence Penalty",
+    "Message Settings": "Message Settings",
+    "Show divider between messages": "Show divider between messages",
+    "Use serif font": "Use serif font",
+    "Message Font Size": "Message Font Size",
+    "Input Settings": "Input Settings",
+    "Show estimated input tokens": "Show estimated input tokens",
+    "Paste long text as file": "Paste long text as file"
+  },
+  "chat-menu": {
+    "Share": "Share",
+    "Rename": "Rename",
+    "Favorite": "Favorite",
+    "Delete": "Delete"
+  },
+  "chat-list": {
+    "username": "username"
+  },
+  "empty-state": {
+    "No Chats": "No Chats",
+    "To get started, create a new chat in this project.": "To get started, create a new chat in this project."
+  },
+  "chatpdf-info-page": {
+    "Loading...": "Loading..."
+  },
+  "pdfv2-preview": {
+    "Previous": "Previous",
+    "of": "of",
+    "Next": "Next",
+    "Rotate": "Rotate",
+    "Zoom Out": "Zoom Out",
+    "Zoom In": "Zoom In",
+    "Error Loading PDF": "Error Loading PDF",
+    "Loading PDF document...": "Loading PDF document...",
+    "Navigation help": "Use arrow keys to navigate between pages. Press + to zoom in and - to zoom out. When zoomed in, scroll horizontally and vertically to see different parts of the page."
+  },
+  "pdf-upload": {
+    "AI PDF Chat Assistant": "AI PDF Chat Assistant",
+    "Upload description": "Upload your PDF and chat with an AI that understands your document",
+    "Error": "Error",
+    "Upload your PDF": "Upload your PDF",
+    "Drag and drop": "Drag and drop your PDF file here or click to browse",
+    "Select PDF": "Select PDF",
+    "Maximum file size": "Maximum file size: 10MB",
+    "Uploading...": "Uploading...",
+    "Processing": "Processing document analysis...",
+    "Why use AI PDF Chat?": "Why use AI PDF Chat?",
+    "Quick Analysis": "Quick Analysis",
+    "Quick Analysis description": "Get instant insights from your documents",
+    "Ask Questions": "Ask Questions",
+    "Ask Questions description": "Chat with AI about specific content in your PDF",
+    "Summarize": "Summarize",
+    "Summarize description": "Extract key points and generate summaries",
+    "Upload successful": "Upload successful",
+    "Upload failed": "Upload failed",
+    "Upload error": "An error occurred during upload"
+  },
+  "pdf-preview": {
+    "Page": "Page",
+    "of": "of"
+  },
+  "home-page": {
+    "hello": "Hello,",
+    "welcome": "Welcome back to your workspace",
+    "recent-applications": "Recent applications",
+    "recent-chats": "Recent chats",
+    "today": "TODAY",
+    "yesterday": "YESTERDAY",
+    "previous-7-days": "PREVIOUS 7 DAYS",
+    "no-applications": "No applications yet",
+    "create-app-description": "Create your first application to chat with AI, build knowledge bases, or collaborate with your team.",
+    "create-application": "Create Application",
+    "no-recent-chats": "No recent chats",
+    "recent-chats-description": "Your recent conversations will appear here. Start a chat with one of your applications to begin.",
+    "start-chat": "Start a Chat",
+    "from": "From",
+    "failed-to-load": "Failed to load homeList"
+  },
+  "meeting-page": {
+    "loading": "loading"
+  },
+  "meeting-info-page": {
+    "loading": "loading"
+  },
+  "meeting-setting": {
+    "brainstorming": "Brainstorming",
+    "stimulate-creativity": "Stimulate creativity and spark intellectual collisions.",
+    "discussion-topic": "Discussion topic",
+    "customized-topics": "Customized topics:",
+    "generate-random-topics": "Generate random topics.",
+    "dialogue-turn-setting": "Dialogue turn setting",
+    "dialogue-turns": "Dialogue turns",
+    "character-setting-panel": "Character setting panel",
+    "character-name": "Character name",
+    "delete-character": "Delete the character.",
+    "character-description": "Character description (maximum 200 characters)",
+    "add-new-character": "Add a new character",
+    "start-discussion": "Start the discussion",
+    "start-discussion-tooltip": "Start the discussion with the current settings.",
+    "enter-topic-error": "Please enter the discussion topic.",
+    "add-character-error": "Please add at least one character."
+  },
+  "meeting-chat": {
+    "error": "Error",
+    "chat-failed": "Failed to chat. Please check model provider setting."
+  },
+  "note-doc-list": {
+    "Create Fail": "Create Fail",
+    "Blank": "Blank"
+  },
+  "space-page": {
+    "Space Settings": "Space Settings",
+    "Manage your": "Manage your",
+    "settings": "settings",
+    "Delete Space": "Delete Space",
+    "Private": "Private",
+    "Public": "Public",
+    "General": "General",
+    "Files": "Files",
+    "Members": "Members",
+    "General Settings": "General Settings",
+    "Update your space information": "Update your space information and preferences",
+    "Icon": "Icon",
+    "Click to select an emoji": "Click to select an emoji as space icon",
+    "Name": "Name",
+    "Enter space name": "Enter space name",
+    "Description": "Description",
+    "Enter space description": "Enter space description",
+    "Briefly describe": "Briefly describe the purpose of this space",
+    "Type": "Type",
+    "Select space type": "Select space type",
+    "Copilot": "Copilot",
+    "ChatPDF": "ChatPDF",
+    "Brainstorm": "Brainstorm",
+    "KnowledgeBase": "KnowledgeBase",
+    "Copilot Prompt": "Copilot Prompt",
+    "Enter instructions": "Enter instructions for the copilot",
+    "Define how": "Define how the AI copilot should behave in this space",
+    "Save Changes": "Save Changes",
+    "Saving": "Saving...",
+    "Loading settings": "Loading space settings...",
+    "Delete confirmation": "Are you sure you want to delete this space? This action cannot be undone and all data associated with this space will be permanently lost.",
+    "Yes Delete": "Yes, Delete Space",
+    "Cancel": "Cancel",
+    "Deleting": "Deleting..."
+  },
+  "members-tab": {
+    "Members": "Members",
+    "Manage who has access": "Manage who has access to this space",
+    "Current Members": "Current Members",
+    "No members yet": "No members yet. Add members to collaborate.",
+    "Remove": "Remove",
+    "Remove Member": "Remove Member",
+    "Are you sure": "Are you sure you want to remove",
+    "from this space": "from this space?",
+    "Cancel": "Cancel"
+  },
+  "copilot-creation": {
+    "New Copilot": "New Copilot",
+    "Search templates": "Search templates",
+    "No templates found": "No templates found",
+    "Try adjusting": "Try adjusting your search terms or category",
+    "Use": "Use"
+  },
+  "userSetting-components-sidebar": {
+    "Back to Desktop": "Back to Desktop"
+  },
+  "not-found": {
+    "404": "404",
+    "Page not found": "Page not found",
+    "Sorry message": "Sorry, we couldn't find the page you're looking for. It might have been moved or deleted.",
+    "Back to Home": "Back to Home"
   }
 }

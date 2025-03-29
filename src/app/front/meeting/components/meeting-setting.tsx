@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Wand2, Shuffle, Trash2, Plus, MessageCircle, Lightbulb } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 
 
@@ -69,6 +70,7 @@ export default function DiscussionSetup({
   data: MeetingData,
   onStart: (data: MeetingData) => void
 }) {
+  const { t } = useTranslation();
   const [topic, setTopic] = useState<string>(data?.topic || "")
   const [maxrounds, setMaxRounds] = useState<number>(data?.maxrounds || 2)
   const [members, setMembers] = useState<Character[]>(data?.members ? data.members.map((m, i) => ({ ...m, id: i + 1 })) : demoData)
@@ -92,7 +94,7 @@ export default function DiscussionSetup({
   const startDiscussion = () => {
     if (!topic.trim()) {
       toast({
-        title: "Please enter the discussion topic.",
+        title: t('meeting-setting.enter-topic-error'),
         variant: "destructive"
       });
       return;
@@ -100,7 +102,7 @@ export default function DiscussionSetup({
 
     if (members.length === 0) {
       toast({
-        title: "Please add at least one character.",
+        title: t('meeting-setting.add-character-error'),
         variant: "destructive"
       });
       return;
@@ -129,9 +131,9 @@ export default function DiscussionSetup({
           <div className="max-w-5xl mx-auto mb-4 text-center">
             <h1 className="text-3xl font-bold tracking-tight flex items-center justify-center gap-1">
               <Lightbulb className="w-8 h-8 text-primary" />
-              Brainstorming
+              {t('meeting-setting.brainstorming')}
             </h1>
-            <p className="mt-1 text-base text-muted-foreground">Stimulate creativity and spark intellectual collisions.</p>
+            <p className="mt-1 text-base text-muted-foreground">{t('meeting-setting.stimulate-creativity')}</p>
           </div>
 
           {/* Topic Section */}
@@ -141,12 +143,12 @@ export default function DiscussionSetup({
                 <div className="w-7 h-7 bg-primary/20 rounded-lg flex items-center justify-center">
                   <Wand2 className="w-4 h-4 text-primary" />
                 </div>
-                <h2 className="text-lg font-semibold">Discussion topic</h2>
+                <h2 className="text-lg font-semibold">{t('meeting-setting.discussion-topic')}</h2>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 px-4 pb-4">
               <div className="space-y-1.5">
-                <Label>Customized topics:</Label>
+                <Label>{t('meeting-setting.customized-topics')}</Label>
                 <Input
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
@@ -157,7 +159,7 @@ export default function DiscussionSetup({
               </div>
               <Button size="sm" onClick={generateRandomTopic} disabled={isDisabled}>
                 <Shuffle className="w-4 h-4 mr-2" />
-                Generate random topics.
+                {t('meeting-setting.generate-random-topics')}
               </Button>
             </CardContent>
           </Card>
@@ -169,12 +171,12 @@ export default function DiscussionSetup({
                 <div className="w-7 h-7 bg-primary/20 rounded-lg flex items-center justify-center">
                   <MessageCircle className="w-4 h-4 text-primary" />
                 </div>
-                <h2 className="text-lg font-semibold">Dialogue turn setting</h2>
+                <h2 className="text-lg font-semibold">{t('meeting-setting.dialogue-turn-setting')}</h2>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 px-4 pb-4">
               <div className="space-y-1.5">
-                <Label>Dialogue turns: {maxrounds}</Label>
+                <Label>{t('meeting-setting.dialogue-turns')}: {maxrounds}</Label>
                 <Slider
                     value={[maxrounds]}
                     onValueChange={(value) => setMaxRounds(value[0])}
@@ -203,7 +205,7 @@ export default function DiscussionSetup({
                     <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
                   </svg>
                 </div>
-                <h2 className="text-lg font-semibold">Character setting panel</h2>
+                <h2 className="text-lg font-semibold">{t('meeting-setting.character-setting-panel')}</h2>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 px-4 pb-4">
@@ -218,7 +220,7 @@ export default function DiscussionSetup({
                               {character.name?.[0]?.toUpperCase()}
                             </div>
                             <div className="space-y-1">
-                              <Label>Character name</Label>
+                              <Label>{t('meeting-setting.character-name')}</Label>
                               <Input
                                   value={character.name}
                                   onChange={(e) => updateCharacter(character.id, "name", e.target.value)}
@@ -235,14 +237,14 @@ export default function DiscussionSetup({
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Delete the character.</p>
+                                <p>{t('meeting-setting.delete-character')}</p>
                               </TooltipContent>
                             </Tooltip>
                           </div>
                         </div>
 
                         <div className="space-y-1">
-                          <Label>Character description (maximum 200 characters)</Label>
+                          <Label>{t('meeting-setting.character-description')}</Label>
                           <Textarea
                               value={character.description}
                               onChange={(e) => updateCharacter(character.id, "description", e.target.value)}
@@ -258,17 +260,17 @@ export default function DiscussionSetup({
 
               <Button variant="outline" size="sm" onClick={addCharacter} disabled={isDisabled}>
                 <Plus className="w-4 h-4 mr-2" />
-                Add a new character
+                {t('meeting-setting.add-new-character')}
               </Button>
 
               {/* Action Buttons */}
               <div className="flex justify-center gap-3 pt-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="sm" onClick={startDiscussion} disabled={isDisabled}>Start the discussion</Button>
+                    <Button size="sm" onClick={startDiscussion} disabled={isDisabled}>{t('meeting-setting.start-discussion')}</Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Start the discussion with the current settings.</p>
+                    <p>{t('meeting-setting.start-discussion-tooltip')}</p>
                   </TooltipContent>
                 </Tooltip>
               </div>

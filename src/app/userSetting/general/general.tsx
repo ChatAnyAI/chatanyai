@@ -1,4 +1,4 @@
-import { Monitor, Moon, Sun, Camera, User } from "lucide-react"
+import { Monitor, Moon, Sun, Camera, User, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -9,8 +9,10 @@ import { useGlobalStore } from "@/store/globalStore"
 import { useTheme } from "next-themes"
 import {DefaultAvatar} from "@/components/user-avatar";
 import * as React from "react";
+import { useTranslation, Trans } from 'react-i18next';
 
 export default function UserSettingsPage() {
+    const { t, i18n } = useTranslation();
     const { theme, setTheme} = useTheme()
     const [isUploading, setIsUploading] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -80,18 +82,23 @@ export default function UserSettingsPage() {
             })
         }
     }
+
+    // Function to handle language change
+    const changeLanguage = (language: string) => {
+      i18n.changeLanguage(language);
+    };
     
     return (
         <div className="max-w-3xl mx-auto py-8 px-4">
             <form onSubmit={handleSubmit}>
                 <section>
-                    <h2 className="text-xl font-semibold mb-6">User Settings</h2>
+                    <h2 className="text-xl font-semibold mb-6">{t('User Settings')}</h2>
 
                     <div className="space-y-6 divide-y">
                         <div className="flex items-center justify-between py-4">
                             <div>
-                                <h3 className="font-medium">Profile Picture</h3>
-                                <p className="text-gray-500 text-sm">You look good today!</p>
+                                <h3 className="font-medium">{t('Profile Picture')}</h3>
+                                <p className="text-gray-500 text-sm">{t('You look good today!')}</p>
                             </div>
                             <div className="flex flex-col items-center gap-2">
                                 <div 
@@ -125,7 +132,7 @@ export default function UserSettingsPage() {
                                         </div>
                                     )}
                                 </div>
-                                <span className="text-xs text-blue-500">Click to change</span>
+                                <span className="text-xs text-blue-500">{t('Click to change')}</span>
                                 <input 
                                     type="file" 
                                     ref={fileInputRef}
@@ -138,9 +145,9 @@ export default function UserSettingsPage() {
 
                         <div className="flex items-center justify-between py-4">
                             <div>
-                                <h3 className="font-medium">Username</h3>
+                                <h3 className="font-medium">{t('Username')}</h3>
                                 <p className="text-gray-500 text-sm">
-                                    You can change your username here.
+                                    {t('You can change your username here.')}
                                 </p>
                             </div>
                             <Input 
@@ -152,9 +159,9 @@ export default function UserSettingsPage() {
 
                         <div className="flex items-center justify-between py-4">
                             <div>
-                                <h3 className="font-medium">Default Team</h3>
+                                <h3 className="font-medium">{t('Default Team')}</h3>
                                 <p className="text-gray-500 text-sm">
-                                    New projects and deployments from your personal scope will be created in this team.
+                                    {t('New projects and deployments from your personal scope will be created in this team.')}
                                 </p>
                             </div>
                             <Select value={String(user.teams?.[0]?.teamId)} disabled={true}>
@@ -190,15 +197,15 @@ export default function UserSettingsPage() {
 
                         <div className="flex items-center justify-between py-4">
                             <div>
-                                <h3 className="font-medium">Interface theme</h3>
-                                <p className="text-gray-500 text-sm">Select your interface color scheme.</p>
+                                <h3 className="font-medium">{t('Interface theme')}</h3>
+                                <p className="text-gray-500 text-sm">{t('Select your interface color scheme.')}</p>
                             </div>
                             <Select value={theme} onValueChange={setTheme}>
                                 <SelectTrigger className="w-[250px]">
                                     <SelectValue>
                                         <div className="flex items-center">
                                             <Sun className="h-4 w-4 mr-2" />
-                                            Light
+                                            {t('Light')}
                                         </div>
                                     </SelectValue>
                                 </SelectTrigger>
@@ -206,19 +213,51 @@ export default function UserSettingsPage() {
                                     <SelectItem value="light">
                                         <div className="flex items-center">
                                             <Sun className="h-4 w-4 mr-2" />
-                                            Light
+                                            {t('Light')}
                                         </div>
                                     </SelectItem>
                                     <SelectItem value="dark">
                                         <div className="flex items-center">
                                             <Moon className="h-4 w-4 mr-2" />
-                                            Dark
+                                            {t('Dark')}
                                         </div>
                                     </SelectItem>
                                     <SelectItem value="system">
                                         <div className="flex items-center">
                                             <Monitor className="h-4 w-4 mr-2" />
-                                            System
+                                            {t('System')}
+                                        </div>
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* New section for language settings */}
+                        <div className="flex items-center justify-between py-4">
+                            <div>
+                                <h3 className="font-medium">{t('Language')}</h3>
+                                <p className="text-gray-500 text-sm">{t('Select your preferred language.')}</p>
+                            </div>
+                            <Select value={i18n.language} onValueChange={changeLanguage}>
+                                <SelectTrigger className="w-[250px]">
+                                    <SelectValue>
+                                        <div className="flex items-center">
+                                            <Languages className="h-4 w-4 mr-2" />
+                                            {i18n.language === 'en' ? 'English' : '中文'}
+                                        </div>
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="en">
+                                        <div className="flex items-center">
+                                            <Languages className="h-4 w-4 mr-2" />
+                                            English
+                                        </div>
+                                    </SelectItem>
+                                    <SelectItem value="zh">
+                                        <div className="flex items-center">
+                                            <Languages className="h-4 w-4 mr-2" />
+                                            中文
                                         </div>
                                     </SelectItem>
                                 </SelectContent>

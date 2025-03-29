@@ -2,6 +2,7 @@
 
 import { Share, Edit2, Star, Trash } from "lucide-react"
 import { useEffect, useRef } from "react"
+import { useTranslation } from 'react-i18next';
 
 interface ChatMenuProps {
   position: { x: number; y: number }
@@ -10,6 +11,7 @@ interface ChatMenuProps {
 }
 
 export function ChatMenu({ position, onClose, onDelete }: ChatMenuProps) {
+  const { t } = useTranslation();
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -38,22 +40,22 @@ export function ChatMenu({ position, onClose, onDelete }: ChatMenuProps) {
       <div className="py-1">
         <button className="w-full text-left px-4 py-2 flex items-center hover:bg-gray-100">
           <Share size={18} className="mr-3 text-gray-600" />
-          <span>Share</span>
+          <span>{t('chat-menu.Share')}</span>
         </button>
         <button className="w-full text-left px-4 py-2 flex items-center hover:bg-gray-100">
           <Edit2 size={18} className="mr-3 text-gray-600" />
-          <span>Rename</span>
+          <span>{t('chat-menu.Rename')}</span>
         </button>
         <button className="w-full text-left px-4 py-2 flex items-center hover:bg-gray-100">
           <Star size={18} className="mr-3 text-gray-600" />
-          <span>Favorite</span>
+          <span>{t('chat-menu.Favorite')}</span>
         </button>
         <button
           onClick={onDelete}
           className="w-full text-left px-4 py-2 flex items-center hover:bg-gray-100 text-red-600"
         >
           <Trash size={18} className="mr-3" />
-          <span>Delete</span>
+          <span>{t('chat-menu.Delete')}</span>
         </button>
       </div>
     </div>

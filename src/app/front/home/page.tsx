@@ -2,22 +2,25 @@
 
 import {
     Star,
-    Plus, RefreshCw, ExternalLink, MessageCircle, MessageSquare
+    Plus, RefreshCw, ExternalLink, MessageCircle, MessageSquare, Layers, MessagesSquare
 } from "lucide-react"
 import React from "react"
 import { motion } from "framer-motion"
+import { useTranslation } from "react-i18next"
 
 import useSWR from "swr";
-import {ApiHomeRecent, ApiHomeRecentChatItem, ApiHomeRecentRes, AvatarUser, UserProfile} from "@/service/api";
-import {Link} from "react-router-dom";
-import {AppLabelEnum, AppVisibility, AppVisibilityEnum, RouteEnum} from "@/lib/constants/constants";
-import {useGlobalStore} from "@/store/globalStore";
-import {Icon} from "@/components/nav-group";
-import {UserAvatar} from "@/components/user-avatar";
+import { ApiHomeRecent, ApiHomeRecentChatItem, ApiHomeRecentRes, AvatarUser, UserProfile } from "@/service/api";
+import { Link } from "react-router-dom";
+import { AppLabelEnum, AppVisibility, AppVisibilityEnum, RouteEnum } from "@/lib/constants/constants";
+import { useGlobalStore } from "@/store/globalStore";
+import { Icon } from "@/components/nav-group";
+import { UserAvatar } from "@/components/user-avatar";
 import { isToday, isYesterday, subDays, isAfter } from 'date-fns';
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
     const user = useGlobalStore(state => state.user);
+    const { t } = useTranslation();
 
     // const tutorials = [
     //     {
@@ -47,7 +50,7 @@ export default function DashboardPage() {
     // ]
 
     const { data: homeList, error } = useSWR<ApiHomeRecentRes>('ApiHomeRecent', ApiHomeRecent);
-    if (error) return <div>Failed to load homeList</div>;
+    if (error) return <div>{t('home-page.failed-to-load')}</div>;
     if (!homeList) return (
         <div className="w-full flex items-center justify-center h-[50vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
@@ -67,154 +70,162 @@ export default function DashboardPage() {
             <div className="container mx-auto px-4 sm:px-6 py-6 max-w-7xl">
                 {/* Welcome section */}
                 <motion.div
-                    initial={{opacity: 0, y: 10}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.5}}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
                     className="mb-8 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 p-5 sm:p-6 rounded-xl shadow-xs hover:shadow-md transition-shadow duration-300"
                 >
-                    <h1 className="text-xl sm:text-2xl font-bold mb-2">Hello, {user.name}</h1>
-                    <p className="text-muted-foreground">Welcome back to your workspace</p>
+                    <h1 className="text-xl sm:text-2xl font-bold mb-2">{t('home-page.hello')} {user.name}</h1>
+                    <p className="text-muted-foreground">{t('home-page.welcome')}</p>
                 </motion.div>
 
                 {/* Recent pages with visual categories */}
                 <motion.div
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.5, delay: 0.2}}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                     className="mb-8"
                 >
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold">Recent applications</h2>
+                        <h2 className="text-xl font-bold">{t('home-page.recent-applications')}</h2>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {homeList.appList.map((application, index) => {
-                            let color = "";
-                            switch (index % 6) {
-                                case 0:
-                                    color = "bg-green-50 dark:bg-green-950/20 hover:bg-green-100 dark:hover:bg-green-950/30"
-                                    break;
-                                case 1:
-                                    color = "bg-yellow-50 dark:bg-yellow-950/20 hover:bg-yellow-100 dark:hover:bg-yellow-950/30"
-                                    break;
-                                case 2:
-                                    color = "bg-blue-50 dark:bg-blue-950/20 hover:bg-blue-100 dark:hover:bg-blue-950/30"
-                                    break;
-                                case 3:
-                                    color = "bg-purple-50 dark:bg-purple-950/20 hover:bg-purple-100 dark:hover:bg-purple-950/30"
-                                    break;
-                                case 4:
-                                    color = "bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-950/30"
-                                    break;
-                                case 5:
-                                    color = "bg-pink-50 dark:bg-pink-950/20 hover:bg-pink-100 dark:hover:bg-pink-950/30"
-                                    break;
-                            }
 
-                            return (
-                                <motion.div
-                                    initial={{opacity: 0, scale: 0.95}}
-                                    animate={{opacity: 1, scale: 1}}
-                                    transition={{duration: 0.3, delay: 0.1 * index}}
-                                    whileHover={{scale: 1.02}}
-                                    key={index}
-                                >
-                                    <Link to={`/${RouteEnum[application.type!]}/${application.id}`}
-                                          className={`block border rounded-lg p-4 shadow-xs transition-all duration-300 ${color}`}
+                    {homeList.appList.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                            {homeList.appList.map((application, index) => {
+                                let color = "";
+                                switch (index % 6) {
+                                    case 0:
+                                        color = "bg-green-50 dark:bg-green-950/20 hover:bg-green-100 dark:hover:bg-green-950/30"
+                                        break;
+                                    case 1:
+                                        color = "bg-yellow-50 dark:bg-yellow-950/20 hover:bg-yellow-100 dark:hover:bg-yellow-950/30"
+                                        break;
+                                    case 2:
+                                        color = "bg-blue-50 dark:bg-blue-950/20 hover:bg-blue-100 dark:hover:bg-blue-950/30"
+                                        break;
+                                    case 3:
+                                        color = "bg-purple-50 dark:bg-purple-950/20 hover:bg-purple-100 dark:hover:bg-purple-950/30"
+                                        break;
+                                    case 4:
+                                        color = "bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-950/30"
+                                        break;
+                                    case 5:
+                                        color = "bg-pink-50 dark:bg-pink-950/20 hover:bg-pink-100 dark:hover:bg-pink-950/30"
+                                        break;
+                                }
+
+                                return (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ duration: 0.3, delay: 0.1 * index }}
+                                        whileHover={{ scale: 1.02 }}
+                                        key={index}
                                     >
-                                        <div className="flex items-start justify-between">
-                                            <div className="w-full">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className="text-xl">
-                                                        <Icon type={application.type!} icon={application.icon}/>
-                                                    </span>
-                                                    <span
-                                                        className="text-xs px-2 py-0.5 rounded-full bg-background/80 text-muted-foreground">
-                                                        {AppLabelEnum[application.type]}
-                                                    </span>
-                                                </div>
-                                                <h3 className="font-medium truncate">{application.name}</h3>
-                                                <div
-                                                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-3 gap-2">
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {new Date(application.updatedAt * 1000).toLocaleString()}
-                                                    </span>
-                                                    <div className="flex gap-2">
-                                                         <span
-                                                            className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                                application.visibility === AppVisibility.Public
+                                        <Link to={`/${RouteEnum[application.type!]}/${application.id}`}
+                                            className={`block border rounded-lg p-4 shadow-xs transition-all duration-300 ${color}`}
+                                        >
+                                            <div className="flex items-start justify-between">
+                                                <div className="w-full">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <span className="text-xl">
+                                                            <Icon type={application.type!} icon={application.icon} />
+                                                        </span>
+                                                        <span
+                                                            className="text-xs px-2 py-0.5 rounded-full bg-background/80 text-muted-foreground">
+                                                            {AppLabelEnum[application.type]}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="font-medium truncate">{application.name}</h3>
+                                                    <div
+                                                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-3 gap-2">
+                                                        <span className="text-xs text-muted-foreground">
+                                                            {new Date(application.updatedAt * 1000).toLocaleString()}
+                                                        </span>
+                                                        <div className="flex gap-2">
+                                                            <span
+                                                                className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${application.visibility === AppVisibility.Public
                                                                     ? "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20"
                                                                     : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
-                                                            }`}
-                                                        >
-                                                           {AppVisibilityEnum[application.visibility] || "Unknown"}
-                                                        </span>
+                                                                    }`}
+                                                            >
+                                                                {AppVisibilityEnum[application.visibility] || "Unknown"}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </motion.div>
-                            )
-                        })}
-                    </div>
+                                        </Link>
+                                    </motion.div>
+                                )
+                            })}
+                        </div>
+                    ) : (
+                        <EmptyApplications />
+                    )}
                 </motion.div>
 
                 <motion.div
-                    initial={{opacity: 0, y: 20}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{duration: 0.5, delay: 0.2}}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                     className="mb-8"
                 >
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold">Recent chats</h2>
+                        <h2 className="text-xl font-bold">{t('home-page.recent-chats')}</h2>
                     </div>
-                    <div className="mx-auto">
-                        {todayChats  && todayChats.length > 0 && <div className="mb-4">
-                            <h2 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 px-3">TODAY</h2>
-                            <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
-                                {todayChats.map((item, index, array) => (
-                                        <div key={item.id}>
-                                            <HistoryItem item={item}/>
-                                            {index < array.length - 1 && (
-                                                <div
-                                                    className="border-b border-zinc-100 dark:border-zinc-800 mx-3"></div>
-                                            )}
-                                        </div>
-                                    ))}
-                            </div>
-                        </div>}
 
-                        {yesterdayChats && yesterdayChats.length > 0 &&<div className="mb-4">
-                            <h2 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 px-3">YESTERDAY</h2>
-                            <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
-                                {yesterdayChats.map((item, index, array) => (
+                    {todayChats.length > 0 || yesterdayChats.length > 0 || previous7DaysChats.length > 0 ? (
+                        <div className="mx-auto">
+                            {todayChats && todayChats.length > 0 && <div className="mb-4">
+                                <h2 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 px-3">{t('home-page.today')}</h2>
+                                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+                                    {todayChats.map((item, index, array) => (
                                         <div key={item.id}>
-                                            <HistoryItem item={item}/>
+                                            <HistoryItem item={item} />
                                             {index < array.length - 1 && (
                                                 <div
                                                     className="border-b border-zinc-100 dark:border-zinc-800 mx-3"></div>
                                             )}
                                         </div>
                                     ))}
-                            </div>
-                        </div>}
+                                </div>
+                            </div>}
 
-                        {previous7DaysChats  && previous7DaysChats.length > 0 && <div>
-                            <h2 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 px-3">PREVIOUS 7
-                                DAYS</h2>
-                            <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
-                                {previous7DaysChats.map((item, index, array) => (
+                            {yesterdayChats && yesterdayChats.length > 0 && <div className="mb-4">
+                                <h2 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 px-3">{t('home-page.yesterday')}</h2>
+                                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+                                    {yesterdayChats.map((item, index, array) => (
                                         <div key={item.id}>
-                                            <HistoryItem item={item}/>
+                                            <HistoryItem item={item} />
                                             {index < array.length - 1 && (
                                                 <div
                                                     className="border-b border-zinc-100 dark:border-zinc-800 mx-3"></div>
                                             )}
                                         </div>
                                     ))}
-                            </div>
-                        </div>}
-                    </div>
+                                </div>
+                            </div>}
+
+                            {previous7DaysChats && previous7DaysChats.length > 0 && <div>
+                                <h2 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1 px-3">{t('home-page.previous-7-days')}</h2>
+                                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+                                    {previous7DaysChats.map((item, index, array) => (
+                                        <div key={item.id}>
+                                            <HistoryItem item={item} />
+                                            {index < array.length - 1 && (
+                                                <div
+                                                    className="border-b border-zinc-100 dark:border-zinc-800 mx-3"></div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>}
+                        </div>
+                    ) : (
+                        <EmptyChats />
+                    )}
                 </motion.div>
 
                 {/* Recent activity timeline */}
@@ -331,14 +342,63 @@ export default function DashboardPage() {
     )
 }
 
+function EmptyApplications() {
+    const { t } = useTranslation();
+    
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="border border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg p-8 flex flex-col items-center justify-center text-center"
+        >
+            <div className="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-full mb-4">
+                <Layers className="h-10 w-10 text-zinc-500 dark:text-zinc-400" />
+            </div>
+            <h3 className="text-lg font-medium mb-2">{t('home-page.no-applications')}</h3>
+            <p className="text-zinc-500 dark:text-zinc-400 mb-4 max-w-md">
+                {t('home-page.create-app-description')}
+            </p>
+            <Button asChild>
+                <Plus className="mr-2 h-4 w-4" />
+                {t('home-page.create-application')}
+            </Button>
+        </motion.div>
+    );
+}
 
-function HistoryItem({item}: { item: ApiHomeRecentChatItem }) {
+function EmptyChats() {
+    const { t } = useTranslation();
+    
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="border border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg p-8 flex flex-col items-center justify-center text-center"
+        >
+            <div className="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-full mb-4">
+                <MessagesSquare className="h-10 w-10 text-zinc-500 dark:text-zinc-400" />
+            </div>
+            <h3 className="text-lg font-medium mb-2">{t('home-page.no-recent-chats')}</h3>
+            <p className="text-zinc-500 dark:text-zinc-400 mb-4 max-w-md">
+                {t('home-page.recent-chats-description')}
+            </p>
+            <Button asChild>
+                <MessageCircle className="mr-2 h-4 w-4" />
+                {t('home-page.start-chat')}
+            </Button>
+        </motion.div>
+    );
+}
+
+function HistoryItem({ item }: { item: ApiHomeRecentChatItem }) {
+    const { t } = useTranslation();
+    
     return (
         <Link to={`/${RouteEnum[item.type!]}/${item.appId}/c/${item.id}`}>
             <div
                 className="flex items-center justify-between py-2.5 px-3 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 rounded-md transition-colors">
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    <Icon type={item.type!} icon={item.icon}/>
+                    <Icon type={item.type!} icon={item.icon} />
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center">
                             <div className="text-sm font-medium truncate mr-2">{item.title}</div>
@@ -346,16 +406,15 @@ function HistoryItem({item}: { item: ApiHomeRecentChatItem }) {
                                 className="text-xs text-zinc-500 dark:text-zinc-400 shrink-0">{new Date(item.updatedAt * 1000).toLocaleString()}</div>
                         </div>
                         <div>
-                            <span className="text-xs text-zinc-600 dark:text-zinc-300 truncate">From {item.appName}</span>
+                            <span className="text-xs text-zinc-600 dark:text-zinc-300 truncate">{t('home-page.from')} {item.appName}</span>
                             <span
-                                className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                    item.visibility === AppVisibility.Public
-                                        ? "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20"
-                                        : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
-                                }`}
+                                className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.visibility === AppVisibility.Public
+                                    ? "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20"
+                                    : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
+                                    }`}
                             >
-                                           {AppVisibilityEnum[item.visibility] || "Unknown"}
-                                        </span>
+                                {AppVisibilityEnum[item.visibility] || "Unknown"}
+                            </span>
                         </div>
 
                     </div>
@@ -363,13 +422,13 @@ function HistoryItem({item}: { item: ApiHomeRecentChatItem }) {
 
                 <div className="flex items-center space-x-4 ml-4 shrink-0">
                     <div className="flex items-center space-x-1">
-                        <MessageSquare className="h-3.5 w-3.5 text-zinc-500"/>
+                        <MessageSquare className="h-3.5 w-3.5 text-zinc-500" />
                         <span className="text-xs text-zinc-500 dark:text-zinc-400">{item.msgCount}</span>
                     </div>
 
                     <div className="flex -space-x-2">
                         {item.collaborators.slice(0, 3).map((collaborator) => (
-                            <UserAvatar user={collaborator as AvatarUser}/>
+                            <UserAvatar user={collaborator as AvatarUser} />
                         ))}
                         {item.collaborators.length > 3 && (
                             <div

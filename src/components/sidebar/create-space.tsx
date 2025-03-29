@@ -15,8 +15,6 @@ import { AppType, AppIcons, AppLabelEnum } from "@/lib/constants/constants"
 import CopilotCreation from "@/app/front/space/components/copilot-creation"
 import { useCreateSpace } from "@/hooks/use-create-space";
 
-
-
 export const documentTypes = [1, 2, 3, 5].map((k) => {
     return {
         name: AppLabelEnum[k as unknown as AppType],
@@ -80,9 +78,6 @@ export function CreateSpace() {
 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="max-w-6xl p-0 gap-0 h-[90vh] max-h-[90vh]">
-                    {/* <DialogHeader>
-                        <DialogTitle>Create {selectedType ? documentTypes.find(dt => dt.type === selectedType)?.name : ''}</DialogTitle>
-                    </DialogHeader> */}
                     <div className="py-4 overflow-y-auto max-h-[90vh]">
                         {renderCreationComponent()}
                     </div>

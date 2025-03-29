@@ -2,10 +2,10 @@
 
 import * as React from "react"
 import { X } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useSidebar } from "../ui/sidebar"
+import { useTranslation } from "react-i18next"
 
 const SidebarDialogContext = React.createContext<{ handleClose: () => void }>({
   handleClose: () => { }
@@ -30,6 +30,7 @@ export function SidebarDialog({
   children,
   isSidebarClick = () => false
 }: SidebarDialogProps) {
+  const { t } = useTranslation()
   const dialogRef = React.useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = React.useState(false)
   const { state, isMobile } = useSidebar();
@@ -91,7 +92,7 @@ export function SidebarDialog({
         <h2 className="text-lg font-semibold">{title}</h2>
         <Button variant="ghost" size="icon" onClick={handleClose}>
           <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">{t('sidebar-dialog.Close')}</span>
         </Button>
       </div>
 

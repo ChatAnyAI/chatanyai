@@ -11,17 +11,17 @@ const steps: Step[] = [
     disableBeacon: true,
   },
   {
-    target: "[data-name=\"Home\"]",
+    target: "[data-name=\"home\"]",
     content: "Here you can quickly return to the home page.",
     placement: "right",
   },
   {
-    target: "[data-name=\"Recently Files\"]",
+    target: "[data-name=\"files\"]",
     content: "Here shows content shared with you.",
     placement: "right",
   },
   {
-    target: "[data-name=\"Shared with me\"]",
+    target: "[data-name=\"shared\"]",
     content: "View your recently used files.",
     placement: "right",
   },

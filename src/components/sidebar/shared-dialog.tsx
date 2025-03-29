@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import { useTranslation } from "react-i18next"
 
 // Initialize dayjs plugin for relative time
 dayjs.extend(relativeTime)
@@ -21,6 +22,7 @@ interface SharedItemsDialogProps {
 }
 
 export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
+    const { t } = useTranslation()
     const router = useNavigate();
     const { data: items, isLoading } = useSWR("ApiShareWithMeList", ApiShareWithMeList);
 
@@ -65,7 +67,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
         <>
             <SidebarOverlay onClick={onClose} />
             <SidebarDialog
-                title="Shared with me"
+                title={t("sidebar.Shared with me")}
                 onClose={onClose}
                 isSidebarClick={checkSidebarClick}
             >
@@ -103,7 +105,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
                                                 <div className="flex items-center gap-1.5">
                                                     <span className="text-sm font-medium truncate">{item.fromUser.name}</span>
                                                     <span className="text-xs text-muted-foreground">
-                                                        shared
+                                                        {t('shared-dialog.shared')}
                                                     </span>
                                                     <h3 className="text-xs truncate flex-1">
                                                         {isApp ? data.name : (data as RespChat).title}
@@ -126,9 +128,9 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
                         <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-muted">
                             <Share2 className="h-5 w-5 text-muted-foreground" />
                         </div>
-                        <h3 className="mb-1 text-base font-medium">Nothing shared with you yet</h3>
+                        <h3 className="mb-1 text-base font-medium">{t('shared-dialog.Nothing shared with you yet')}</h3>
                         <p className="text-xs text-muted-foreground max-w-[240px]">
-                            When someone shares an app or chat with you, it will appear here.
+                            {t('shared-dialog.When someone shares an app or chat with you, it will appear here.')}
                         </p>
                     </div>
                 )}

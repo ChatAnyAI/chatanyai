@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sidebar"
 import {TeamSwitcher} from "@/components/team-switcher";
 import {useGlobalStore} from "@/store/globalStore";
+import { useTranslation } from 'react-i18next';
 
 
 const menuItems: NavMenuItem[] = [
@@ -25,6 +26,7 @@ const menuItems: NavMenuItem[] = [
 export function UserSettingSidebar() {
     const navigate = useNavigate();
     const user = useGlobalStore(state => state.user);
+    const { t } = useTranslation();
 
     return (
         <div className="flex h-full">
@@ -49,7 +51,7 @@ export function UserSettingSidebar() {
                             >
                                 <div>
                                     <ArrowLeft className="size-4" />
-                                    <span> Back to Desktop</span>
+                                    <span> {t('userSetting-components-sidebar.Back to Desktop')}</span>
                                 </div>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

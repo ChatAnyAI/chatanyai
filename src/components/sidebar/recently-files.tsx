@@ -10,11 +10,13 @@ import { ApiFileRecent, FileResp } from "@/service/api";
 import { SidebarDialog, SidebarOverlay } from "@/components/sidebar/sidebar-dialog";
 import dayjs from "dayjs";
 import { FileFormatIcon, getFileTypeLabel } from "@/lib/files/tools";
+import { useTranslation } from "react-i18next";
 
 
 // File icon component
 
 export default function RecentlyFiles({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<FileResp[]>([])
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
@@ -85,7 +87,7 @@ export default function RecentlyFiles({ isOpen, onClose }: { isOpen: boolean, on
   // Handle file download
   const handleDownload = useCallback((e: React.MouseEvent, file: FileResp) => {
     e.stopPropagation();
-    
+
     // Create an anchor element
     const anchor = document.createElement('a');
     anchor.href = `/${file.contentKey}`;
@@ -105,7 +107,7 @@ export default function RecentlyFiles({ isOpen, onClose }: { isOpen: boolean, on
     <>
       <SidebarOverlay onClick={onClose} />
       <SidebarDialog
-        title="Recently Files"
+        title={t("sidebar.Recently Files")}
         onClose={onClose}
         isSidebarClick={checkSidebarClick}
       >
@@ -133,9 +135,9 @@ export default function RecentlyFiles({ isOpen, onClose }: { isOpen: boolean, on
                     </div>
                     <p className="text-sm text-gray-500 mt-1 truncate max-w-[270px]">{getDescription(file.contentKey)}</p>
                   </div>
-                  
-                  <div 
-                    className="ml-2 p-2 rounded-full hover:bg-gray-200" 
+
+                  <div
+                    className="ml-2 p-2 rounded-full hover:bg-gray-200"
                     title="Download file"
                     onClick={(e) => handleDownload(e, file)}
                   >
@@ -148,13 +150,13 @@ export default function RecentlyFiles({ isOpen, onClose }: { isOpen: boolean, on
             {loading && (
               <div className="flex justify-center items-center p-4">
                 <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
-                <span className="ml-2 text-gray-600">Loading more files...</span>
+                <span className="ml-2 text-gray-600">{t("sidebar.Loading more files...")}</span>
               </div>
             )}
 
-            {!hasMore && files.length > 0 && <div className="text-center p-4 text-gray-500">No more files to load</div>}
+            {!hasMore && files.length > 0 && <div className="text-center p-4 text-gray-500">{t("recently-files.No more files to load")}</div>}
 
-            {files.length === 0 && !loading && <div className="h-full text-center p-8 text-gray-500">No files found</div>}
+            {files.length === 0 && !loading && <div className="h-full text-center p-8 text-gray-500">{t("recently-files.No files found")}</div>}
           </div>
         </div>
       </SidebarDialog>

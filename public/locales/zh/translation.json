@@ -1,0 +1,208 @@
+{
+  "sidebar": {
+    "Admin Area": "管理区域",
+    "Home": "首页",
+    "Recently Files": "最近文件",
+    "Loading more files...": "加载更多文件...",
+    "Shared with me": "与我共享",
+    "New Chat": "新对话",
+    "Share": "共享",
+    "Setting": "设置"
+  },
+  "sidebar-dialog": {
+    "Close": "关闭"
+  },
+  "shared-dialog": {
+    "shared": "共享",
+    "Nothing shared with you yet": "暂无共享内容",
+    "When someone shares an app or chat with you, it will appear here.": "当有人与您共享应用或对话时，将显示在这里。"
+  },
+  "recently-files": {
+    "No more files to load": "没有更多文件可加载",
+    "No files found": "未找到文件"
+  },
+  "aichat-page": {
+    "Loading...": "加载中..."
+  },
+  "info-page": {
+    "Loading...": "加载中..."
+  },
+  "rightSetting": {
+    "Model Settings": "模型设置",
+    "Temperature": "温度",
+    "Max Tokens": "最大令牌数",
+    "Frequency Penalty": "频率惩罚",
+    "Presence Penalty": "存在惩罚",
+    "Message Settings": "消息设置",
+    "Show divider between messages": "在消息之间显示分隔线",
+    "Use serif font": "使用衬线字体",
+    "Message Font Size": "消息字体大小",
+    "Input Settings": "输入设置",
+    "Show estimated input tokens": "显示预估输入令牌数",
+    "Paste long text as file": "将长文本粘贴为文件"
+  },
+  "chat-menu": {
+    "Share": "共享",
+    "Rename": "重命名",
+    "Favorite": "收藏",
+    "Delete": "删除"
+  },
+  "chat-list": {
+    "username": "用户名"
+  },
+  "empty-state": {
+    "No Chats": "无对话",
+    "To get started, create a new chat in this project.": "要开始，请在此项目中创建新对话。"
+  },
+  "chatpdf-info-page": {
+    "Loading...": "加载中..."
+  },
+  "pdfv2-preview": {
+    "Previous": "上一页",
+    "of": "共",
+    "Next": "下一页",
+    "Rotate": "旋转",
+    "Zoom Out": "缩小",
+    "Zoom In": "放大",
+    "Error Loading PDF": "PDF加载错误",
+    "Loading PDF document...": "正在加载PDF文档...",
+    "Navigation help": "使用箭头键在页面之间导航。按+放大和-缩小。放大后，可以水平和垂直滚动查看页面的不同部分。"
+  },
+  "pdf-upload": {
+    "AI PDF Chat Assistant": "AI PDF聊天助手",
+    "Upload description": "上传您的PDF，与理解您文档的AI聊天",
+    "Error": "错误",
+    "Upload your PDF": "上传您的PDF",
+    "Drag and drop": "拖放您的PDF文件到这里或点击浏览",
+    "Select PDF": "选择PDF",
+    "Maximum file size": "最大文件大小：10MB",
+    "Uploading...": "正在上传...",
+    "Processing": "正在处理文档分析...",
+    "Why use AI PDF Chat?": "为什么使用AI PDF聊天？",
+    "Quick Analysis": "快速分析",
+    "Quick Analysis description": "从您的文档中获取即时见解",
+    "Ask Questions": "提问",
+    "Ask Questions description": "与AI聊天了解您PDF中的特定内容",
+    "Summarize": "总结",
+    "Summarize description": "提取关键点并生成摘要",
+    "Upload successful": "上传成功",
+    "Upload failed": "上传失败",
+    "Upload error": "上传过程中发生错误"
+  },
+  "pdf-preview": {
+    "Page": "页面",
+    "of": "共"
+  },
+  "home-page": {
+    "hello": "您好，",
+    "welcome": "欢迎回到您的工作空间",
+    "recent-applications": "最近的应用",
+    "recent-chats": "最近的对话",
+    "today": "今天",
+    "yesterday": "昨天",
+    "previous-7-days": "过去7天",
+    "no-applications": "暂无应用",
+    "create-app-description": "创建您的第一个应用，与AI聊天，构建知识库，或与团队协作。",
+    "create-application": "创建应用",
+    "no-recent-chats": "暂无最近对话",
+    "recent-chats-description": "您最近的对话将显示在这里。开始与您的应用对话以开始。",
+    "start-chat": "开始对话",
+    "from": "来自",
+    "failed-to-load": "加载首页列表失败"
+  },
+  "meeting-page": {
+    "loading": "加载中"
+  },
+  "meeting-info-page": {
+    "loading": "加载中"
+  },
+  "meeting-setting": {
+    "brainstorming": "头脑风暴",
+    "stimulate-creativity": "激发创造力和思维碰撞。",
+    "discussion-topic": "讨论主题",
+    "customized-topics": "自定义主题：",
+    "generate-random-topics": "生成随机主题。",
+    "dialogue-turn-setting": "对话轮次设置",
+    "dialogue-turns": "对话轮次",
+    "character-setting-panel": "角色设置面板",
+    "character-name": "角色名称",
+    "delete-character": "删除角色。",
+    "character-description": "角色描述（最多200字符）",
+    "add-new-character": "添加新角色",
+    "start-discussion": "开始讨论",
+    "start-discussion-tooltip": "使用当前设置开始讨论。",
+    "enter-topic-error": "请输入讨论主题。",
+    "add-character-error": "请至少添加一个角色。"
+  },
+  "meeting-chat": {
+    "error": "错误",
+    "chat-failed": "聊天失败。请检查模型提供商设置。"
+  },
+  "note-doc-list": {
+    "Create Fail": "创建失败",
+    "Blank": "空白"
+  },
+  "space-page": {
+    "Space Settings": "空间设置",
+    "Manage your": "管理您的",
+    "settings": "设置",
+    "Delete Space": "删除空间",
+    "Private": "私密",
+    "Public": "公开",
+    "General": "通用",
+    "Files": "文件",
+    "Members": "成员",
+    "General Settings": "通用设置",
+    "Update your space information": "更新您的空间信息和偏好",
+    "Icon": "图标",
+    "Click to select an emoji": "点击选择表情符号作为空间图标",
+    "Name": "名称",
+    "Enter space name": "输入空间名称",
+    "Description": "描述",
+    "Enter space description": "输入空间描述",
+    "Briefly describe": "简要描述此空间的用途",
+    "Type": "类型",
+    "Select space type": "选择空间类型",
+    "Copilot": "副驾驶",
+    "ChatPDF": "PDF聊天",
+    "Brainstorm": "头脑风暴",
+    "KnowledgeBase": "知识库",
+    "Copilot Prompt": "副驾驶提示",
+    "Enter instructions": "输入副驾驶的指令",
+    "Define how": "定义AI副驾驶在此空间中的行为方式",
+    "Save Changes": "保存更改",
+    "Saving": "保存中...",
+    "Loading settings": "加载空间设置...",
+    "Delete confirmation": "您确定要删除此空间吗？此操作无法撤销，与此空间相关的所有数据将被永久删除。",
+    "Yes Delete": "是的，删除空间",
+    "Cancel": "取消",
+    "Deleting": "删除中..."
+  },
+  "members-tab": {
+    "Members": "成员",
+    "Manage who has access": "管理谁有权访问此空间",
+    "Current Members": "当前成员",
+    "No members yet": "暂无成员。添加成员以进行协作。",
+    "Remove": "移除",
+    "Remove Member": "移除成员",
+    "Are you sure": "您确定要移除",
+    "from this space": "从此空间？",
+    "Cancel": "取消"
+  },
+  "copilot-creation": {
+    "New Copilot": "新副驾驶",
+    "Search templates": "搜索模板",
+    "No templates found": "未找到模板",
+    "Try adjusting": "尝试调整您的搜索词或类别",
+    "Use": "使用"
+  },
+  "userSetting-components-sidebar": {
+    "Back to Desktop": "返回桌面"
+  },
+  "not-found": {
+    "404": "404",
+    "Page not found": "页面未找到",
+    "Sorry message": "抱歉，我们找不到您要查找的页面。它可能已被移动或删除。",
+    "Back to Home": "返回首页"
+  }
+}

@@ -7,8 +7,10 @@ import { ChatList } from './component/chat-list';
 import { EmptyState } from './component/empty-state';
 import { ApiChatListByAppId } from '@/service/api';
 import useSWR from 'swr';
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+  const { t } = useTranslation();
   const chatId = generateUUID();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();

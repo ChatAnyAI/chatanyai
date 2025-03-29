@@ -8,35 +8,19 @@ import React from "react";
 import { AppUpdate } from "./app-update";
 import Share from "./sharev2";
 import { useVisibility } from "@/hooks/use-visibility";
-import {usePermission} from "@/hooks/use-permission";
+import { usePermission } from "@/hooks/use-permission";
+import { useTranslation } from "react-i18next";
 
 
 export default (
     { appInfo, children }:
         { appInfo: AppResp & { isFullAccess?: boolean }; children: ReactNode; hiddenFavorite?: boolean }) => {
     const navigator = useNavigate();
-    // const { toast } = useToast();
-    // const { toggleMenu: onClickMenu, activeMenu } = useAppSideBarHistoryListContext();
     const triggerRef = React.useRef<HTMLDivElement>(null);
-
-    // const handleDelete = async () => {
-    //     try {
-    //         await ApiDatasetDelete(appInfo.id);
-    //         toast({
-    //             title: "Dataset deleted successfully"
-    //         });
-    //         // You can add callback or logic to refresh the list here
-    //     } catch (error) {
-    //         toast({
-    //             title: "Failed to delete dataset",
-    //             variant: "destructive"
-    //         });
-    //     }
-    // };
-
     const [showUpdatePopover, setShowUpdatePopover] = useState(false);
     const { visibility, handleVisibilityChange } = useVisibility(appInfo.visibility, appInfo.id, '');
-    const { permission, handlePermissionChange } = usePermission(appInfo.permission,visibility, appInfo.id, '');
+    const { permission, handlePermissionChange } = usePermission(appInfo.permission, visibility, appInfo.id, '');
+    const { t } = useTranslation();
 
     return <>
         <DropdownMenu onOpenChange={(state) => {
@@ -64,20 +48,12 @@ export default (
                         />
                     </DropdownMenuContent> :
                     <DropdownMenuContent align="start" className="w-50">
-                        {/* {
-                            hiddenFavorite ? null :
-
-                                <DropdownMenuItem onClick={handleFavoriteClick}>
-                                    <Star className="h-4 w-4 mr-2" />
-                                    {isFavorite ? 'Remove Favorite' : 'Add Favorite'}
-                                </DropdownMenuItem>
-                        } */}
                         <DropdownMenuItem onClick={() => {
                             if (!appInfo.id) return;
                             navigator(`/${RouteEnum[appInfo.type]}/${appInfo.id}`);
                         }}>
                             <MessageCircle className="h-4 w-4 mr-2" />
-                            New Chat
+                            {t('New Chat')}
                         </DropdownMenuItem>
                         {
                             appInfo.isFullAccess ?
@@ -85,7 +61,7 @@ export default (
                                     <DropdownMenuSub>
                                         <DropdownMenuSubTrigger>
                                             <Users className="h-4 w-4 mr-2" />
-                                            Share
+                                            {t('Share')}
                                         </DropdownMenuSubTrigger>
                                         <DropdownMenuSubContent>
                                             <div className="p-0">
@@ -109,7 +85,7 @@ export default (
                                         navigator(`/${RouteEnum[appInfo.type]}/${appInfo.id}/setting`);
                                     }}>
                                         <Settings className="h-4 w-4 mr-2" />
-                                        Setting
+                                        {t("Setting")}
                                     </DropdownMenuItem>
                                 </> : null
                         }

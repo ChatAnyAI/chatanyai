@@ -19,8 +19,10 @@ import { useParams } from "react-router-dom"
 import {UserAvatar} from "@/components/user-avatar";
 import {InviteScreen} from "@/components/share/invite-screen";
 import useSWR from "swr";
+import { useTranslation } from "react-i18next"
 
 export function MembersTab() {
+  const { t } = useTranslation()
   const [users, setUsers] = useState<ShareUser[]>([])
   const [spaceUsers, setSpaceUsers] = useState<ShareUser[]>([])
   // const [searchQuery, setSearchQuery] = useState("")
@@ -80,8 +82,8 @@ export function MembersTab() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Members</CardTitle>
-        <CardDescription>Manage who has access to this space</CardDescription>
+        <CardTitle>{t("members-tab.Members")}</CardTitle>
+        <CardDescription>{t("members-tab.Manage who has access")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-6">
@@ -137,12 +139,12 @@ export function MembersTab() {
         </div>
 
         <div>
-          <h3 className="text-sm font-medium mb-3">Current Members ({spaceUsers.length})</h3>
+          <h3 className="text-sm font-medium mb-3">{t("members-tab.Current Members")} ({spaceUsers.length})</h3>
 
           {spaceUsers.length === 0 ? (
             <div className="text-center py-8 border-2 border-dashed rounded-lg">
               <Users className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">No members yet. Add members to collaborate.</p>
+              <p className="text-sm text-muted-foreground">{t("members-tab.No members yet")}</p>
             </div>
           ) : (
             <div className="border rounded-md">
@@ -166,14 +168,14 @@ export function MembersTab() {
                         className="text-muted-foreground hover:text-destructive"
                       >
                         <Trash2 className="h-4 w-4 mr-1" />
-                        Remove
+                        {t("members-tab.Remove")}
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
-                        <DialogTitle>Remove Member</DialogTitle>
+                        <DialogTitle>{t("members-tab.Remove Member")}</DialogTitle>
                         <DialogDescription>
-                          Are you sure you want to remove {user.name} from this space?
+                          {t("members-tab.Are you sure")} {user.name} {t("members-tab.from this space")}
                         </DialogDescription>
                       </DialogHeader>
                       <div className="flex items-center gap-3 py-4">
@@ -185,10 +187,10 @@ export function MembersTab() {
                       </div>
                       <DialogFooter>
                         <Button variant="outline" className="mr-2">
-                          Cancel
+                          {t("members-tab.Cancel")}
                         </Button>
                         <Button variant="destructive" onClick={() => removeUserFromSpace(user)}>
-                          Remove
+                          {t("members-tab.Remove")}
                         </Button>
                       </DialogFooter>
                     </DialogContent>

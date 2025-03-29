@@ -9,6 +9,7 @@ import { RespChat, RespChatHistoryMessage, ApiChatHistory, ApiGetChat } from '@/
 import { useGlobalStore } from '@/store/globalStore';
 import { RightSettingProvider } from '../component/rightSetting';
 import { useChatStore } from '@/store/chatStore';
+import { useTranslation } from 'react-i18next';
 
 export function ChatWrapper() {
     const { appId, chatId: id } = useParams();
@@ -44,8 +45,9 @@ export function ChatWrapper() {
 }
 
 export default function Page() {
+    const { t } = useTranslation();
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t('info-page.Loading...')}</div>}>
             <ChatWrapper />
         </Suspense>
     );

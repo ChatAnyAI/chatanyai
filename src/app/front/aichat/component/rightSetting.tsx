@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import React from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { useTranslation } from 'react-i18next';
 
 interface SettingData {
     showDivider: boolean;
@@ -73,6 +74,7 @@ export const useRightSetting = () => {
 }
 
 export function RightSidebar() {
+    const { t } = useTranslation();
     const {
         settingData, updateSettingData, showSettings
     } = React.useContext(RightSettingContext);
@@ -85,7 +87,7 @@ export function RightSidebar() {
         <ScrollArea className="h-screen w-80 border-l p-6 space-y-8">
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-lg font-semibold">Model Settings</h2>
+                        <h2 className="text-lg font-semibold">{t('rightSetting.Model Settings')}</h2>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
                             <Info className="h-4 w-4" />
                         </Button>
@@ -93,7 +95,7 @@ export function RightSidebar() {
 
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Temperature</Label>
+                            <Label>{t('rightSetting.Temperature')}</Label>
                             <Slider value={[settingData.temperature || 0]} max={2} step={0.1} onValueChange={([value]) => updateSettingData({ temperature: value })} />
                         </div>
 
@@ -103,52 +105,52 @@ export function RightSidebar() {
                     </div> */}
 
                         <div className="space-y-2">
-                            <Label>Max Tokens</Label>
+                            <Label>{t('rightSetting.Max Tokens')}</Label>
                             <Slider value={[settingData.maxTokens || 1]} min={1} max={4096} step={1} onValueChange={([value]) => updateSettingData({ maxTokens: value })} />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Frequency Penalty</Label>
+                            <Label>{t('rightSetting.Frequency Penalty')}</Label>
                             <Slider value={[settingData.frequencyPenalty || 0]} min={-2} max={2} step={0.1} onValueChange={([value]) => updateSettingData({ frequencyPenalty: value })} />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Presence Penalty</Label>
+                            <Label>{t('rightSetting.Presence Penalty')}</Label>
                             <Slider value={[settingData.presencePenalty || 0]} min={-2} max={2} step={0.1} onValueChange={([value]) => updateSettingData({ presencePenalty: value })} />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold">Message Settings</h2>
+                    <h2 className="text-lg font-semibold">{t('rightSetting.Message Settings')}</h2>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <Label>Show divider between messages</Label>
+                            <Label>{t('rightSetting.Show divider between messages')}</Label>
                             <Switch checked={settingData.showDivider} onCheckedChange={(checked) => updateSettingData({ showDivider: checked })} />
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <Label>Use serif font</Label>
+                            <Label>{t('rightSetting.Use serif font')}</Label>
                             <Switch checked={settingData.useSerifFont} onCheckedChange={(checked) => updateSettingData({ useSerifFont: checked })} />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Message Font Size</Label>
+                            <Label>{t('rightSetting.Message Font Size')}</Label>
                             <Slider value={[settingData.messageFontSize]} max={100} step={1} onValueChange={([value]) => updateSettingData({ messageFontSize: value })} />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold">Input Settings</h2>
+                    <h2 className="text-lg font-semibold">{t('rightSetting.Input Settings')}</h2>
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                            <Label>Show estimated input tokens</Label>
+                            <Label>{t('rightSetting.Show estimated input tokens')}</Label>
                             <Switch checked={settingData.showTokens} onCheckedChange={(checked) => updateSettingData({ showTokens: checked })} />
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <Label>Paste long text as file</Label>
+                            <Label>{t('rightSetting.Paste long text as file')}</Label>
                             <Switch checked={settingData.pasteLongText} onCheckedChange={(checked) => updateSettingData({ pasteLongText: checked })} />
                         </div>
                     </div>

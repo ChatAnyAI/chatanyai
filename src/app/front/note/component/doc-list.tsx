@@ -6,9 +6,10 @@ import useSWR from "swr";
 import {ApiChatListByAppId, ApiCreateDoc, ApiDocList} from "@/service/api";
 import {useChatStore} from "@/store/chatStore";
 import {toast} from "@/hooks/use-toast";
-
+import { useTranslation } from "react-i18next";
 
 export default function DocList() {
+    const { t } = useTranslation();
     const { appId,chatId } = useParams();
     const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChatListByAppId(appId!));
     const { data: docList, mutate } = useSWR([`ApiDocList`, appId], () => ApiDocList(appId!));
@@ -22,14 +23,12 @@ export default function DocList() {
             navigate(`/${RouteEnum[currentAppInfo?.type!]}/${appId}/c/${resp.guid}`);
         } catch (error) {
             toast({
-                title: 'Create Fail',
-                description: 'Create Fail',
+                title: t('note-doc-list.Create Fail'),
+                description: t('note-doc-list.Create Fail'),
                 variant: 'destructive'
             });
         }
     }
-
-
 
     return (
         <div className="w-60 bg-gray-50 border-r border-gray-200 overflow-y-auto">
@@ -44,7 +43,7 @@ export default function DocList() {
                 <div className="space-y-3">
                     {/* First card */}
                     {/*<div className="bg-white rounded-lg shadow-sm p-4 h-32 flex items-center justify-center">*/}
-                    {/*    <p className="text-gray-500">Blank</p>*/}
+                    {/*    <p className="text-gray-500">{t('note-doc-list.Blank')}</p>*/}
                     {/*</div>*/}
 
                     {/* Second card */}

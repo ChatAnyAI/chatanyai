@@ -5,6 +5,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
 
@@ -13,6 +14,7 @@ interface PDFPreviewProps {
 }
 
 export default function PDFPreview({ pdfUrl }: PDFPreviewProps) {
+    const { t } = useTranslation();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | null>(null);
     const [pageNum, setPageNum] = useState(1);
@@ -90,7 +92,7 @@ export default function PDFPreview({ pdfUrl }: PDFPreviewProps) {
                 </Button>
                 
                 <span className="text-sm">
-                    Page {pageNum} of {numPages}
+                    {t('pdf-preview.Page')} {pageNum} {t('pdf-preview.of')} {numPages}
                 </span>
                 
                 <Button

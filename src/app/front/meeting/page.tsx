@@ -8,8 +8,10 @@ import { useChatStore } from '@/store/chatStore';
 import MeetingChat from './components/meeting-chat';
 import MeetingSetting, { MeetingData } from './components/meeting-setting';
 import { ChatHeader } from '@/components/chat/chat-header';
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+  const { t } = useTranslation();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();
   const idRef = useRef<string>(generateUUID());

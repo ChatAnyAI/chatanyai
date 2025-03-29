@@ -17,17 +17,19 @@ import { useInitialFetchRobots } from "@/hooks/use-initial-fetch-robots"
 import { NavHeader } from "@/components/nav-header";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { useSpaceDrag } from "@/hooks/use-space-api"
-import {UserRole} from "@/lib/constants/constants";
+import { UserRole } from "@/lib/constants/constants";
+import { i18n } from "i18next"
+import { useTranslation } from "react-i18next"
 
-const data = {
+const data = (t: i18n['t']) => ({
   navSupport: [
     {
-      name: "Admin Area",
+      name: t("sidebar.Admin Area"),
       url: "/admin/overview",
       icon: LifeBuoy,
     },
   ],
-}
+})
 
 
 export type ActiveMenu = {
@@ -67,6 +69,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const user = useGlobalStore(state => state.user);
   const { appList } = useInitialFetchRobots();
   const { onDragEnd } = useSpaceDrag();
+  const { t } = useTranslation();
 
   return (
     <div className="flex h-full">
@@ -81,8 +84,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <NavHeader />
           {/*<NavGroup items={favoriteAppList} groupName="Favorite" maked />*/}
-          <NavGroup items={appList} groupName="Workspace" draggable onDragEnd={onDragEnd} showAdd maked />
-          {user.roleId == UserRole.Admin && <NavGroup items={data.navSupport} className="mt-auto" />}
+          <NavGroup items={appList} groupName={t("Workspace")} draggable onDragEnd={onDragEnd} showAdd maked />
+          {user.roleId === UserRole.Admin && <NavGroup items={data(t).navSupport} className="mt-auto" />}
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={user} />

@@ -12,8 +12,10 @@ import useSWR from 'swr';
 import { ApiChatHistory, ApiGetChat, RespChat, RespChatHistoryMessage } from '@/service/api';
 import { useGlobalStore } from '@/store/globalStore';
 import { ChatHeader } from '@/components/chat/chat-header';
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+  const { t } = useTranslation();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId, chatId } = useParams();
   const id = chatId;
@@ -41,7 +43,7 @@ export default function Page() {
   }, [messageHistoryResp])
 
   if (!storeData && isLoading) {
-    return <div>loading</div>
+    return <div>{t('meeting-info-page.loading')}</div>
   }
 
   return (

@@ -31,6 +31,7 @@ import {
 import ShareDialog from "@/components/sharev2";
 import {useVisibility} from "@/hooks/use-visibility";
 import {usePermission} from "@/hooks/use-permission";
+import { useTranslation } from "react-i18next"
 
 // Form schema for validation
 const formSchema = z.object({
@@ -57,6 +58,7 @@ const getWorkspaceIcon = (type: AppType) => {
 }
 
 export default function SpaceSettings() {
+  const { t } = useTranslation()
   const [space, setSpace] = useState<Space | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -183,7 +185,7 @@ export default function SpaceSettings() {
       <div className="w-full flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading space settings...</p>
+          <p className="text-muted-foreground">{t("space-page.Loading settings")}</p>
         </div>
       </div>
     )
@@ -193,9 +195,9 @@ export default function SpaceSettings() {
     <div className="container mx-auto py-6 px-4 md:px-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Space Settings</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("space-page.Space Settings")}</h1>
           <p className="text-muted-foreground">
-            Manage your {space?.type ? AppLabelEnum[space.type] : "workspace"} settings
+            {t("space-page.Manage your")} {space?.type ? AppLabelEnum[space.type] : "workspace"} {t("space-page.settings")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -205,7 +207,7 @@ export default function SpaceSettings() {
             size="sm"
             onClick={() => setShowDeleteDialog(true)}
           >
-            Delete Space
+            {t("space-page.Delete Space")}
           </Button>
           {space?.type && (
             <Badge variant="outline" className="flex items-center gap-1 px-3 py-1">
@@ -214,7 +216,7 @@ export default function SpaceSettings() {
             </Badge>
           )}
           <Badge variant={space?.visibility === 1 ? "secondary" : "outline"} className="px-3 py-1">
-            {space?.visibility === 1 ? "Private" : "Public"}
+            {space?.visibility === 1 ? t("space-page.Private") : t("space-page.Public")}
           </Badge>
 
         </div>
@@ -228,21 +230,21 @@ export default function SpaceSettings() {
                 value="general"
                 className="flex items-center justify-start w-full py-3 px-4 data-[state=active]:bg-background"
               >
-                General
+                {t("space-page.General")}
               </TabsTrigger>
               {Number.parseInt(form.watch("type")) === 1 && (
                 <TabsTrigger
                   value="files"
                   className="flex items-center justify-start w-full py-3 px-4 data-[state=active]:bg-background"
                 >
-                  Files
+                  {t("space-page.Files")}
                 </TabsTrigger>
               )}
                 <TabsTrigger
                   value="members"
                   className="flex items-center justify-start w-full py-3 px-4 data-[state=active]:bg-background"
                 >
-                  Members
+                  {t("space-page.Members")}
                 </TabsTrigger>
             </TabsList>
           </div>
@@ -253,8 +255,8 @@ export default function SpaceSettings() {
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)}>
                     <CardHeader>
-                      <CardTitle>General Settings</CardTitle>
-                      <CardDescription>Update your space information and preferences</CardDescription>
+                      <CardTitle>{t("space-page.General Settings")}</CardTitle>
+                      <CardDescription>{t("space-page.Update your space information")}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                       <FormField
@@ -262,7 +264,7 @@ export default function SpaceSettings() {
                         name="icon"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Icon</FormLabel>
+                            <FormLabel>{t("space-page.Icon")}</FormLabel>
                             <div className="flex items-center gap-2">
                               <Button
                                 type="button"
@@ -283,7 +285,7 @@ export default function SpaceSettings() {
                                 )}
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                Click to select an emoji as space icon
+                                {t("space-page.Click to select an emoji")}
                               </div>
                             </div>
                             <FormMessage />
@@ -296,9 +298,9 @@ export default function SpaceSettings() {
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Name</FormLabel>
+                            <FormLabel>{t("space-page.Name")}</FormLabel>
                             <FormControl>
-                              <Input placeholder="Enter space name" {...field} />
+                              <Input placeholder={t("space-page.Enter space name")} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -310,15 +312,15 @@ export default function SpaceSettings() {
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Description</FormLabel>
+                            <FormLabel>{t("space-page.Description")}</FormLabel>
                             <FormControl>
                               <Textarea
-                                placeholder="Enter space description"
+                                placeholder={t("space-page.Enter space description")}
                                 className="resize-none min-h-[100px]"
                                 {...field}
                               />
                             </FormControl>
-                            <FormDescription>Briefly describe the purpose of this space</FormDescription>
+                            <FormDescription>{t("space-page.Briefly describe")}</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -330,29 +332,29 @@ export default function SpaceSettings() {
                           name="type"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Type</FormLabel>
+                              <FormLabel>{t("space-page.Type")}</FormLabel>
                               <Select disabled onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select space type" />
+                                    <SelectValue placeholder={t("space-page.Select space type")} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                   <SelectItem value="1" className="flex items-center gap-2">
                                     <MessageSquare className="h-4 w-4 text-orange-500" />
-                                    <span>Copilot</span>
+                                    <span>{t("space-page.Copilot")}</span>
                                   </SelectItem>
                                   <SelectItem value="2" className="flex items-center gap-2">
                                     <FileText className="h-4 w-4 text-blue-500" />
-                                    <span>ChatPDF</span>
+                                    <span>{t("space-page.ChatPDF")}</span>
                                   </SelectItem>
                                   <SelectItem value="3" className="flex items-center gap-2">
                                     <Brain className="h-4 w-4 text-purple-500" />
-                                    <span>Brainstorm</span>
+                                    <span>{t("space-page.Brainstorm")}</span>
                                   </SelectItem>
                                     <SelectItem value="4" className="flex items-center gap-2">
                                         <Database className="h-4 w-4 text-emerald-500" />
-                                        <span>KnowledgeBase</span>
+                                        <span>{t("space-page.KnowledgeBase")}</span>
                                     </SelectItem>
                                 </SelectContent>
                               </Select>
@@ -401,15 +403,15 @@ export default function SpaceSettings() {
                           name="copilotPrompt"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Copilot Prompt</FormLabel>
+                              <FormLabel>{t("space-page.Copilot Prompt")}</FormLabel>
                               <FormControl>
                                 <Textarea
-                                  placeholder="Enter instructions for the copilot"
+                                  placeholder={t("space-page.Enter instructions")}
                                   className="resize-none min-h-[150px]"
                                   {...field}
                                 />
                               </FormControl>
-                              <FormDescription>Define how the AI copilot should behave in this space</FormDescription>
+                              <FormDescription>{t("space-page.Define how")}</FormDescription>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -421,10 +423,10 @@ export default function SpaceSettings() {
                         {saving ? (
                           <>
                             <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2"></div>
-                            Saving...
+                            {t("space-page.Saving")}
                           </>
                         ) : (
-                          "Save Changes"
+                          t("space-page.Save Changes")
                         )}
                       </Button>
                     </CardFooter>
@@ -458,10 +460,10 @@ export default function SpaceSettings() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" />
-              Delete Space
+              {t("space-page.Delete Space")}
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this space? This action cannot be undone and all data associated with this space will be permanently lost.
+              {t("space-page.Delete confirmation")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:justify-start">
@@ -474,10 +476,10 @@ export default function SpaceSettings() {
               {deleting ? (
                 <>
                   <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2"></div>
-                  Deleting...
+                  {t("space-page.Deleting")}
                 </>
               ) : (
-                "Yes, Delete Space"
+                t("space-page.Yes Delete")
               )}
             </Button>
             <Button
@@ -486,7 +488,7 @@ export default function SpaceSettings() {
               onClick={() => setShowDeleteDialog(false)}
               disabled={deleting}
             >
-              Cancel
+              {t("space-page.Cancel")}
             </Button>
           </DialogFooter>
         </DialogContent>

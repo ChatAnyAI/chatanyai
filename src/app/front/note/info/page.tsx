@@ -16,8 +16,10 @@ import {
 import {useChatStore} from "@/store/chatStore";
 import {useGlobalStore} from "@/store/globalStore";
 import DocList from "@/app/front/note/component/doc-list";
+import { useTranslation } from "react-i18next";
 
 export default function Page() {
+    const { t } = useTranslation();
     const { appId, chatId } = useParams();
     const user = useGlobalStore(state => state.user);
     const selectedModelId = useChatStore(state => state.modelSelectedId)
