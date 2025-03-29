@@ -41,12 +41,12 @@ export default function Page() {
     return (
         <RightSettingProvider>
 
-            <div className="flex" >
+            <div className="flex flex-1  overflow-hidden" >
                 {/* Sidebar */}
                 {/* Sidebar */}
                 <DocList />
                 {/* Main content */}
-                <div className="h-screen " data-registry="plate">
+                <div className="h-screen flex-1 overflow-x-hidden" data-registry="plate">
                     {docResp && <CoreEditor
                         initialValue={docResp.content}
                         appId={appId!}

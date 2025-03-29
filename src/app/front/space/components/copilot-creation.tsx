@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Search, X, Plus, ChevronRight, ChevronLeft } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -60,6 +60,8 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
     const [hasMore, setHasMore] = useState(true)
     const modalContentRef = useRef<HTMLDivElement>(null)
     const { createSpace, chooseCopilotTemplate } = useCreateSpace()
+    const [isLoadingMore, setIsLoadingMore] = useState(false)
+    const throttleTimerRef = useRef<NodeJS.Timeout | null>(null)
 
     // 加载模板数据
     const loadTemplates = async (reset = false, newPage: number | null = null) => {
@@ -69,6 +71,7 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
             setTemplates([])
         }
 
+        setIsLoadingMore(true)
         try {
             const pageToLoad = newPage || (reset ? 1 : page)
             const result = await ApiTemplateList(selectedCategory, pageToLoad)
@@ -90,6 +93,7 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
             console.error("Error loading templates:", error)
         } finally {
             setIsLoading(false)
+            setIsLoadingMore(false)
         }
     }
 
@@ -106,16 +110,26 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
         loadTemplates(true)
     }
 
-    // Scroll to load more
-    const handleScroll = () => {
-        if (!modalContentRef.current || isLoading || !hasMore) return
-
+    // Throttled scroll handler
+    const handleScroll = useCallback(() => {
+        console.log('handleScroll', isLoading , isLoadingMore , hasMore, throttleTimerRef.current);
+        if (!modalContentRef.current || isLoading || isLoadingMore || !hasMore) return
+        
+        // Prevent multiple executions within 300ms
+        if (throttleTimerRef.current) return
+        
         const { scrollTop, scrollHeight, clientHeight } = modalContentRef.current
         // Trigger loading when scrolled to within 100px of the bottom
         if (scrollHeight - scrollTop - clientHeight < 100) {
             loadTemplates()
+            
+            // Set throttle timer
+            const timerId = setTimeout(() => {
+                throttleTimerRef.current = null
+            }, 300)
+            throttleTimerRef.current = timerId
         }
-    }
+    }, [isLoading, isLoadingMore, hasMore, loadTemplates])
 
     const onCreateSpace = async (data: Template | null) => {
 
@@ -127,23 +141,21 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
         onClose()
 
     }
-
     // Add scroll event listener
     useEffect(() => {
         const contentElement = modalContentRef.current
         if (contentElement) {
             contentElement.addEventListener("scroll", handleScroll)
-            return () => contentElement.removeEventListener("scroll", handleScroll)
+            return () => {
+                contentElement.removeEventListener("scroll", handleScroll)
+                // Clear any existing timer when unmounting
+                if (throttleTimerRef.current) {
+                    clearTimeout(throttleTimerRef.current)
+                    throttleTimerRef.current = null
+                }
+            }
         }
-    }, [isLoading, hasMore])
-
-    // Jump directly to specified page
-    const goToPage = (pageNumber: number) => {
-        if (pageNumber < 1 || pageNumber > totalPages || pageNumber === page) return
-        loadTemplates(false, pageNumber)
-    }
-
-
+    }, [handleScroll])
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50" onClick={onClose}>
@@ -231,24 +243,6 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
                                     </>
                                 )}
                             </div>
-
-                            {/* Pagination controls */}
-                            {totalPages > 1 && !isLoading && (
-                                <div className="flex items-center justify-center mt-8 mb-4 space-x-2">
-                                    <Button variant="outline" size="icon" disabled={page <= 2} onClick={() => goToPage(page - 1)}>
-                                        <ChevronLeft className="h-4 w-4" />
-                                    </Button>
-
-                                    <div className="text-sm text-muted-foreground">
-                                        Page <span className="font-medium text-foreground">{page - 1}</span> of{" "}
-                                        <span className="font-medium text-foreground">{totalPages}</span>
-                                    </div>
-
-                                    <Button variant="outline" size="icon" disabled={page > totalPages} onClick={() => goToPage(page)}>
-                                        <ChevronRight className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            )}
 
                             {/* No results message */}
                             {!isLoading && templates?.length === 0 && (
