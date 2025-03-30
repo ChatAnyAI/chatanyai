@@ -4,9 +4,8 @@ import { useState } from 'react';
 import Mermaid from './mermaid/mermaid';
 
 interface CodeBlockProps {
-  node: any;
   inline: boolean;
-  className: string;
+  className?: string;
   children: any;
 }
 
@@ -54,7 +53,7 @@ if (language === 'mermaid' || language === 'flowchart') {
   } else {
     return (
       <code
-        className={`${className} text-sm bg-zinc-100 dark:bg-zinc-800 py-0.5 px-1 rounded-md`}
+        className={`${className} text-sm bg-zinc-100/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 py-0.5 px-1.5 rounded-md border border-zinc-200 dark:border-zinc-700`}
         {...props}
       >
         {children}

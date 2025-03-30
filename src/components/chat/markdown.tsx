@@ -5,38 +5,42 @@ import remarkGfm from 'remark-gfm';
 import { CodeBlock } from './code-block';
 
 const components: Partial<Components> = {
-  // @ts-expect-error
-  code: CodeBlock,
-  pre: ({ children }) => <>{children}</>,
-  ol: ({  children, ...props }) => {
+  code: ({ node, className, children, ...props }) => {
+    return <CodeBlock inline>{children}</CodeBlock>;
+  },
+  pre: ({ children }) => {
+    // @ts-ignore
+    return <CodeBlock inline={false} >{children?.props?.children}</CodeBlock>;
+  },
+  ol: ({node, children, ...props }) => {
     return (
       <ol className="list-decimal list-outside ml-4" {...props}>
         {children}
       </ol>
     );
   },
-  li: ({  children, ...props }) => {
+  li: ({node, children, ...props }) => {
     return (
       <li className="py-1" {...props}>
         {children}
       </li>
     );
   },
-  ul: ({  children, ...props }) => {
+  ul: ({ node, children, ...props }) => {
     return (
       <ul className="list-decimal list-outside ml-4" {...props}>
         {children}
       </ul>
     );
   },
-  strong: ({  children, ...props }) => {
+  strong: ({ node, children, ...props }) => {
     return (
       <span className="font-semibold" {...props}>
         {children}
       </span>
     );
   },
-  a: ({  children, ...props }) => {
+  a: ({ node, children, ...props }) => {
     return (
       // @ts-expect-error
       <Link
@@ -49,49 +53,49 @@ const components: Partial<Components> = {
       </Link>
     );
   },
-  h1: ({  children, ...props }) => {
+  h1: ({ node, children, ...props }) => {
     return (
       <h1 className="text-3xl font-semibold mt-6 mb-2" {...props}>
         {children}
       </h1>
     );
   },
-  h2: ({  children, ...props }) => {
+  h2: ({ node, children, ...props }) => {
     return (
       <h2 className="text-2xl font-semibold mt-6 mb-2" {...props}>
         {children}
       </h2>
     );
   },
-  h3: ({  children, ...props }) => {
+  h3: ({ node, children, ...props }) => {
     return (
       <h3 className="text-xl font-semibold mt-6 mb-2" {...props}>
         {children}
       </h3>
     );
   },
-  h4: ({  children, ...props }) => {
+  h4: ({ node, children, ...props }) => {
     return (
       <h4 className="text-lg font-semibold mt-6 mb-2" {...props}>
         {children}
       </h4>
     );
   },
-  h5: ({  children, ...props }) => {
+  h5: ({ node, children, ...props }) => {
     return (
       <h5 className="text-base font-semibold mt-6 mb-2" {...props}>
         {children}
       </h5>
     );
   },
-  h6: ({  children, ...props }) => {
+  h6: ({ node, children, ...props }) => {
     return (
       <h6 className="text-sm font-semibold mt-6 mb-2" {...props}>
         {children}
       </h6>
     );
   },
-  p: ({  children, ...props }) => {
+  p: ({ node, children, ...props }) => {
     return <div {...props}>
       {children}
     </div>

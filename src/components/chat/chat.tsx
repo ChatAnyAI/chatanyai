@@ -85,6 +85,8 @@ function Chat({
     });
   }
 
+  console.log('chatInfo messages', messages);
+
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
 
