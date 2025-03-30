@@ -647,9 +647,21 @@ export const ApiDocContent = (appId: string,chatId: string,req:{content: string}
     return put<void>(`/api/app/${appId}/doc/${chatId}/content`,req);
 }
 
+export const ApiDocAppendContent = (appId: string,chatId: string,req:{content: string}) => {
+    return put<void>(`/api/app/${appId}/doc/${chatId}/appendContent`,req);
+}
+
+
+export const ApiDocRecent = () => {
+    return get<DocInfo[]>(`/api/doc/-/recent`);
+}
+
+
 export interface DocInfo {
-    chatId: number;
+    appId: string;
+    chatId: string;
     name: string;
+    updatedAt: number;
 }
 
 // /api/app/:appId/doc/-/list

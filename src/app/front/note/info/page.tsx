@@ -17,6 +17,7 @@ import {useChatStore} from "@/store/chatStore";
 import {useGlobalStore} from "@/store/globalStore";
 import DocList from "@/app/front/note/component/doc-list";
 import { useTranslation } from "react-i18next";
+import {ChatHeader} from "@/components/chat/chat-header";
 
 export default function Page() {
     const { t } = useTranslation();
@@ -42,13 +43,17 @@ export default function Page() {
 
     return (
         <RightSettingProvider>
-
             <div className="flex flex-1  overflow-hidden" >
                 {/* Sidebar */}
                 {/* Sidebar */}
                 <DocList />
                 {/* Main content */}
-                <div className="h-screen flex-1 overflow-x-hidden" data-registry="plate">
+                <div className="h-screen flex-1 overflow-x-hidden" >
+                    <ChatHeader
+                        chatInfo={chatResp!}
+                        chatId={chatResp?.id!}
+                        isReadonly={user.id !== chatResp?.uid}
+                    />
                     {docResp && <CoreEditor
                         initialValue={docResp.content}
                         appId={appId!}

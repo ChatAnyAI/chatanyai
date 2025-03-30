@@ -44,7 +44,7 @@ export default function Page() {
                         <ChatHeader
                             chatInfo={chatResp!}
                             chatId={chatResp?.id!}
-                            isReadonly={false}
+                            isReadonly={user.id !== chatResp?.uid}
                         />
                 }
                 <div className="flex justify-center flex-1 overflow-hidden">

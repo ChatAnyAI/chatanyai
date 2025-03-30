@@ -1,10 +1,6 @@
 import type { Message } from 'ai';
-import { toast } from 'sonner';
 import { useCopyToClipboard } from 'usehooks-ts';
-
-// import { getMessageIdFromAnnotations } from '@/lib/utils';
-
-import { CopyIcon } from './icons';
+import {CopyIcon, ThumbUpIcon} from './icons';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -12,7 +8,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { memo } from 'react';
+import {memo, useState} from 'react';
+import {Send} from "lucide-react";
+import {toast} from "@/hooks/use-toast";
+import {ApiCreateDoc, ApiDocRecent} from "@/service/api";
+import {RouteEnum} from "@/lib/constants/constants";
+import {useTranslation} from "react-i18next";
+import {SendToRecentDoc} from "@/components/doc/send-to-recent-doc";
 
 export function PureMessageActions({
   message,
@@ -22,11 +24,26 @@ export function PureMessageActions({
   isLoading: boolean;
 }) {
   const [_, copyToClipboard] = useCopyToClipboard();
-
+    const { t } = useTranslation();
+    const [isOpen, setIsOpen] = useState(false)
+    const [content, setContent] = useState("")
   if (isLoading) return null;
   if (message.role === 'user') return null;
   if (message.toolInvocations && message.toolInvocations.length > 0)
     return null;
+
+
+    // const recentDoc = async () => {
+    //     try {
+    //         const resp = await ApiDocRecent();
+    //     } catch (error) {
+    //         toast({
+    //             title: t('note-doc-list.Create Fail'),
+    //             description: t('note-doc-list.Create Fail'),
+    //             variant: 'destructive'
+    //         });
+    //     }
+    // }
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -34,11 +51,13 @@ export function PureMessageActions({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="py-1 px-2 h-fit text-muted-foreground"
+              className="py-1 px-2 h-fit text-muted-foreground cursor-pointer"
               variant="outline"
               onClick={async () => {
                 await copyToClipboard(message.content as string);
-                toast.success('Copied to clipboard!');
+                  toast({
+                      title: 'Copied to clipboard!',
+                  })
               }}
             >
               <CopyIcon />
@@ -47,114 +66,123 @@ export function PureMessageActions({
           <TooltipContent>Copy</TooltipContent>
         </Tooltip>
 
-        {/* <Tooltip>
+       <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="py-1 px-2 h-fit text-muted-foreground pointer-events-auto!"
-              disabled={vote?.isUpvoted}
+              className="py-1 px-2 h-fit text-muted-foreground pointer-events-auto! cursor-pointer"
+              // disabled={vote?.isUpvoted}
               variant="outline"
               onClick={async () => {
-                const messageId = getMessageIdFromAnnotations(message);
+                 setIsOpen(true)
+                  setContent(message.content as string)
 
-                const upvote = fetch('/api/vote', {
-                  method: 'PATCH',
-                  body: JSON.stringify({
-                    chatId,
-                    messageId,
-                    type: 'up',
-                  }),
-                });
+                // const messageId = getMessageIdFromAnnotations(message);
+                //
+                // const upvote = fetch('/api/vote', {
+                //   method: 'PATCH',
+                //   body: JSON.stringify({
+                //     chatId,
+                //     messageId,
+                //     type: 'up',
+                //   }),
+                // });
 
-                toast.promise(upvote, {
-                  loading: 'Upvoting Response...',
-                  success: () => {
-                    mutate<Array<Vote>>(
-                      `/api/vote?chatId=${chatId}`,
-                      (currentVotes) => {
-                        if (!currentVotes) return [];
-
-                        const votesWithoutCurrent = currentVotes.filter(
-                          (vote) => vote.messageId !== message.id,
-                        );
-
-                        return [
-                          ...votesWithoutCurrent,
-                          {
-                            chatId,
-                            messageId: message.id,
-                            isUpvoted: true,
-                          },
-                        ];
-                      },
-                      { revalidate: false },
-                    );
-
-                    return 'Upvoted Response!';
-                  },
-                  error: 'Failed to upvote response.',
-                });
+                // toast.promise("upvote", {
+                //   loading: 'Upvoting Response...',
+                //   success: () => {
+                //     // mutate<Array<Vote>>(
+                //     //   `/api/vote?chatId=${chatId}`,
+                //     //   (currentVotes) => {
+                //     //     if (!currentVotes) return [];
+                //     //
+                //     //     const votesWithoutCurrent = currentVotes.filter(
+                //     //       (vote) => vote.messageId !== message.id,
+                //     //     );
+                //     //
+                //     //     return [
+                //     //       ...votesWithoutCurrent,
+                //     //       {
+                //     //         chatId,
+                //     //         messageId: message.id,
+                //     //         isUpvoted: true,
+                //     //       },
+                //     //     ];
+                //     //   },
+                //     //   { revalidate: false },
+                //     // );
+                //
+                //     return 'Send to Doc';
+                //   },
+                //   error: 'Failed to upvote response.',
+                // });
               }}
             >
-              <ThumbUpIcon />
+               <Send />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Upvote Response</TooltipContent>
+          <TooltipContent>Send to recent Doc</TooltipContent>
         </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              className="py-1 px-2 h-fit text-muted-foreground pointer-events-auto!"
-              variant="outline"
-              disabled={vote && !vote.isUpvoted}
-              onClick={async () => {
-                const messageId = getMessageIdFromAnnotations(message);
+        {/*<Tooltip>*/}
+        {/*  <TooltipTrigger asChild>*/}
+        {/*    <Button*/}
+        {/*      className="py-1 px-2 h-fit text-muted-foreground pointer-events-auto!"*/}
+        {/*      variant="outline"*/}
+        {/*      disabled={vote && !vote.isUpvoted}*/}
+        {/*      onClick={async () => {*/}
+        {/*        const messageId = getMessageIdFromAnnotations(message);*/}
 
-                const downvote = fetch('/api/vote', {
-                  method: 'PATCH',
-                  body: JSON.stringify({
-                    chatId,
-                    messageId,
-                    type: 'down',
-                  }),
-                });
+        {/*        const downvote = fetch('/api/vote', {*/}
+        {/*          method: 'PATCH',*/}
+        {/*          body: JSON.stringify({*/}
+        {/*            chatId,*/}
+        {/*            messageId,*/}
+        {/*            type: 'down',*/}
+        {/*          }),*/}
+        {/*        });*/}
 
-                toast.promise(downvote, {
-                  loading: 'Downvoting Response...',
-                  success: () => {
-                    mutate<Array<Vote>>(
-                      `/api/vote?chatId=${chatId}`,
-                      (currentVotes) => {
-                        if (!currentVotes) return [];
+        {/*        toast.promise(downvote, {*/}
+        {/*          loading: 'Downvoting Response...',*/}
+        {/*          success: () => {*/}
+        {/*            mutate<Array<Vote>>(*/}
+        {/*              `/api/vote?chatId=${chatId}`,*/}
+        {/*              (currentVotes) => {*/}
+        {/*                if (!currentVotes) return [];*/}
 
-                        const votesWithoutCurrent = currentVotes.filter(
-                          (vote) => vote.messageId !== message.id,
-                        );
+        {/*                const votesWithoutCurrent = currentVotes.filter(*/}
+        {/*                  (vote) => vote.messageId !== message.id,*/}
+        {/*                );*/}
 
-                        return [
-                          ...votesWithoutCurrent,
-                          {
-                            chatId,
-                            messageId: message.id,
-                            isUpvoted: false,
-                          },
-                        ];
-                      },
-                      { revalidate: false },
-                    );
+        {/*                return [*/}
+        {/*                  ...votesWithoutCurrent,*/}
+        {/*                  {*/}
+        {/*                    chatId,*/}
+        {/*                    messageId: message.id,*/}
+        {/*                    isUpvoted: false,*/}
+        {/*                  },*/}
+        {/*                ];*/}
+        {/*              },*/}
+        {/*              { revalidate: false },*/}
+        {/*            );*/}
 
-                    return 'Downvoted Response!';
-                  },
-                  error: 'Failed to downvote response.',
-                });
-              }}
-            >
-              <ThumbDownIcon />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Downvote Response</TooltipContent>
-        </Tooltip> */}
+        {/*            return 'Downvoted Response!';*/}
+        {/*          },*/}
+        {/*          error: 'Failed to downvote response.',*/}
+        {/*        });*/}
+        {/*      }}*/}
+        {/*    >*/}
+        {/*      <ThumbDownIcon />*/}
+        {/*    </Button>*/}
+        {/*  </TooltipTrigger>*/}
+        {/*  <TooltipContent>Downvote Response</TooltipContent>*/}
+        {/*</Tooltip> */}
       </div>
+      <SendToRecentDoc
+        content={content}
+        setContent={setContent}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
     </TooltipProvider>
   );
 }

@@ -67,17 +67,20 @@ export function CoreEditor(props: EditorProps) {
     };
 
   return (
-      <DndProvider backend={HTML5Backend}>
-          <Plate
-              editor={editor}
-              readOnly={readOnly}
-              onValueChange={handleChange}
-          >
-              <EditorContainer>
-                  <Editor variant="demo" />
-              </EditorContainer>
-              <SettingsDialog/>
-          </Plate>
-      </DndProvider>
+      <div  data-registry="plate">
+          <DndProvider backend={HTML5Backend}>
+              <Plate
+                  editor={editor}
+                  readOnly={readOnly}
+                  onValueChange={handleChange}
+              >
+                  <EditorContainer>
+                      <Editor variant="demo" />
+                  </EditorContainer>
+                  <SettingsDialog/>
+              </Plate>
+          </DndProvider>
+      </div>
+
 );
 }

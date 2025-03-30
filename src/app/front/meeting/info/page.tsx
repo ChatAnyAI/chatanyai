@@ -51,7 +51,7 @@ export default function Page() {
       <div className="flex flex-col h-screen flex-1">
         <ChatHeader
           chatId={id!}
-          isReadonly={false}
+          isReadonly={user.id !== chatResp?.uid}
           chatInfo={chatResp!}
         />
         <div className="flex justify-center px-4 flex-1 overflow-hidden">
