@@ -1,7 +1,7 @@
 import { ModelSelector } from '@/components/chat/model-selector';
 import { Button } from '@/components/ui/button';
 import { memo, useState } from 'react';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import { VisibilitySelector } from './visibility-selector';
 import { Settings2, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
