@@ -51,17 +51,17 @@ export function NavHeader({
     const { t } = useTranslation();
     const items: NavMenuItem[] = [{
         id: "home",
-        name: t("Home"),
+        name: t("sidebar.Home"),
         url: "/home",
         icon: House,
     }, {
         id: "files",
-        name: t("Recently Files"),
+        name: t("sidebar.Recently Files"),
         url: "#",
         icon: Folder
     }, {
         id: "shared",
-        name: t("Shared with me"),
+        name: t("sidebar.Shared with me"),
         url: "#",
         icon: Share2,
     }]

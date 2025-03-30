@@ -53,7 +53,7 @@ export default (
                             navigator(`/${RouteEnum[appInfo.type]}/${appInfo.id}`);
                         }}>
                             <MessageCircle className="h-4 w-4 mr-2" />
-                            {t('New Chat')}
+                            {t('sidebar.New Chat')}
                         </DropdownMenuItem>
                         {
                             appInfo.isFullAccess ?
@@ -61,7 +61,7 @@ export default (
                                     <DropdownMenuSub>
                                         <DropdownMenuSubTrigger>
                                             <Users className="h-4 w-4 mr-2" />
-                                            {t('Share')}
+                                            {t('sidebar.Share')}
                                         </DropdownMenuSubTrigger>
                                         <DropdownMenuSubContent>
                                             <div className="p-0">
@@ -85,7 +85,7 @@ export default (
                                         navigator(`/${RouteEnum[appInfo.type]}/${appInfo.id}/setting`);
                                     }}>
                                         <Settings className="h-4 w-4 mr-2" />
-                                        {t("Setting")}
+                                        {t("sidebar.Setting")}
                                     </DropdownMenuItem>
                                 </> : null
                         }

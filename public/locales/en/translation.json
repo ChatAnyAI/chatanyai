@@ -1,4 +1,27 @@
 {
+  "constant": {
+    "Private": "Private",
+    "Internal": "Internal",
+    "Public": "Public",
+    "Copilot": "Copilot",
+    "ChatPDF": "ChatPDF",
+    "Brainstorm": "Brainstorm",
+    "KnowledgeBase": "KnowledgeBase",
+    "Note": "Note",
+    "Unknown": "Unknown",
+    "Active": "Active",
+    "Blocked": "Blocked",
+    "Normal": "Normal",
+    "Admin": "Admin",
+    "Editor": "Editor",
+    "Free Trial": "Free Trial",
+    "Professional": "Professional",
+    "Enterprise": "Enterprise",
+    "Can view": "Can view",
+    "Can edit": "Can edit",
+    "Can comment": "Can comment",
+    "Full access": "Full access"
+  },
   "sidebar": {
     "Admin Area": "Admin Area",
     "Home": "Home",
@@ -7,7 +30,8 @@
     "Shared with me": "Shared with me",
     "New Chat": " New Chat",
     "Share": "Share",
-    "Setting": "Setting"
+    "Setting": "Setting",
+    "Workspace": "Workspace"
   },
   "sidebar-dialog": {
     "Close": "Close"

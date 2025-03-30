@@ -15,6 +15,7 @@ import {AdminSearch} from "@/app/admin/components/admin-search";
 import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import UpdateAppForm, {AppFormValues} from "@/app/admin/application/components/edit-app";
 import {toast} from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next"
 
 export default function Application() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -23,6 +24,7 @@ export default function Application() {
   const [sort, setSort] = useState("name")
   const [isUpdateUserModalOpen, setIsUpdateUserModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useTranslation()
 
  const [editingApp, setEditingApp] = useState<RespApiAdminApplicationListItem>()
 
@@ -154,7 +156,7 @@ export default function Application() {
                                 : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
                         }`}
                     >
-                                       {AppVisibilityEnum[application.visibility] || "Unknown"}
+                            {t(AppVisibilityEnum[application.visibility] || "Unknown")}
                                     </span>
                      </TableCell>
                   <TableCell>{new Date(application.createdAt * 1000).toLocaleString()}</TableCell>

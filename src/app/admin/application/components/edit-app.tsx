@@ -12,6 +12,7 @@ import {
     AppVisibilityEnum,
 } from "@/lib/constants/constants";
 import {Switch} from "@/components/ui/switch";
+import { useTranslation } from "react-i18next";
 
 interface UpdateAppFormProps {
     onSubmit: (appId: number, data: AppFormValues) => void
@@ -32,6 +33,7 @@ export type AppFormValues = z.infer<typeof appFormSchema>
 export default function UpdateAppForm({ editingApp, onSubmit, isLoading,onCancel }: UpdateAppFormProps) {
   
     const [isActive, setIsActive] = useState(false)
+    const { t } = useTranslation()
 
     const handleSubmit = async (data: AppFormValues) => {
          onSubmit(editingApp?.id!, data)
@@ -84,13 +86,13 @@ export default function UpdateAppForm({ editingApp, onSubmit, isLoading,onCancel
                         <div className="flex items-center space-x-3">
                             <RadioGroupItem value={AppVisibility.Public.toString()} id="active"/>
                             <Label htmlFor="active" className="font-normal">
-                                {AppVisibilityEnum[AppVisibility.Public]}
+                                {t(AppVisibilityEnum[AppVisibility.Public])}
                             </Label>
                         </div>
                         <div className="flex items-center space-x-3">
                             <RadioGroupItem value={AppVisibility.Private.toString()} id="blocked"/>
                             <Label htmlFor="blocked" className="font-normal">
-                                {AppVisibilityEnum[AppVisibility.Private]}
+                                {t(AppVisibilityEnum[AppVisibility.Private])}
                             </Label>
                         </div>
                     </RadioGroup>
