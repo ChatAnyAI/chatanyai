@@ -25,7 +25,7 @@ export type NavMenuItem = Partial<Omit<AppResp, 'icon' | 'id'>> & {
   items?: NavMenuItem[]
   type?: AppType;
   spaceId?: number;
-  isFullAccess?: boolean;
+  isFullAccess?: boolean
 }
 
 export function NavGroup({
@@ -115,6 +115,7 @@ export function NavGroup({
     setDraggedItem(null);
     setDragOverItem(null);
   };
+
 
   return (
     <SidebarGroup className={className}>

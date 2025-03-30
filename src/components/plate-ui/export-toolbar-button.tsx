@@ -130,7 +130,7 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const openState = useOpenState();
 
   const getCanvas = async () => {
-    const { default: html2canvas } = await import('html2canvas');
+    const { default: html2canvas } = await import('html2canvas-pro');
 
     const style = document.createElement('style');
     document.head.append(style);

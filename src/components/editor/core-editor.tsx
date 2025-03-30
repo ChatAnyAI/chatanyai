@@ -7,7 +7,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Plate } from '@udecode/plate/react';
 
 import {useCoreEditor} from '@/components/editor/use-create-editor';
-import { SettingsDialog } from '@/components/editor/settings';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 import {Operation, withHistory} from "@udecode/plate";
 import {useNavigate, useParams} from "react-router-dom";
@@ -77,7 +76,7 @@ export function CoreEditor(props: EditorProps) {
                   <EditorContainer>
                       <Editor variant="demo" />
                   </EditorContainer>
-                  <SettingsDialog/>
+                  {/* <SettingsDialog/> */}
               </Plate>
           </DndProvider>
       </div>

@@ -1,9 +1,9 @@
 'use client';
 
 import { isToday, isYesterday, subMonths, subWeeks } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams, useLocation, useNavigate as useRouter } from 'react-router-dom';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import useSWR from 'swr';
 import { useGlobalStore } from '@/store/globalStore';
@@ -49,6 +49,7 @@ import { useAppSideBarHistoryListContext } from '@/components/app-sidebar';
 import React from 'react';
 import { getFirstPathSegment } from '@/lib/utils';
 import { useSidebarDialog } from '../sidebar/sidebar-dialog';
+import { fetchRecentChatId, useRecentChatId } from '@/hooks/useRecentChatId';
 
 type GroupedChats = {
   today: RespChat[];
@@ -76,6 +77,10 @@ const PureChatItem = ({
   const { toast } = useToast();
   const [title, setTitle] = useState(chat.title);
   const [isUpdating, setIsUpdating] = useState(false);
+  const {
+    setRecentChatId
+  } = useRecentChatId(appId!);
+
 
   const handleUpdateChat = async () => {
     try {
@@ -105,6 +110,7 @@ const PureChatItem = ({
         <Link
           to={`${getFirstPathSegment(location.pathname)}/${appId}/c/${chat.id}`}
           onClick={() => {
+            setRecentChatId(chat.id);
             setOpenMobile(false);
             handleClose();
           }}
@@ -200,7 +206,6 @@ export function SidebarHistory() {
   const { handleClose } = useSidebarDialog()
   const appId = activeMenu?.appId;
   const { chatId } = useParams();
-  const location = useLocation();
   const user = useGlobalStore((state) => state.user);
   const {
     data: chatListResp,
@@ -211,6 +216,21 @@ export function SidebarHistory() {
     {
       fallbackData: [],
     });
+  const navigator = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    if (!appId) return;
+    (async () => {
+      try {
+        const chatId = await fetchRecentChatId(appId);
+        setTimeout(() => { 
+          if (chatId) navigator(`${getFirstPathSegment(location.pathname)}/${appId}/c/${chatId}`);
+        }, 200)
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [appId]);
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -236,29 +256,6 @@ export function SidebarHistory() {
       router('/');
     }
   };
-
-  const renderNewChatButton = () => (
-    <Button
-      variant="default"
-      className="w-full flex items-center justify-center gap-2"
-      onClick={() => {
-        const path = `${getFirstPathSegment(location.pathname)}/${appId}`;
-        router(path);
-        setOpenMobile(false);
-        handleClose();
-      }}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className="w-4 h-4"
-      >
-        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-      </svg>
-      New Chat
-    </Button>
-  );
 
   if (!user) {
     return (
@@ -305,7 +302,6 @@ export function SidebarHistory() {
     return (
       <SidebarGroup>
         <SidebarGroupContent>
-          {renderNewChatButton()}
           <div className="px-2 py-2 text-zinc-500 w-full flex flex-col justify-center items-center gap-4">
             <span className="text-sm text-center">
               Your conversations will appear here once you start chatting!
@@ -353,7 +349,6 @@ export function SidebarHistory() {
     <>
       <SidebarGroup>
         <SidebarGroupContent>
-          {renderNewChatButton()}
           <SidebarMenu>
             {chatListResp &&
               (() => {
