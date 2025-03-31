@@ -120,7 +120,7 @@ export const MediaPlaceholderElement = withHOC(
           editor.tf.insertNodes(node, { at: path });
             // console.log("node",node)
             // console.log("editor",editor.history.undos)
-            // todo 这里有bug
+            // todo maybe bug
           // updateUploadHistory(editor, node);
         });
 

@@ -102,7 +102,7 @@ const PurePreviewMessage = ({
                   </Tooltip>
                 )}
 
-                  {message.content.startsWith('https://') ? (
+                  {(message.content.startsWith('https://') || message.content.startsWith('http://')) ? (
                       <img src={message.content} alt="" />
                   ) : (
                       <div

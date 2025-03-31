@@ -7,9 +7,6 @@ import {useTranslation} from "react-i18next";
 import useSWR from "swr";
 import {FileText, Send} from "lucide-react";
 import {Button} from "@/components/ui/button";
-import { unified } from "unified";
-import markdown from "remark-parse";
-import { remarkToSlate } from "remark-slate-transformer";
 import {MarkdownPlugin} from "@udecode/plate-markdown";
 import {
     createPlateEditor,
