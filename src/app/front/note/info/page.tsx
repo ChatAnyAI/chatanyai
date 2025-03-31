@@ -1,19 +1,13 @@
-import {PlateEditor} from "@/components/editor/plate-editor";
 import {RightSettingProvider} from "@/app/front/aichat/component/rightSetting";
 import {CoreEditor} from "@/components/editor/core-editor";
-import {InfoIcon, PinIcon, PlusIcon, StarIcon} from "lucide-react";
-import {generateUUID} from "@/lib/utils";
 import {useParams} from "react-router-dom";
 import useSWR from "swr";
 import {
-    ApiChatHistory,
-    ApiChannelListByAppId, ApiCreateDocResp,
+    ApiCreateDocResp,
     ApiGetChat,
     ApiGetDoc,
     RespChannel,
-    RespChatHistoryMessage
 } from "@/service/api";
-import {useChatStore} from "@/store/chatStore";
 import {useGlobalStore} from "@/store/globalStore";
 import DocList from "@/app/front/note/component/doc-list";
 import { useTranslation } from "react-i18next";
@@ -23,17 +17,12 @@ export default function Page() {
     const { t } = useTranslation();
     const { appId, chatId } = useParams();
     const user = useGlobalStore(state => state.user);
-    const selectedModelId = useChatStore(state => state.modelSelectedId)
 
     const { data: chatResp } = useSWR<RespChannel>(
         chatId ? ['ApiGetChat', chatId] : null,
         () => ApiGetChat(chatId!),
     );
 
-    const { data: messageHistoryResp } = useSWR<RespChatHistoryMessage[]>(
-        chatId ? ['ApiChatHistory', chatId] : null,
-        () => ApiChatHistory(chatId!),
-    );
 
 
     const { data: docResp } = useSWR<ApiCreateDocResp>(

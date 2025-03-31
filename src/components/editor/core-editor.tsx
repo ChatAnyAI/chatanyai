@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -8,10 +8,8 @@ import { Plate } from '@udecode/plate/react';
 
 import {useCoreEditor} from '@/components/editor/use-create-editor';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
-import {Operation, withHistory} from "@udecode/plate";
-import {useNavigate, useParams} from "react-router-dom";
-import {ApiCreateDoc, ApiDocContent} from "@/service/api";
-import {RouteEnum} from "@/lib/constants/constants";
+import {Operation, withHistory, PlateEditor} from "@udecode/plate";
+import { ApiDocContent} from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 
 interface EditorProps {
@@ -25,22 +23,18 @@ interface EditorProps {
 }
 
 export function CoreEditor(props: EditorProps) {
-    const { readOnly, appId, onChange, chatId, initialValue, headerDom } = props;
+    const { readOnly, appId, onChange, chatId, initialValue } = props;
     const editor = useCoreEditor(initialValue);
     const historyEditor = withHistory(editor);
     const [changes, setChanges] = useState<Operation[]>([]);
 
-    // const navigate = useNavigate();
-    // const param = useParams();
-    //
-    // const submitForm = useCallback(() => {
-    //     // if (chatId !== param.chatId) {
-    //     //     navigate(`c/${chatId}`, { replace: true });
-    //     // }
-    // }, [
-    //     chatId,
-    // ]);
+    // Add effect to update editor content when initialValue changes
+    useEffect(() => {
+        if (editor && initialValue) {
 
+            editor.tf.setValue(initialValue);
+        }
+    }, [initialValue, editor]);
 
     const handleChange = (newValue: any) => {
         const operations = historyEditor.operations;
@@ -76,7 +70,6 @@ export function CoreEditor(props: EditorProps) {
                   <EditorContainer>
                       <Editor variant="demo" />
                   </EditorContainer>
-                  {/* <SettingsDialog/> */}
               </Plate>
           </DndProvider>
       </div>
