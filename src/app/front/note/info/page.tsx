@@ -11,7 +11,7 @@ import {
 import { useGlobalStore } from "@/store/globalStore";
 import DocList from "@/app/front/note/component/doc-list";
 import { useTranslation } from "react-i18next";
-import { ChatHeader } from "../component/node-header";
+import { ChatHeader } from "../component/note-header";
 import { Chat } from "@/components/chat/chat";
 
 export default function Page() {
@@ -23,8 +23,6 @@ export default function Page() {
         chatId ? ['ApiGetChat', chatId] : null,
         () => ApiGetChat(chatId!),
     );
-
-
 
     const { data: docResp } = useSWR<ApiCreateDocResp>(
         chatId ? ['ApiGetDoc', chatId] : null,
@@ -43,18 +41,20 @@ export default function Page() {
                         chatId={chatResp?.channelId!}
                         isReadonly={user.id !== chatResp?.uid}
                     />
-
-                    <CoreEditor
-                        initialValue={docResp?.content}
-                        appId={appId!}
-                        chatId={chatId!}
-                    />
-                    <div className="flex-1 w-full flex overflow-hidden">
-                        <div className="h-full w-[300px] overflow-hidden">
-                            {/* <Chat
-                                className=""
+                    
+                    <div className="flex flex-1 overflow-hidden">
+                        <div className="flex-1 overflow-hidden">
+                            <CoreEditor
+                                initialValue={docResp?.content}
+                                appId={appId!}
+                                chatId={chatId!}
+                            />
+                        </div>
+                        <div className="w-[0px] border-l">
+                            <Chat 
                                 hiddenHeader
-                            /> */}
+                                chatId={chatId!} 
+                            />
                         </div>
                     </div>
                 </div>

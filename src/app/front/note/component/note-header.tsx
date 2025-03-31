@@ -1,9 +1,8 @@
 import { ModelSelector } from '@/components/chat/model-selector';
 import { Button } from '@/components/ui/button';
 import { memo, useState } from 'react';
-import html2canvas from 'html2canvas-pro';
 import { VisibilitySelector } from '@/components/chat/visibility-selector';
-import { Settings2, Download } from "lucide-react";
+import { Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { useParams } from "react-router-dom";
@@ -22,9 +21,6 @@ function PureChatHeader({
     chatInfo?: RespChannel;
 }) {
     const { showSettings, setShowSettings } = useRightSetting();
-    const [isExporting, setIsExporting] = useState(false);
-    const { chatId: cid } = useParams();
-    const currentAppInfo = useChatStore(state => state.currentAppInfo);
 
 
     return (

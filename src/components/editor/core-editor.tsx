@@ -59,7 +59,7 @@ export function CoreEditor(props: EditorProps) {
     };
 
   return (
-      <div  data-registry="plate" className='flex-1 h-full'>
+      <div  data-registry="plate" className='h-full'>
           <DndProvider backend={HTML5Backend}>
               <Plate
                   editor={editor}
