@@ -698,6 +698,8 @@ export const ApiUserProfile = () => {
   return get<UserProfile>('/api/user/profile');
 }
 
-
+export const ApiOauthSupport = () => {
+    return get<string[]>('/api/oauth/support');
+}
 
 

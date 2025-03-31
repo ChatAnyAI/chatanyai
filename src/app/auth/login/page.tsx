@@ -3,14 +3,13 @@
 import React, { useState, useEffect } from "react"
 
 import { motion,AnimatePresence } from "framer-motion"
-import { ArrowRight, Mail, Lock } from "lucide-react"
+import {ArrowRight, Mail, Lock, AlertCircle} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useNavigate as useRouter } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useGlobalStore } from "@/store/globalStore";
 import Navbar from "./navbar";
-import { AlertCircle } from "lucide-react"
-import {ApiAuthLogin, ApiUserProfile} from "@/service/api";
+import {ApiAuthLogin, ApiUserProfile, ApiOauthSupport} from "@/service/api";
 import { useSWRConfig } from "swr"
 
 export default function Login() {
@@ -25,7 +24,7 @@ export default function Login() {
     const user = useGlobalStore(({ user }) => user);
     const setUser = useGlobalStore(({ setUser }) => setUser);
     const { mutate } = useSWRConfig()
-
+    const [oauthSupport, setOauthSupport] = useState<string[]>([])
 
     // Animation variants
     const containerVariants = {
@@ -53,6 +52,20 @@ export default function Login() {
             // router("/");
         }
     }, [user]);
+
+    const fetchOauthSupport = async () => {
+        const response = await ApiOauthSupport()
+        setOauthSupport(response)
+        console.log("oauth support", response)
+    }
+
+    useEffect(() => {
+        fetchOauthSupport()
+    }, []);
+
+    const capitalizeFirstLetter = (str: string):string => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -219,11 +232,41 @@ export default function Login() {
                             </motion.div>
                         </form>
 
+                        {oauthSupport.length > 0 && (
+                            <motion.div variants={itemVariants} className="mt-6">
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-300"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-sm">
+                                      <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                                        Or continue with
+                                      </span>
+                                    </div>
+                                </div>
+
+                                {oauthSupport.map((service, index) => (
+                                    <div className="mt-6">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
+                                            <img src={'/'+service+".svg"} alt="Dingtalk Icon" className="h-5 w-5 mr-2 text-gray-700 dark:text-gray-300"/>
+                                            <a href={"/api/oauth/login/"+service} target={"_self"} className="text-gray-700 dark:text-gray-300">
+                                                <span>{capitalizeFirstLetter(service)}</span>
+                                            </a>
+                                        </Button>
+                                    </div>
+                                ))}
+
+                            </motion.div>
+                        )}
                     </motion.div>
 
                     {/* Decorative elements */}
                     <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-linear-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
                     <div className="absolute -top-4 -left-4 w-24 h-24 bg-linear-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"></div>
+
+
                 </div>
             </div>
         </div>
