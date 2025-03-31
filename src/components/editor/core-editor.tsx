@@ -8,7 +8,7 @@ import { Plate } from '@udecode/plate/react';
 
 import {useCoreEditor} from '@/components/editor/use-create-editor';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
-import {Operation, withHistory, PlateEditor} from "@udecode/plate";
+import {Operation, withHistory} from "@udecode/plate";
 import { ApiDocContent} from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 
@@ -19,7 +19,7 @@ interface EditorProps {
     initialValue?: any;
     onChange?: (value: any) => void;
     topHeader?: boolean;
-    headerDom: React.ReactNode;
+    // headerDom: React.ReactNode;
 }
 
 export function CoreEditor(props: EditorProps) {

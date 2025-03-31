@@ -195,13 +195,13 @@ export default function UserSettingsPage() {
                             </Select>
                         </div>
 
-                        <div className="flex items-center justify-between py-4">
+                        <div className="flex items-center justify-between py-4 ">
                             <div>
                                 <h3 className="font-medium">{t('Interface theme')}</h3>
                                 <p className="text-gray-500 text-sm">{t('Select your interface color scheme.')}</p>
                             </div>
                             <Select value={theme} onValueChange={setTheme}>
-                                <SelectTrigger className="w-[250px]">
+                                <SelectTrigger className="w-[250px] cursor-pointer">
                                     <SelectValue>
                                         <div className="flex items-center">
                                             <Sun className="h-4 w-4 mr-2" />
@@ -211,19 +211,19 @@ export default function UserSettingsPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="light">
-                                        <div className="flex items-center">
+                                        <div className="flex items-center cursor-pointer">
                                             <Sun className="h-4 w-4 mr-2" />
                                             {t('Light')}
                                         </div>
                                     </SelectItem>
                                     <SelectItem value="dark">
-                                        <div className="flex items-center">
+                                        <div className="flex items-center cursor-pointer">
                                             <Moon className="h-4 w-4 mr-2" />
                                             {t('Dark')}
                                         </div>
                                     </SelectItem>
                                     <SelectItem value="system">
-                                        <div className="flex items-center">
+                                        <div className="flex items-center cursor-pointer">
                                             <Monitor className="h-4 w-4 mr-2" />
                                             {t('System')}
                                         </div>
@@ -239,7 +239,7 @@ export default function UserSettingsPage() {
                                 <p className="text-gray-500 text-sm">{t('Select your preferred language.')}</p>
                             </div>
                             <Select value={i18n.language} onValueChange={changeLanguage}>
-                                <SelectTrigger className="w-[250px]">
+                                <SelectTrigger className="w-[250px]  cursor-pointer">
                                     <SelectValue>
                                         <div className="flex items-center">
                                             <Languages className="h-4 w-4 mr-2" />
@@ -249,13 +249,13 @@ export default function UserSettingsPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="en">
-                                        <div className="flex items-center">
+                                        <div className="flex items-center cursor-pointer">
                                             <Languages className="h-4 w-4 mr-2" />
                                             English
                                         </div>
                                     </SelectItem>
                                     <SelectItem value="zh">
-                                        <div className="flex items-center">
+                                        <div className="flex items-center cursor-pointer">
                                             <Languages className="h-4 w-4 mr-2" />
                                             中文
                                         </div>

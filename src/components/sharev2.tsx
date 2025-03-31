@@ -121,7 +121,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                             onClick={() => setShowInviteScreen(true)}
                                         />
                                     </div>
-                                    <button className="px-4 py-2 text-sm bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors" onClick={() => setShowInviteScreen(true)}>
+                                    <button className="px-4 py-2 text-sm bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors cursor-pointer" onClick={() => setShowInviteScreen(true)}>
                                         Invite
                                     </button>
                                 </div>
@@ -169,7 +169,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                         <div className="flex items-center justify-between">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger className="flex items-center space-x-2 hover:bg-gray-50 rounded-lg transition-colors">
-                                                    <div className="flex items-center space-x-2 p-1.5">
+                                                    <div className="flex items-center space-x-2 p-1.5  cursor-pointer">
                                                         {(() => {
                                                             switch (accessType) {
                                                                 case AppVisibility.Private:
@@ -279,7 +279,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                         <HelpCircle className="h-4 w-4 mr-1" />
                                         <span>Learn about sharing</span>
                                     </button>
-                                    <button className="flex items-center px-3 py-1.5 border rounded-lg hover:bg-gray-50 text-xs" onClick={async () => {
+                                    <button className="flex items-center px-3 py-1.5 border rounded-lg hover:bg-gray-50 text-xs cursor-pointer" onClick={async () => {
                                         try {
                                             let url;
                                             if (!appId) return;

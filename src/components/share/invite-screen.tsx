@@ -222,7 +222,7 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
                     {/*    onChange={(e) => setMessage(e.target.value)}*/}
                     {/*    rows={3}*/}
                     {/*/>*/}
-                    <button className="w-full py-2 text-sm bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors" onClick={handleInvite}>
+                    <button className="w-full py-2 text-sm bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition-colors cursor-pointer" onClick={handleInvite}>
                         Invite
                     </button>
                 </div>
