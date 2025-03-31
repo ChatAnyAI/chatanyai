@@ -7,10 +7,10 @@ import {useParams} from "react-router-dom";
 import useSWR from "swr";
 import {
     ApiChatHistory,
-    ApiChatListByAppId, ApiCreateDocResp,
+    ApiChannelListByAppId, ApiCreateDocResp,
     ApiGetChat,
     ApiGetDoc,
-    RespChat,
+    RespChannel,
     RespChatHistoryMessage
 } from "@/service/api";
 import {useChatStore} from "@/store/chatStore";
@@ -25,7 +25,7 @@ export default function Page() {
     const user = useGlobalStore(state => state.user);
     const selectedModelId = useChatStore(state => state.modelSelectedId)
 
-    const { data: chatResp } = useSWR<RespChat>(
+    const { data: chatResp } = useSWR<RespChannel>(
         chatId ? ['ApiGetChat', chatId] : null,
         () => ApiGetChat(chatId!),
     );

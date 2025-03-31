@@ -5,7 +5,7 @@ import {InfoIcon, PinIcon, PlusIcon, StarIcon} from "lucide-react";
 import {generateUUID} from "@/lib/utils";
 import {useNavigate, useParams} from "react-router-dom";
 import useSWR from "swr";
-import {ApiAppShareCreate, ApiChatListByAppId, ApiChatShareCreate, ApiCreateDoc, ApiDocList} from "@/service/api";
+import {ApiAppShareCreate, ApiChannelListByAppId, ApiChatShareCreate, ApiCreateDoc, ApiDocList} from "@/service/api";
 import {useChatStore} from "@/store/chatStore";
 import {toast} from "@/hooks/use-toast";
 import {RouteEnum} from "@/lib/constants/constants";

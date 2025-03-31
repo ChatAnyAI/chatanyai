@@ -41,7 +41,7 @@ export function SidebarToggle({
       <Button
         onClick={toggleSidebar}
         variant={open ? "ghost" : "outline"}
-        className={`md:px-2 md:h-fit ${className}`}
+        className={`md:px-2 md:h-fit ${className} cursor-pointer`}
       >
         {open ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
       </Button>

@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { useVisibility } from '@/hooks/use-visibility';
 import { useParams } from 'react-router-dom';
 import ShareDialog from "@/components/sharev2";
-import {RespChat} from "@/service/api";
+import {RespChannel} from "@/service/api";
 import {AppVisibility, AppVisibilityEnum} from "@/lib/constants/constants";
 import {usePermission} from "@/hooks/use-permission";
 
@@ -21,7 +21,7 @@ export function VisibilitySelector({
   chatInfo,
 }: {
   chatId: string;
-  chatInfo: RespChat;
+  chatInfo: RespChannel;
 } & React.ComponentProps<typeof Button>) {
   const { appId } = useParams();
   const { visibility, handleVisibilityChange } = useVisibility(chatInfo.visibility, appId!, chatId);

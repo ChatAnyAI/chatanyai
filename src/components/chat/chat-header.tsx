@@ -7,7 +7,7 @@ import { Settings2, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { useParams } from "react-router-dom";
-import { RespChat } from "@/service/api";
+import { RespChannel } from "@/service/api";
 import { useChatStore } from '@/store/chatStore';
 
 function PureChatHeader({
@@ -19,7 +19,7 @@ function PureChatHeader({
     chatId: string;
     isReadonly: boolean;
     isNew?: boolean;
-    chatInfo?: RespChat;
+    chatInfo?: RespChannel;
 }) {
     const { showSettings, setShowSettings } = useRightSetting();
     const [isExporting, setIsExporting] = useState(false);

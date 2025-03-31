@@ -5,7 +5,7 @@ import { convertToUIMessages } from '@/lib/utils';
 import { DataStreamHandler } from '@/components/chat/data-stream-handler';
 import useSWR from "swr";
 import { Suspense } from "react";
-import { RespChat, RespChatHistoryMessage, ApiChatHistory, ApiGetChat } from '@/service/api'
+import { RespChannel, RespChatHistoryMessage, ApiChatHistory, ApiGetChat } from '@/service/api'
 import { useGlobalStore } from '@/store/globalStore';
 import { RightSettingProvider } from '../component/rightSetting';
 import { useChatStore } from '@/store/chatStore';
@@ -16,7 +16,7 @@ export function ChatWrapper() {
     const user = useGlobalStore(state => state.user);
     const selectedModelId = useChatStore(state => state.modelSelectedId)
 
-    const { data: chatResp } = useSWR<RespChat>(
+    const { data: chatResp } = useSWR<RespChannel>(
         id ? ['ApiGetChat', id] : null,
         () => ApiGetChat(id!),
     );

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { LifeBuoy } from "lucide-react"
-import { NavGroup } from "./nav-group"
+import { WorkspaceGroup } from "./workspace-group"
 import { NavUser } from "./nav-user"
 import {
   Sidebar,
@@ -79,13 +79,12 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             currentTeam={user.currentTeam}
             teams={user.teams}
           />
-       
         </SidebarHeader>
         <SidebarContent>
           <NavHeader />
           {/*<NavGroup items={favoriteAppList} groupName="Favorite" maked />*/}
-          <NavGroup items={appList} groupName={t("sidebar.Workspace")} draggable onDragEnd={onDragEnd} showAdd maked />
-          {user.roleId === UserRole.Admin && <NavGroup items={data(t).navSupport} className="mt-auto" />}
+          <WorkspaceGroup items={appList} groupName={t("sidebar.Workspace")} draggable onDragEnd={onDragEnd} showAdd maked />
+          {user.roleId === UserRole.Admin && <WorkspaceGroup items={data(t).navSupport} className="mt-auto" />}
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={user} />

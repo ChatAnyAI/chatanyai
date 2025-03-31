@@ -235,7 +235,7 @@ export const ApiUpdateAppInfo = (appId: string, data: UpdateAppInfoRequest) => {
 }
 
 export const ApiShareWithMeList = () => {
-  return get<Array<{ app?: AppResp, chat?: RespChat, fromUser: User }>>('/api/share/-/list');
+  return get<Array<{ app?: AppResp, chat?: RespChannel, fromUser: User }>>('/api/share/-/list');
 }
 
 export interface ApiAppShareCreateRequest {
@@ -452,7 +452,7 @@ export const ApiPostChat = (data: PostChatRequest) => {
 }
 
 
-export interface RespChat {
+export interface RespChannel {
   id: string;
   name: string;
   description: string;
@@ -466,7 +466,7 @@ export interface RespChat {
   type: AppType;
 }
 export const ApiGetChat = (chatId: string) => {
-  return get<RespChat>(`/api/chat/${chatId}`);
+  return get<RespChannel>(`/api/chat/${chatId}`);
 }
 
 export interface RespChatHistoryMessage {
@@ -497,8 +497,8 @@ export const ApiUpdateChatVisibility = (chatId: string, visibility: AppVisibilit
     return put<void>(`/api/chat/${chatId}/visibility`, { visibility });
 }
 
-export const ApiChatListByAppId = (appId: string) => {
-  return get<RespChat[]>(`/api/app/${appId}/chat/-/list`);
+export const ApiChannelListByAppId = (appId: string) => {
+  return get<RespChannel[]>(`/api/app/${appId}/channel/-/list`);
 }
 
 export const ApiChatShareList = (chatId: string) => {

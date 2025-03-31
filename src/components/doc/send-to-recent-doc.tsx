@@ -1,7 +1,7 @@
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import React from "react";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {ApiChatListByAppId, ApiDocAppendContent, ApiDocContent, ApiDocRecent} from "@/service/api";
+import {ApiChannelListByAppId, ApiDocAppendContent, ApiDocContent, ApiDocRecent} from "@/service/api";
 import {toast} from "@/hooks/use-toast";
 import {useTranslation} from "react-i18next";
 import useSWR from "swr";

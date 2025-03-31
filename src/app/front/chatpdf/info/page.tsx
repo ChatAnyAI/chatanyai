@@ -8,7 +8,7 @@ import { useChatStore } from '@/store/chatStore';
 import PDFPreview from '../component/pdfv2-preview';
 import { useGlobalStore } from '@/store/globalStore';
 import useSWR from 'swr';
-import { ApiChatHistory, ApiGetChat, RespChat, RespChatHistoryMessage } from '@/service/api';
+import { ApiChatHistory, ApiGetChat, RespChannel, RespChatHistoryMessage } from '@/service/api';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +18,7 @@ export default function Page() {
     const user = useGlobalStore(state => state.user);
     const selectedModelId = useChatStore(state => state.modelSelectedId)
 
-    const { data: chatResp, isLoading } = useSWR<RespChat>(
+    const { data: chatResp, isLoading } = useSWR<RespChannel>(
         id ? ['ApiGetChat', id] : null,
         () => ApiGetChat(id!),
     );

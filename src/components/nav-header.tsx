@@ -76,7 +76,6 @@ export function NavHeader({
                         navigator(groupRoute);
                     }}>
                         <SidebarGroupLabel>{groupName}</SidebarGroupLabel>
-
                         {
                             showAdd ?
                                 <SidebarGroupAction
@@ -88,7 +87,6 @@ export function NavHeader({
                                     <Plus className="h-4 w-4" />
                                 </SidebarGroupAction> : null
                         }
-
                     </div>
                     : null
             }

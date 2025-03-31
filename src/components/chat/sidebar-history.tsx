@@ -38,7 +38,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { ApiChatListByAppId, RespChat, ApiUpdateChatInfo } from "@/service/api";
+import { ApiChannelListByAppId, RespChannel, ApiUpdateChatInfo } from "@/service/api";
 import { useToast } from '@/hooks/use-toast';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
@@ -52,11 +52,11 @@ import { useSidebarDialog } from '../sidebar/sidebar-dialog';
 import { fetchRecentChatId, useRecentChatId } from '@/hooks/useRecentChatId';
 
 type GroupedChats = {
-  today: RespChat[];
-  yesterday: RespChat[];
-  lastWeek: RespChat[];
-  lastMonth: RespChat[];
-  older: RespChat[];
+  today: RespChannel[];
+  yesterday: RespChannel[];
+  lastWeek: RespChannel[];
+  lastMonth: RespChannel[];
+  older: RespChannel[];
 };
 
 const PureChatItem = ({
@@ -65,7 +65,7 @@ const PureChatItem = ({
   onDelete,
   setOpenMobile,
 }: {
-  chat: RespChat;
+  chat: RespChannel;
   isActive: boolean;
   onDelete: (chatId: string) => void;
   setOpenMobile: (open: boolean) => void;
@@ -211,8 +211,8 @@ export function SidebarHistory() {
     data: chatListResp,
     isLoading,
     mutate,
-  } = useSWR<RespChat[]>(user && appId ? ['ApiChatListByAppId', appId, user] : null,
-    () => ApiChatListByAppId(appId as string),
+  } = useSWR<RespChannel[]>(user && appId ? ['ApiChatListByAppId', appId, user] : null,
+    () => ApiChannelListByAppId(appId as string),
     {
       fallbackData: [],
     });
@@ -312,7 +312,7 @@ export function SidebarHistory() {
     );
   }
 
-  const groupChatsByDate = (chats: RespChat[]): GroupedChats => {
+  const groupChatsByDate = (chats: RespChannel[]): GroupedChats => {
     const now = new Date();
     const oneWeekAgo = subWeeks(now, 1);
     const oneMonthAgo = subMonths(now, 1);

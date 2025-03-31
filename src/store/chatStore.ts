@@ -1,7 +1,7 @@
 import { ApiAppInfo, ApiSpaceList, AppResp } from "@/service/api";
 import { create } from 'zustand';
 import { ApiAppFavoriteList, ApiAiModelList, RespModel } from "@/service/api";
-import { NavMenuItem } from "@/components/nav-group";
+import { NavMenuItem } from "@/components/workspace-group";
 import { RouteEnum } from "@/lib/constants/constants";
 import Cookies from "js-cookie";
 import {toast} from "@/hooks/use-toast";

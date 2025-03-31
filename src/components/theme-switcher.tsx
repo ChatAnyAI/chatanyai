@@ -24,7 +24,7 @@ export default () => {
           variant="outline"
           size="icon"
           onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          className="rounded-full w-8 h-8 border-muted transition-all hover:scale-110 hover:border-primary flex items-center justify-center p-0 aspect-square"
+          className="rounded-full w-8 h-8 border-muted transition-all hover:scale-110 hover:border-primary flex items-center justify-center p-0 aspect-square  cursor-pointer"
         >
           <div className="relative w-4 h-4 flex items-center justify-center">
             <Sun 

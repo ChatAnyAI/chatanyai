@@ -13,7 +13,7 @@ import { ApiHomeRecent, ApiHomeRecentChatItem, ApiHomeRecentRes, AvatarUser, Use
 import { Link } from "react-router-dom";
 import { AppLabelEnum, AppVisibility, AppVisibilityEnum, RouteEnum } from "@/lib/constants/constants";
 import { useGlobalStore } from "@/store/globalStore";
-import { Icon } from "@/components/nav-group";
+import { Icon } from "@/components/workspace-group";
 import { UserAvatar } from "@/components/user-avatar";
 import { isToday, isYesterday, subDays, isAfter } from 'date-fns';
 import { Button } from "@/components/ui/button";
@@ -173,7 +173,7 @@ export default function DashboardPage() {
                     className="mb-8"
                 >
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold">{t('home-page.recent-chats')}</h2>
+                        <h2 className="text-xl font-bold">{t('home-page.recent-activities')}</h2>
                     </div>
 
                     {todayChats.length > 0 || yesterdayChats.length > 0 || previous7DaysChats.length > 0 ? (

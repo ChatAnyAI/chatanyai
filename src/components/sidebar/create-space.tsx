@@ -40,8 +40,6 @@ export function CreateSpace() {
 
     const renderCreationComponent = () => {
         switch (selectedType) {
-            // case AppType.Dataset:
-            //     return <DatasetCreation />
             case AppType.Copilot:
                 return <CopilotCreation
                     onClose={() => {
@@ -58,7 +56,7 @@ export function CreateSpace() {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <SidebarGroupAction data-name="create-icon" className="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 transition-opacity">
+                    <SidebarGroupAction data-name="create-icon" className="opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 transition-opacity cursor-pointer">
                         <Plus className="h-4 w-4" />
                     </SidebarGroupAction>
                 </DropdownMenuTrigger>

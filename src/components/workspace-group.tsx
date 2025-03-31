@@ -28,7 +28,7 @@ export type NavMenuItem = Partial<Omit<AppResp, 'icon' | 'id'>> & {
   isFullAccess?: boolean
 }
 
-export function NavGroup({
+export function WorkspaceGroup({
   showAdd,
   groupName,
   groupRoute,
@@ -196,7 +196,7 @@ export function NavGroup({
                       <NavMore appInfo={item as AppResp}>
                         <SidebarMenuAction
                           showOnHover
-                          className="opacity-0 hover:opacity-100 transition-opacity data-[active=true]:opacity-100"
+                          className="opacity-0 hover:opacity-100 transition-opacity data-[active=true]:opacity-100 cursor-pointer"
                         >
                           <MoreHorizontal size={18} />
                         </SidebarMenuAction>

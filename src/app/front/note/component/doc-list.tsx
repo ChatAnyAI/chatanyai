@@ -3,7 +3,7 @@ import {RouteEnum} from "@/lib/constants/constants";
 import {cn} from "@/lib/utils";
 import {useNavigate, useParams} from "react-router-dom";
 import useSWR from "swr";
-import {ApiChatListByAppId, ApiCreateDoc, ApiDocList} from "@/service/api";
+import {ApiChannelListByAppId, ApiCreateDoc, ApiDocList} from "@/service/api";
 import {useChatStore} from "@/store/chatStore";
 import {toast} from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 export default function DocList() {
     const { t } = useTranslation();
     const { appId,chatId } = useParams();
-    const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChatListByAppId(appId!));
+    const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChannelListByAppId(appId!));
     const { data: docList, mutate } = useSWR([`ApiDocList`, appId], () => ApiDocList(appId!));
     const currentAppInfo = useChatStore(state => state.currentAppInfo);
     const navigate = useNavigate();

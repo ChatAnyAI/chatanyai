@@ -3,13 +3,13 @@
 import type React from "react"
 
 import { MoreVertical, LockIcon } from "lucide-react"
-import type { RespChat } from "@/service/api"
+import type { RespChannel } from "@/service/api"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
 import { useTranslation } from 'react-i18next';
 
 interface ChatListProps {
-  chats: RespChat[]
+  chats: RespChannel[]
   onMenuOpen: (chatId: string, x: number, y: number) => void
 }
 

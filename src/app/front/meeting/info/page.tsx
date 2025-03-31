@@ -9,7 +9,7 @@ import { useChatStore } from '@/store/chatStore';
 import MeetingChat from '../components/meeting-chat';
 import MeetingSetting, { MeetingData } from '../components/meeting-setting';
 import useSWR from 'swr';
-import { ApiChatHistory, ApiGetChat, RespChat, RespChatHistoryMessage } from '@/service/api';
+import { ApiChatHistory, ApiGetChat, RespChannel, RespChatHistoryMessage } from '@/service/api';
 import { useGlobalStore } from '@/store/globalStore';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ export default function Page() {
   const user = useGlobalStore(state => state.user);
 
 
-  const { data: chatResp } = useSWR<RespChat>(
+  const { data: chatResp } = useSWR<RespChannel>(
     !storeData ? ['ApiGetChat', id] : null,
     () => ApiGetChat(id!),
   );

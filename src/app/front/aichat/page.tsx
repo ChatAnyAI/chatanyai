@@ -5,7 +5,7 @@ import { RightSettingProvider } from '@/app/front/aichat/component/rightSetting'
 import { useChatStore } from '@/store/chatStore';
 import { ChatList } from './component/chat-list';
 import { EmptyState } from './component/empty-state';
-import { ApiChatListByAppId } from '@/service/api';
+import { ApiChannelListByAppId } from '@/service/api';
 import useSWR from 'swr';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ export default function Page() {
   const chatId = generateUUID();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();
-  const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChatListByAppId(appId!));
+  const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChannelListByAppId(appId!));
   const currentAppInfo = useChatStore(state => state.currentAppInfo);
 
   return (
@@ -40,7 +40,6 @@ export default function Page() {
             selectedModelId={selectedModelId}
             isReadonly={false} />
         </RightSettingProvider>
-
         {chats?.length! > 0 ? <ChatList chats={chats!} onMenuOpen={() => { }} /> : <EmptyState />}
       </div>
       {/* 

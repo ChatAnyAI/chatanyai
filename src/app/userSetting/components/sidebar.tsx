@@ -4,7 +4,7 @@ import {
 } from "lucide-react"
 import { useNavigate } from "react-router-dom";
 import type * as React from "react"
-import { NavGroup, NavMenuItem } from "@/components/nav-group"
+import { WorkspaceGroup, NavMenuItem } from "@/components/workspace-group"
 import {
     Sidebar,
     SidebarContent,
@@ -38,7 +38,7 @@ export function UserSettingSidebar() {
                     />
                 </SidebarHeader>
                 <SidebarContent>
-                    <NavGroup items={menuItems} />
+                    <WorkspaceGroup items={menuItems} />
                 </SidebarContent>
                 <SidebarFooter className="cursor-pointer">
                     <SidebarMenu>

@@ -11,7 +11,7 @@ import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
 import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
-import { RespChat } from "@/service/api";
+import { RespChannel } from "@/service/api";
 import { toast } from '@/hooks/use-toast';
 
 function Chat({
@@ -37,7 +37,7 @@ function Chat({
   isReadonly: boolean;
   appId: string;
   isNew?: boolean;
-  chatInfo?: RespChat;
+  chatInfo?: RespChannel;
 }) {
   const { settingData } = useRightSetting();
   const { mutate } = useSWRConfig();

@@ -3,7 +3,7 @@
 import * as React from "react"
 import { File, Share2, ExternalLink } from "lucide-react"
 import { SidebarDialog, SidebarOverlay } from "./sidebar-dialog"
-import { ApiShareWithMeList, RespChat } from '@/service/api'
+import { ApiShareWithMeList, RespChannel } from '@/service/api'
 import useSWR from "swr"
 import { useNavigate } from "react-router-dom"
 import { AppIcons, RouteEnum, AppType } from "@/lib/constants/constants"
@@ -108,7 +108,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
                                                         {t('shared-dialog.shared')}
                                                     </span>
                                                     <h3 className="text-xs truncate flex-1">
-                                                        {isApp ? data.name : (data as RespChat).title}
+                                                        {isApp ? data.name : (data as RespChannel).title}
                                                     </h3>
                                                 </div>
                                             </div>

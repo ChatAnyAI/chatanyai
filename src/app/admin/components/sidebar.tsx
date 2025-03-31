@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom";
 import type * as React from "react"
-import { NavGroup, NavMenuItem } from "@/components/nav-group"
+import { WorkspaceGroup, NavMenuItem } from "@/components/workspace-group"
 import {
     Sidebar,
     SidebarContent,
@@ -51,28 +51,9 @@ export function AdminSidebar() {
                         currentTeam={user.currentTeam}
                         teams={user.teams}
                     />
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                                className="fixed right-2 top-[6px]"
-                            >
-                                {theme === "light" ? (
-                                    <Moon className="h-4 w-4" />
-                                ) : (
-                                    <Sun className="h-4 w-4" />
-                                )}
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            {theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-                        </TooltipContent>
-                    </Tooltip>
                 </SidebarHeader>
                 <SidebarContent>
-                    <NavGroup items={menuItems} />
+                    <WorkspaceGroup items={menuItems} />
                 </SidebarContent>
                 <SidebarFooter className="cursor-pointer">
                     <SidebarMenu>
