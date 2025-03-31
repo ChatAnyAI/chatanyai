@@ -51,7 +51,7 @@ export default function Page() {
                 <div className="h-screen flex-1 overflow-x-hidden" >
                     <ChatHeader
                         chatInfo={chatResp!}
-                        chatId={chatResp?.id!}
+                        chatId={chatResp?.channelId!}
                         isReadonly={user.id !== chatResp?.uid}
                     />
                     {docResp && <CoreEditor

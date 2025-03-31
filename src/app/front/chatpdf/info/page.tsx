@@ -43,7 +43,7 @@ export default function Page() {
                     !chatResp?.pdfLink! ? null :
                         <ChatHeader
                             chatInfo={chatResp!}
-                            chatId={chatResp?.id!}
+                            chatId={chatResp?.channelId!}
                             isReadonly={user.id !== chatResp?.uid}
                         />
                 }

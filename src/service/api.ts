@@ -451,19 +451,22 @@ export const ApiPostChat = (data: PostChatRequest) => {
   return post<void>(`/api/app/${data.appId}/chat/${data.id}`, data);
 }
 
+export interface RespChannelUser {
+    id: number;
+    name: string;
+    avatar: string;
+}
+
 
 export interface RespChannel {
-  id: string;
+  channelId: string;
   name: string;
-  description: string;
   createdAt: number;
-  appId: string;
-  title: string;
   uid: number;
   visibility: AppVisibility;
   permission: PermissionType;
+  user: RespChannelUser;
   pdfLink: string;
-  type: AppType;
 }
 export const ApiGetChat = (chatId: string) => {
   return get<RespChannel>(`/api/chat/${chatId}`);
