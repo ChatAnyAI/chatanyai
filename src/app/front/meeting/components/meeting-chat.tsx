@@ -50,7 +50,7 @@ export default function Chat({
     reload,
     error,
   } = useChat({
-    api: `/api/app/${appId}/chat/${id}/meeting`,
+    api: `/api/app/${appId}/channel/${id}/meeting`,
     id,
     body: {
       id,

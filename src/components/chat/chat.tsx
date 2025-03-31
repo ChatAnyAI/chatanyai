@@ -54,7 +54,7 @@ function Chat({
     reload,
     error,
   } = useChat({
-    api: `/api/app/${appId}/chat/${id}`,
+    api: `/api/app/${appId}/channel/${id}`,
     id,
     body: {
       id,

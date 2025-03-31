@@ -13,7 +13,7 @@ export const useChat = () => {
 
   return useBaseChat({
     id: 'editor',
-    api: `/api/app/${appId}/chat/${id}`,
+    api: `/api/app/${appId}/channel/${id}`,
     body: {
       id,
       modelId: 'openai-gpt-4o-mini',

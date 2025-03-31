@@ -356,7 +356,6 @@ export const ApiDatasetDelete = (datasetId: string) => {
   return del<void>(`/api/dataset/${datasetId}/info`);
 }
 
-
 export interface RespDatasetInfo {
   id: string;
   name: string;
@@ -447,9 +446,9 @@ export interface PostChatMessageAttachment {
   contentType: string;
 }
 
-export const ApiPostChat = (data: PostChatRequest) => {
-  return post<void>(`/api/app/${data.appId}/chat/${data.id}`, data);
-}
+// export const ApiPostChat = (data: PostChatRequest) => {
+//   return post<void>(`/api/app/${data.appId}/chat/${data.id}`, data);
+// }
 
 export interface RespChannelUser {
     id: number;
@@ -469,7 +468,7 @@ export interface RespChannel {
   pdfLink: string;
 }
 export const ApiGetChat = (chatId: string) => {
-  return get<RespChannel>(`/api/chat/${chatId}`);
+  return get<RespChannel>(`/api/channel/${chatId}`);
 }
 
 export interface RespChatHistoryMessage {
@@ -484,7 +483,7 @@ export interface RespChatHistoryMessage {
 }
 
 export const ApiChatHistory = (chatId: string) => {
-  return get<RespChatHistoryMessage[]>(`/api/chat/${chatId}/history`);
+  return get<RespChatHistoryMessage[]>(`/api/channel/${chatId}/history`);
 }
 
 export interface UpdateChatInfoRequest {
@@ -492,12 +491,12 @@ export interface UpdateChatInfoRequest {
 }
 
 export const ApiUpdateChatInfo = (chatId: string, data: UpdateChatInfoRequest) => {
-  return put<void>(`/api/chat/${chatId}/info`, data);
+  return put<void>(`/api/channel/${chatId}/info`, data);
 }
 
 
 export const ApiUpdateChatVisibility = (chatId: string, visibility: AppVisibility) => {
-    return put<void>(`/api/chat/${chatId}/visibility`, { visibility });
+    return put<void>(`/api/channel/${chatId}/visibility`, { visibility });
 }
 
 export const ApiChannelListByAppId = (appId: string) => {
@@ -505,7 +504,7 @@ export const ApiChannelListByAppId = (appId: string) => {
 }
 
 export const ApiChatShareList = (chatId: string) => {
-  return get<ShareUser[]>(`/api/chat/${chatId}/share/-/userList`);
+  return get<ShareUser[]>(`/api/channel/${chatId}/share/-/userList`);
 }
 
 export interface ApiChatShareCreateRequest {
@@ -514,21 +513,21 @@ export interface ApiChatShareCreateRequest {
 }
 
 export const ApiChatShareCreate = (chatId: string, req: ApiChatShareCreateRequest) => {
-  return put<void>(`/api/chat/${chatId}/share`, req);
+  return put<void>(`/api/channel/${chatId}/share`, req);
 }
 
 export const ApiChatShareDelete = (chatId: string, uid: number) => {
-  return del<void>(`/api/chat/${chatId}/share/${uid}`);
+  return del<void>(`/api/channel/${chatId}/share/${uid}`);
 }
 
 export const ApiChatShareUpdatePermission = (chatId: string, uid: number, permission: PermissionType) => {
-    return put<void>(`/api/chat/${chatId}/share/${uid}/permission`,{
+    return put<void>(`/api/channel/${chatId}/share/${uid}/permission`,{
         permission
     });
 }
 
 export const ApiChatUpdatePermission = (chatId: string,  permission: PermissionType) => {
-    return put<void>(`/api/chat/${chatId}/permission`,{
+    return put<void>(`/api/channel/${chatId}/permission`,{
         permission
     });
 }
@@ -550,22 +549,22 @@ export interface MeetingRequest {
   // pdfLink?: string;
 }
 
-export const ApiMeetingCreate = (data: MeetingRequest) => {
-  return post<void>(`/api/app/${data.appId}/chat/${data.id}/meeting`, data);
-}
-
-
-export const ApiStreamChat = () => {
-  return get<void>('/api/stream');
-}
-
-export const ApiStreamChatOllama = () => {
-  return get<void>('/api/streamOllama');
-}
-
-export const ApiMultiStreamChatOllama = () => {
-  return get<void>('/api/multiStreamOllama');
-}
+// export const ApiMeetingCreate = (data: MeetingRequest) => {
+//   return post<void>(`/api/app/${data.appId}/chat/${data.id}/meeting`, data);
+// }
+//
+//
+// export const ApiStreamChat = () => {
+//   return get<void>('/api/stream');
+// }
+//
+// export const ApiStreamChatOllama = () => {
+//   return get<void>('/api/streamOllama');
+// }
+//
+// export const ApiMultiStreamChatOllama = () => {
+//   return get<void>('/api/multiStreamOllama');
+// }
 
 export type RespModel = {
   label: string;
