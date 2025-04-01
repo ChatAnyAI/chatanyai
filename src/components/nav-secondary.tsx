@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -20,6 +20,7 @@ export function NavSecondary() {
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed"
   const sidebarWidth = isMobile ? 0 : isCollapsed ? "var(--sidebar-width-icon)" : "var(--sidebar-width)"
+  const sidebarRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (activeMenu) {
@@ -29,12 +30,31 @@ export function NavSecondary() {
     }
   }, [activeMenu])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isVisible && 
+        sidebarRef.current && 
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        toggleMenu(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isVisible, toggleMenu]);
+
   const toggleFloating = () => {
     setIsFloating(!isFloating)
   }
 
   return (
     <div
+      ref={sidebarRef}
       className={cn(
         "bg-background transition-all duration-300 ease-in-out overflow-hidden flex flex-col",
         isVisible ? "w-[400px] opacity-100" : "w-0 opacity-0",

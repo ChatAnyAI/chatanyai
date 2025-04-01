@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function Page() {
   const { t } = useTranslation();
-  const chatId = generateUUID();
+  // const chatId = generateUUID();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();
   const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChannelListByAppId(appId!));
@@ -32,8 +32,6 @@ export default function Page() {
             hiddenHeader
             hiddenMessage
             className='flex-none'
-            key={chatId}
-            id={chatId}
             isNew={true}
             appId={appId!}
             initialMessages={[]}

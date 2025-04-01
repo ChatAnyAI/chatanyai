@@ -171,11 +171,16 @@ export function WorkspaceGroup({
                   isActive={new RegExp(item.url).test(location.pathname)}
                   asChild
                   tooltip={item.name}
-                  onClick={() => {
-                    onClickMenu(item.id && item.type !== AppType.Copilot && item.type !== AppType.Note ? {
-                      appId: item.id,
-                      name: item.name!,
-                    } : null);
+                  onClick={(e) => {
+                    if (item.id && item.type !== AppType.Copilot && item.type !== AppType.Note) { 
+                      e.stopPropagation();
+                      onClickMenu({
+                        appId: item.id,
+                        name: item.name!,
+                      });
+                      return;
+                    }
+                    onClickMenu(null);
                   }}
                 >
                   <Link to={item.url}>

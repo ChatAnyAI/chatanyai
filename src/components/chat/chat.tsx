@@ -2,7 +2,7 @@
 
 import type { Attachment, Message } from 'ai';
 import { useChat } from 'ai/react';
-import { memo, useState } from 'react';
+import { memo, use, useCallback, useState, useEffect } from 'react';
 import { useSWRConfig } from 'swr';
 
 import { ChatHeader } from '@/components/chat/chat-header';
@@ -11,8 +11,9 @@ import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
 import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
-import { RespChannel } from "@/service/api";
+import { ApiChatCreate, RespChannel } from "@/service/api";
 import { toast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 function Chat({
   hiddenHeader,
@@ -31,7 +32,7 @@ function Chat({
   hiddenHeader?: boolean;
   hiddenMessage?: boolean;
   pdfLink?: string;
-  id: string;
+  id?: string;
   initialMessages: Array<Message>;
   selectedModelId: string;
   isReadonly: boolean;
@@ -41,6 +42,11 @@ function Chat({
 }) {
   const { settingData } = useRightSetting();
   const { mutate } = useSWRConfig();
+  const [channelId, setChannelId] = useState<string | undefined>(id);
+  const navgate = useNavigate();
+
+  // Create a dynamic API endpoint that updates when channelId changes
+  const apiEndpoint = `/api/app/${appId}/channel/${channelId}`;
 
   const {
     messages,
@@ -54,17 +60,17 @@ function Chat({
     reload,
     error,
   } = useChat({
-    api: `/api/app/${appId}/channel/${id}`,
-    id,
+    api: apiEndpoint,
+    id: channelId, // Use channelId instead of id to ensure consistency
     body: {
-      id,
+      id: channelId, // Use channelId instead of id
       modelId: selectedModelId,
       options: {
-        frequency_penalty: settingData.frequencyPenalty, // Optional: Frequency penalty, >= -2 and <= 2
-        max_tokens: settingData.maxTokens,        // Optional: Maximum tokens, > 1
-        presence_penalty: settingData.presencePenalty,  // Optional: Presence penalty, >= -2 and <= 2
-        temperature: settingData.temperature,      // Optional: Sampling temperature, <= 2
-        // topP: settingData.topP,            // Optional: Nucleus sampling parameter, <= 1
+        frequency_penalty: settingData.frequencyPenalty,
+        max_tokens: settingData.maxTokens,
+        presence_penalty: settingData.presencePenalty,
+        temperature: settingData.temperature,
+        // topP: settingData.topP,
       },
       appId,
       ...(pdfLink ? { pdfLink } : {})
@@ -75,6 +81,14 @@ function Chat({
       mutate('ApiChatListByAppId');
     },
   });
+
+  // Reset messages when channelId changes
+  useEffect(() => {
+    if (channelId && channelId !== id) {
+      setMessages([]); // Clear messages when switching to a new channel
+    }
+  }, [channelId, id, setMessages]);
+
   if (error) {
     console.error(error);
     stop();
@@ -90,13 +104,50 @@ function Chat({
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
 
+  //@ts-ignore
+  const handleMsgSubmit = useCallback((e, data) => {
+    if (channelId) { 
+      // If we already have a channel ID, submit directly
+      handleSubmit(e, data);
+    } else {
+      // Create a new channel first
+      ApiChatCreate(appId, {
+        pdfLink: pdfLink || ''
+      }).then((res) => {
+        console.log('ApiChatCreate', res);
+        setChannelId(res.guid);
+        navgate(`c/${res.guid}`);
+        // Use the new data with updated channel ID
+        const updatedData = {
+          ...data,
+          body: {
+            ...data.body,
+            id: res.guid,
+          }
+        };
+        
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          handleSubmit(e, updatedData);
+        }, 100);
+      }).catch(err => {
+        console.error('Failed to create channel:', err);
+        toast({
+          title: "Error",
+          description: "Failed to create new chat channel.",
+          variant: "destructive"
+        });
+      });
+    }
+  }, [appId, handleSubmit, channelId, pdfLink]);
+
   return (
     <>
       <div className={`flex flex-auto flex-col min-w-0 bg-background ${className}`}>
         {
           hiddenHeader ? null :
             <ChatHeader
-              chatId={id}
+              chatId={channelId!}
               chatInfo={chatInfo}
               isReadonly={isReadonly}
               isNew={isNew}
@@ -107,7 +158,7 @@ function Chat({
             {
               hiddenMessage ? null :
                 <Messages
-                  chatId={id}
+                  chatId={channelId!}
                   isLoading={isLoading}
                   messages={messages}
                   setMessages={setMessages}
@@ -120,10 +171,10 @@ function Chat({
             <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
               {!isReadonly && (
                 <MultimodalInput
-                  chatId={id}
+                  chatId={channelId!}
                   input={input}
                   setInput={setInput}
-                  handleSubmit={handleSubmit}
+                  handleSubmit={handleMsgSubmit}
                   isLoading={isLoading}
                   stop={stop}
                   attachments={attachments}

@@ -83,7 +83,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <NavHeader />
           {/*<NavGroup items={favoriteAppList} groupName="Favorite" maked />*/}
-          <WorkspaceGroup items={appList} groupName={t("sidebar.Workspace")} draggable onDragEnd={onDragEnd} showAdd maked />
+          <WorkspaceGroup items={appList} groupName={"Workspace"} draggable onDragEnd={onDragEnd} showAdd maked />
           {user.roleId === UserRole.Admin && <WorkspaceGroup items={data(t).navSupport} className="mt-auto" />}
         </SidebarContent>
         <SidebarFooter>

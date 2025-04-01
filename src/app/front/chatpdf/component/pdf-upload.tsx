@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useTranslation } from "react-i18next"
+import { ApiChatCreate } from "@/service/api"
+import { useNavigate } from "react-router-dom"
 
 interface PDFUploaderProps {
     appId: string
@@ -22,7 +24,7 @@ const uploadAPI = (
     appId: string,
     file: File,
     onProgress: (progress: number) => void,
-): Promise<{ success: boolean; message: string; url?: string }> => {
+): Promise<{ success: boolean; message: string; url?: string, pathname: string }> => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest()
         const formData = new FormData()
@@ -90,6 +92,7 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
     const [isUploading, setIsUploading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate()
 
     const validateFileType = (file: File): boolean => {
         if (file.type !== "application/pdf") {
@@ -158,7 +161,11 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                 title: t("pdf-upload.Upload successful"),
             })
 
-            //@ts-ignore
+            const { guid }  = await ApiChatCreate(appId, {
+                pdfLink: result.pathname,
+            })
+            navigate('c/' + guid)
+
             onPdfUploaded(result.pathname)
         } catch (error: any) {
             // Handle upload error

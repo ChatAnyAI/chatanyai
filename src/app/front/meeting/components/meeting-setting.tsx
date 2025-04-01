@@ -14,7 +14,6 @@ import { Wand2, Shuffle, Trash2, Plus, MessageCircle, Lightbulb } from "lucide-r
 import { useTranslation } from "react-i18next"
 
 
-
 const demoTopics = [
   "How to enhance user loyalty and brand stickiness through social platforms?",
   "How to design an effective remote team collaboration process?",
