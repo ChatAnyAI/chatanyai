@@ -102,7 +102,7 @@ module.exports = function (proxy, allowedHost) {
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
     proxy: [
      {
-        context: ['/api', '/ragcdn', '/gstatic'],
+        context: ['/api', '/storage', '/gstatic'],
         target: 'http://localhost:9088',
       }
     ],
