@@ -27,5 +27,5 @@ export function useScrollToBottom<T extends HTMLElement>(isLoading: boolean): [
     }
   }, [isLoading]);
 
-  return [containerRef, endRef];
+  return [containerRef, endRef] as [RefObject<T>, RefObject<T>];
 }

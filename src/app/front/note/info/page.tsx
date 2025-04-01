@@ -12,7 +12,7 @@ import { useGlobalStore } from "@/store/globalStore";
 import DocList from "@/app/front/note/component/doc-list";
 import { useTranslation } from "react-i18next";
 import { ChatHeader } from "../component/note-header";
-import { Chat } from "@/components/chat/chat";
+// import { Chat } from "@/components/chat/chat";
 
 export default function Page() {
     const { t } = useTranslation();
@@ -51,10 +51,10 @@ export default function Page() {
                             />
                         </div>
                         <div className="w-[0px] border-l">
-                            <Chat 
+                            {/* <Chat 
                                 hiddenHeader
                                 chatId={chatId!} 
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>
