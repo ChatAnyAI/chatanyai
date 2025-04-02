@@ -245,5 +245,11 @@
     "presets": [
       "react-app"
     ]
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@ai-sdk/ui-utils": "patches/@ai-sdk__ui-utils.patch",
+      "@ai-sdk/react": "patches/@ai-sdk__react.patch"
+    }
   }
 }

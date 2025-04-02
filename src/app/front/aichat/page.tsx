@@ -1,5 +1,4 @@
 import { Chat } from '@/components/chat/chat';
-import { generateUUID } from '@/lib/utils';
 import { useParams } from "react-router-dom";
 import { RightSettingProvider } from '@/app/front/aichat/component/rightSetting';
 import { useChatStore } from '@/store/chatStore';
@@ -7,10 +6,10 @@ import { ChatList } from './component/chat-list';
 import { EmptyState } from './component/empty-state';
 import { ApiChannelListByAppId } from '@/service/api';
 import useSWR from 'swr';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 
 export default function Page() {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   // const chatId = generateUUID();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();

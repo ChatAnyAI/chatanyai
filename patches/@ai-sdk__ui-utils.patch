@@ -1,0 +1,22 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 13f8e7a8e4e2cedc32d045541e2c77efd2c611a4..8e28eb160df4d3afe38bde340f79ef07324c4d1b 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -101,7 +101,7 @@ var parseAssistantStreamPart = (line) => {
+   }
+   const prefix = line.slice(0, firstSeparatorIndex);
+   if (!validCodes.includes(prefix)) {
+-    throw new Error(`Failed to parse stream string. Invalid code ${prefix}.`);
++    throw new Error(line || `Failed to parse stream string. Invalid code ${prefix}.`);
+   }
+   const code = prefix;
+   const textValue = line.slice(firstSeparatorIndex + 1);
+@@ -733,7 +733,7 @@ var parseDataStreamPart = (line) => {
+   }
+   const prefix = line.slice(0, firstSeparatorIndex);
+   if (!validCodes2.includes(prefix)) {
+-    throw new Error(`Failed to parse stream string. Invalid code ${prefix}.`);
++    throw new Error(line || `Failed to parse stream string. Invalid code ${prefix}.`);
+   }
+   const code = prefix;
+   const textValue = line.slice(firstSeparatorIndex + 1);

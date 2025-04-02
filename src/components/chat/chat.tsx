@@ -2,7 +2,7 @@
 
 import type { Attachment, Message } from 'ai';
 import { useChat } from 'ai/react';
-import { memo, use, useCallback, useState, useEffect } from 'react';
+import { memo, useCallback, useState, useEffect } from 'react';
 import { useSWRConfig } from 'swr';
 
 import { ChatHeader } from '@/components/chat/chat-header';
@@ -58,7 +58,6 @@ function Chat({
     isLoading,
     stop,
     reload,
-    error,
   } = useChat({
     api: apiEndpoint,
     id: channelId, // Use channelId instead of id to ensure consistency
@@ -80,6 +79,18 @@ function Chat({
     onFinish: () => {
       mutate('ApiChatListByAppId');
     },
+    onError: (err: Error) => { 
+      let errmsg = err.message;
+      try {
+        errmsg = JSON.parse(err.message).msg || err.message;
+      } catch (error) {
+      }
+      toast({
+        title: "Error",
+        description: errmsg || "Failed to chat. Please check model provider setting.",
+        variant: "destructive"
+      });
+    },
   });
 
   // Reset messages when channelId changes
@@ -88,16 +99,6 @@ function Chat({
       setMessages([]); // Clear messages when switching to a new channel
     }
   }, [channelId, id, setMessages]);
-
-  if (error) {
-    console.error(error);
-    stop();
-    toast({
-      title: "Error",
-      description: "Failed to chat. Please check model provider setting.",
-      variant: "destructive"
-    });
-  }
 
   console.log('chatInfo messages', messages);
 
@@ -114,7 +115,6 @@ function Chat({
       ApiChatCreate(appId, {
         pdfLink: pdfLink || ''
       }).then((res) => {
-        console.log('ApiChatCreate', res);
         setChannelId(res.guid);
         navgate(`c/${res.guid}`);
         // Use the new data with updated channel ID
@@ -125,11 +125,13 @@ function Chat({
             id: res.guid,
           }
         };
-        
         // Small delay to ensure state is updated
-        setTimeout(() => {
-          handleSubmit(e, updatedData);
-        }, 100);
+        setTimeout(() => { 
+          //@ts-ignore
+          handleSubmit(e, updatedData, {
+            api: `/api/app/${appId}/channel/${res.guid}`
+          });
+        }, 100)
       }).catch(err => {
         console.error('Failed to create channel:', err);
         toast({

@@ -4,6 +4,14 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@ai-sdk/react':
+    hash: d914a80773306c915814f7fe12fd6c0d1ed45006719f90eb87b68d5db71ac15c
+    path: patches/@ai-sdk__react.patch
+  '@ai-sdk/ui-utils':
+    hash: 83af16a64b75ab3cb92264b068cc99a41b37d966c0727c6ba418d32ddbc2154e
+    path: patches/@ai-sdk__ui-utils.patch
+
 importers:
 
   .:
@@ -9564,17 +9572,17 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@1.2.3(react@19.0.0)(zod@3.24.2)':
+  '@ai-sdk/react@1.2.3(patch_hash=d914a80773306c915814f7fe12fd6c0d1ed45006719f90eb87b68d5db71ac15c)(react@19.0.0)(zod@3.24.2)':
     dependencies:
       '@ai-sdk/provider-utils': 2.2.1(zod@3.24.2)
-      '@ai-sdk/ui-utils': 1.2.2(zod@3.24.2)
+      '@ai-sdk/ui-utils': 1.2.2(patch_hash=83af16a64b75ab3cb92264b068cc99a41b37d966c0727c6ba418d32ddbc2154e)(zod@3.24.2)
       react: 19.0.0
       swr: 2.3.3(react@19.0.0)
       throttleit: 2.1.0
     optionalDependencies:
       zod: 3.24.2
 
-  '@ai-sdk/ui-utils@1.2.2(zod@3.24.2)':
+  '@ai-sdk/ui-utils@1.2.2(patch_hash=83af16a64b75ab3cb92264b068cc99a41b37d966c0727c6ba418d32ddbc2154e)(zod@3.24.2)':
     dependencies:
       '@ai-sdk/provider': 1.1.0
       '@ai-sdk/provider-utils': 2.2.1(zod@3.24.2)
@@ -13016,8 +13024,8 @@ snapshots:
     dependencies:
       '@ai-sdk/provider': 1.1.0
       '@ai-sdk/provider-utils': 2.2.1(zod@3.24.2)
-      '@ai-sdk/react': 1.2.3(react@19.0.0)(zod@3.24.2)
-      '@ai-sdk/ui-utils': 1.2.2(zod@3.24.2)
+      '@ai-sdk/react': 1.2.3(patch_hash=d914a80773306c915814f7fe12fd6c0d1ed45006719f90eb87b68d5db71ac15c)(react@19.0.0)(zod@3.24.2)
+      '@ai-sdk/ui-utils': 1.2.2(patch_hash=83af16a64b75ab3cb92264b068cc99a41b37d966c0727c6ba418d32ddbc2154e)(zod@3.24.2)
       '@opentelemetry/api': 1.9.0
       jsondiffpatch: 0.6.0
       zod: 3.24.2
