@@ -664,7 +664,7 @@ export const ApiDocRecent = () => {
 
 export interface DocInfo {
     appId: string;
-    chatId: string;
+    channelId: string;
     name: string;
     updatedAt: number;
 }

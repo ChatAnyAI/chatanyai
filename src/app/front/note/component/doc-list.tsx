@@ -49,8 +49,8 @@ export default function DocList() {
                     {/* Second card */}
                     {docList?.map((doc) => {
                         return (
-                            <div className={cn("bg-white rounded-lg shadow-sm p-4 h-32 relative cursor-pointer", chatId===doc.chatId?"bg-blue-500 rounded-lg shadow-sm p-4 h-32 flex items-center justify-center":"" )} onClick={() => {
-                                navigate(`/${RouteEnum[currentAppInfo?.type!]}/${appId}/c/${doc.chatId}`);
+                            <div className={cn("bg-white rounded-lg shadow-sm p-4 h-32 relative cursor-pointer", chatId===doc.channelId?"bg-blue-500 rounded-lg shadow-sm p-4 h-32 flex items-center justify-center":"" )} onClick={() => {
+                                navigate(`/${RouteEnum[currentAppInfo?.type!]}/${appId}/c/${doc.channelId}`);
                             }}>
                                 {/*<div className="absolute top-2 right-2 flex space-x-2">*/}
                                 {/*    <div className="bg-gray-100 p-1 rounded-md">*/}
@@ -66,7 +66,7 @@ export default function DocList() {
                                 {/*    </div>*/}
                                 {/*</div>*/}
                                 <div className="h-full flex items-center justify-center">
-                                    <p className={cn("", chatId===doc.chatId?"text-white":"text-gray-500" )}>{doc.name}</p>
+                                    <p className={cn("", chatId===doc.channelId?"text-white":"text-gray-500" )}>{doc.name}</p>
                                 </div>
                             </div>
                         )
