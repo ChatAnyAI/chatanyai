@@ -113,7 +113,7 @@ function Chat({
     } else {
       // Create a new channel first
       ApiChatCreate(appId, {
-        pdfLink: pdfLink || ''
+        fileId: pdfLink || ''
       }).then((res) => {
         setChannelId(res.guid);
         navgate(`c/${res.guid}`);

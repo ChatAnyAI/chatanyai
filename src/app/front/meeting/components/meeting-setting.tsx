@@ -120,7 +120,7 @@ export default function DiscussionSetup({
     sessionStorage.setItem(`meeting-${chatId}`, JSON.stringify(data));
     if (!chatId) {
       ApiChatCreate(appId!, {
-        pdfLink: "",
+        fileId: "",
       }).then((res) => {
         navigate(`c/${res.guid}`, { replace: true });
         onStart(data);

@@ -494,7 +494,7 @@ export const ApiUpdateChatInfo = (chatId: string, data: UpdateChatInfoRequest) =
   return put<void>(`/api/channel/${chatId}/info`, data);
 }
 
-export const ApiChatCreate = (appId: string, data: { pdfLink: string}) => { 
+export const ApiChatCreate = (appId: string, data: { fileId: string}) => { 
   return post<{ guid: string }>(`/api/app/${appId}/channel`, data);
 }
 

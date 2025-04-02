@@ -13,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useTranslation } from "react-i18next"
 import { ApiChatCreate } from "@/service/api"
 import { useNavigate } from "react-router-dom"
+import { cssnanoMinify } from "css-minimizer-webpack-plugin"
 
 interface PDFUploaderProps {
     appId: string
@@ -24,7 +25,9 @@ const uploadAPI = (
     appId: string,
     file: File,
     onProgress: (progress: number) => void,
-): Promise<{ success: boolean; message: string; url?: string, pathname: string }> => {
+): Promise<{
+    success: boolean; message: string; url?: string, pathname: string; id: string
+}> => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest()
         const formData = new FormData()
@@ -162,7 +165,7 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
             })
 
             const { guid }  = await ApiChatCreate(appId, {
-                pdfLink: result.pathname,
+                fileId: result.id,
             })
             navigate('c/' + guid)
 
