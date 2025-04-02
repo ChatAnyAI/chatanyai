@@ -115,7 +115,7 @@ const PureChatItem = ({
             handleClose();
           }}
         >
-          <span>{chat.name}</span>
+          <span>{chat.name || 'chat'}</span>
         </Link>
       </SidebarMenuButton>
 

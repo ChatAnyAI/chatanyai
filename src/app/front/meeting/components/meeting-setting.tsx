@@ -12,6 +12,8 @@ import { Slider } from "@/components/ui/slider"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Wand2, Shuffle, Trash2, Plus, MessageCircle, Lightbulb } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { ApiChatCreate } from "@/service/api"
+import { useNavigate, useParams } from "react-router-dom"
 
 
 const demoTopics = [
@@ -74,6 +76,8 @@ export default function DiscussionSetup({
   const [maxrounds, setMaxRounds] = useState<number>(data?.maxrounds || 2)
   const [members, setMembers] = useState<Character[]>(data?.members ? data.members.map((m, i) => ({ ...m, id: i + 1 })) : demoData)
   const { toast } = useToast()
+  const { appId } = useParams()
+  const navigate = useNavigate()
 
   const isDisabled = !!data
 
@@ -114,7 +118,16 @@ export default function DiscussionSetup({
     }
     console.log("startDiscussion", data, chatId)
     sessionStorage.setItem(`meeting-${chatId}`, JSON.stringify(data));
-    onStart(data);
+    if (!chatId) {
+      ApiChatCreate(appId!, {
+        pdfLink: "",
+      }).then((res) => {
+        navigate(`c/${res.guid}`, { replace: true });
+        onStart(data);
+      })
+    } else { 
+      onStart(data);
+    }
   }
 
   const generateRandomTopic = () => {

@@ -115,11 +115,11 @@ export default function Chat({
   useEffect(() => {
     console.log(Date.now(), "meetingData", id, meetingData, isReadonly, isStoreData);
     if (!id || isReadonly || !isStoreData) return;
-    if (id !== chatId) {
-      console.log(Date.now(), "id", id, chatId);
-      navigate(`c/${id}`, { replace: true });
-      return;
-    }
+    // if (id !== chatId) {
+    //   console.log(Date.now(), "id", id, chatId);
+    //   navigate(`c/${id}`, { replace: true });
+    //   return;
+    // }
     const msgs = [{
       "role": "system",
       "content": "You are a multi-role teamwork dialogue model. Each role has its own responsibilities and revolves around a given topic."
