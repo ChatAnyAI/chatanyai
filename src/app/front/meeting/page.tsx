@@ -25,13 +25,13 @@ export default function Page() {
         {
           !meetingData ? null :
             <ChatHeader
-              chatId={id!}
+              channelId={id!}
               isReadonly={false}
               isNew={true}
             />
         }
         <div className="flex justify-center px-4 flex-1 overflow-hidden">
-          <MeetingSetting onStart={setMeetingData} data={meetingData!} chatId={id} />
+          <MeetingSetting onStart={setMeetingData} data={meetingData!} channelId={id} />
           {!meetingData ? (
             null
           ) : (

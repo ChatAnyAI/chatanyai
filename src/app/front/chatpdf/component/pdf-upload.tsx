@@ -26,7 +26,7 @@ const uploadAPI = (
     file: File,
     onProgress: (progress: number) => void,
 ): Promise<{
-    success: boolean; message: string; url?: string, pathname: string; id: string
+    success: boolean; message: string; url?: string, pathname: string; id: number
 }> => {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest()

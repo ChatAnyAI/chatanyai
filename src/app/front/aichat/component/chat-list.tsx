@@ -9,13 +9,13 @@ import {UserAvatar} from "@/components/user-avatar";
 
 interface ChatListProps {
   channelList: RespChannel[]
-  onMenuOpen: (chatId: string, x: number, y: number) => void
+  onMenuOpen: (channelId: string, x: number, y: number) => void
 }
 
 export function ChatList({ channelList, onMenuOpen }: ChatListProps) {
-  const handleMenuClick = (e: React.MouseEvent, chatId: string) => {
+  const handleMenuClick = (e: React.MouseEvent, channelId: string) => {
     e.preventDefault()
-    onMenuOpen(chatId, e.clientX, e.clientY)
+    onMenuOpen(channelId, e.clientX, e.clientY)
   }
 
   return (

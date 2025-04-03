@@ -49,7 +49,7 @@ import { useAppSideBarHistoryListContext } from '@/components/app-sidebar';
 import React from 'react';
 import { getFirstPathSegment } from '@/lib/utils';
 import { useSidebarDialog } from '../sidebar/sidebar-dialog';
-import { fetchRecentChatId, useRecentChatId } from '@/hooks/useRecentChatId';
+import { fetchRecentchannelId, useRecentchannelId } from '@/hooks/useRecentchannelId';
 
 type GroupedChats = {
   today: RespChannel[];
@@ -67,7 +67,7 @@ const PureChatItem = ({
 }: {
   chat: RespChannel;
   isActive: boolean;
-  onDelete: (chatId: string) => void;
+  onDelete: (channelId: string) => void;
   setOpenMobile: (open: boolean) => void;
 }) => {
   const { handleClose } = useSidebarDialog();
@@ -78,8 +78,8 @@ const PureChatItem = ({
   const [title, setTitle] = useState(chat.name);
   const [isUpdating, setIsUpdating] = useState(false);
   const {
-    setRecentChatId
-  } = useRecentChatId(appId!);
+    setRecentchannelId
+  } = useRecentchannelId(appId!);
 
 
   const handleUpdateChat = async () => {
@@ -110,7 +110,7 @@ const PureChatItem = ({
         <Link
           to={`${getFirstPathSegment(location.pathname)}/${appId}/c/${chat.channelId}`}
           onClick={() => {
-            setRecentChatId(chat.channelId);
+            setRecentchannelId(chat.channelId);
             setOpenMobile(false);
             handleClose();
           }}
@@ -205,7 +205,7 @@ export function SidebarHistory() {
   const { activeMenu } = useAppSideBarHistoryListContext();
   const { handleClose } = useSidebarDialog()
   const appId = activeMenu?.appId;
-  const { chatId } = useParams();
+  const { channelId } = useParams();
   const user = useGlobalStore((state) => state.user);
   const {
     data: chatListResp,
@@ -222,9 +222,9 @@ export function SidebarHistory() {
     if (!appId) return;
     (async () => {
       try {
-        const chatId = await fetchRecentChatId(appId);
+        const channelId = await fetchRecentchannelId(appId);
         setTimeout(() => { 
-          if (chatId) navigator(`${getFirstPathSegment(location.pathname)}/${appId}/c/${chatId}`);
+          if (channelId) navigator(`${getFirstPathSegment(location.pathname)}/${appId}/c/${channelId}`);
         }, 200)
       } catch (error) {
         console.error(error);
@@ -252,7 +252,7 @@ export function SidebarHistory() {
 
     setShowDeleteDialog(false);
 
-    if (deleteId === chatId) {
+    if (deleteId === channelId) {
       router('/');
     }
   };
@@ -364,9 +364,9 @@ export function SidebarHistory() {
                           <ChatItem
                             key={chat.channelId}
                             chat={chat}
-                            isActive={chat.channelId === chatId}
-                            onDelete={(chatId) => {
-                              setDeleteId(chatId);
+                            isActive={chat.channelId === channelId}
+                            onDelete={(channelId) => {
+                              setDeleteId(channelId);
                               setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
@@ -384,9 +384,9 @@ export function SidebarHistory() {
                           <ChatItem
                             key={chat.channelId}
                             chat={chat}
-                            isActive={chat.channelId === chatId}
-                            onDelete={(chatId) => {
-                              setDeleteId(chatId);
+                            isActive={chat.channelId === channelId}
+                            onDelete={(channelId) => {
+                              setDeleteId(channelId);
                               setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
@@ -404,9 +404,9 @@ export function SidebarHistory() {
                           <ChatItem
                             key={chat.channelId}
                             chat={chat}
-                            isActive={chat.channelId === chatId}
-                            onDelete={(chatId) => {
-                              setDeleteId(chatId);
+                            isActive={chat.channelId === channelId}
+                            onDelete={(channelId) => {
+                              setDeleteId(channelId);
                               setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
@@ -424,9 +424,9 @@ export function SidebarHistory() {
                           <ChatItem
                             key={chat.channelId}
                             chat={chat}
-                            isActive={chat.channelId === chatId}
-                            onDelete={(chatId) => {
-                              setDeleteId(chatId);
+                            isActive={chat.channelId === channelId}
+                            onDelete={(channelId) => {
+                              setDeleteId(channelId);
                               setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}
@@ -444,9 +444,9 @@ export function SidebarHistory() {
                           <ChatItem
                             key={chat.channelId}
                             chat={chat}
-                            isActive={chat.channelId === chatId}
-                            onDelete={(chatId) => {
-                              setDeleteId(chatId);
+                            isActive={chat.channelId === channelId}
+                            onDelete={(channelId) => {
+                              setDeleteId(channelId);
                               setShowDeleteDialog(true);
                             }}
                             setOpenMobile={setOpenMobile}

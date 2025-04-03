@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 export default function DocList() {
     const { t } = useTranslation();
-    const { appId,chatId } = useParams();
+    const { appId,channelId } = useParams();
     const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChannelListByAppId(appId!));
     const { data: docList, mutate } = useSWR([`ApiDocList`, appId], () => ApiDocList(appId!));
     const currentAppInfo = useChatStore(state => state.currentAppInfo);
@@ -49,7 +49,7 @@ export default function DocList() {
                     {/* Second card */}
                     {docList?.map((doc) => {
                         return (
-                            <div className={cn("bg-white rounded-lg shadow-sm p-4 h-32 relative cursor-pointer", chatId===doc.channelId?"bg-blue-500 rounded-lg shadow-sm p-4 h-32 flex items-center justify-center":"" )} onClick={() => {
+                            <div className={cn("bg-white rounded-lg shadow-sm p-4 h-32 relative cursor-pointer", channelId===doc.channelId?"bg-blue-500 rounded-lg shadow-sm p-4 h-32 flex items-center justify-center":"" )} onClick={() => {
                                 navigate(`/${RouteEnum[currentAppInfo?.type!]}/${appId}/c/${doc.channelId}`);
                             }}>
                                 {/*<div className="absolute top-2 right-2 flex space-x-2">*/}
@@ -66,7 +66,7 @@ export default function DocList() {
                                 {/*    </div>*/}
                                 {/*</div>*/}
                                 <div className="h-full flex items-center justify-center">
-                                    <p className={cn("", chatId===doc.channelId?"text-white":"text-gray-500" )}>{doc.name}</p>
+                                    <p className={cn("", channelId===doc.channelId?"text-white":"text-gray-500" )}>{doc.name}</p>
                                 </div>
                             </div>
                         )

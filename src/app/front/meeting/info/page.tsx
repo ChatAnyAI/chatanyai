@@ -17,8 +17,8 @@ import { useTranslation } from 'react-i18next';
 export default function Page() {
   const { t } = useTranslation();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
-  const { appId, chatId } = useParams();
-  const id = chatId;
+  const { appId, channelId } = useParams();
+  const id = channelId;
   const storeData = sessionStorage.getItem(`meeting-${id}`);
   sessionStorage.removeItem(`meeting-${id}`);
   const [meetingData, setMeetingData] = useState<MeetingData | null>(storeData ? JSON.parse(storeData) : null);
@@ -50,12 +50,12 @@ export default function Page() {
     <RightSettingProvider>
       <div className="flex flex-col h-screen flex-1">
         <ChatHeader
-          chatId={id!}
+          channelId={id!}
           isReadonly={user.id !== chatResp?.uid}
           chatInfo={chatResp!}
         />
         <div className="flex justify-center px-4 flex-1 overflow-hidden">
-          <MeetingSetting onStart={setMeetingData} data={meetingData!} chatId={id!} />
+          <MeetingSetting onStart={setMeetingData} data={meetingData!} channelId={id!} />
           <>
             <div className="flex-1 flex overflow-hidden">
               {selectedModelId && <MeetingChat

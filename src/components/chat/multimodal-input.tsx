@@ -30,7 +30,7 @@ import equal from 'fast-deep-equal';
 import { useNavigate, useParams } from 'react-router-dom';
 
 function PureMultimodalInput({
-  chatId,
+  channelId,
   input,
   setInput,
   isLoading,
@@ -43,7 +43,7 @@ function PureMultimodalInput({
   handleSubmit,
   className,
 }: {
-  chatId: string;
+  channelId: string;
   input: string;
   setInput: (value: string) => void;
   isLoading: boolean;
@@ -119,8 +119,8 @@ function PureMultimodalInput({
   const param = useParams();
 
   const submitForm = useCallback(() => {
-    if (chatId !== param.chatId) {
-      navigate(`c/${chatId}`, { replace: true });
+    if (channelId !== param.channelId) {
+      navigate(`c/${channelId}`, { replace: true });
     }
 
 
@@ -141,7 +141,7 @@ function PureMultimodalInput({
     setAttachments,
     setLocalStorageInput,
     width,
-    chatId,
+    channelId,
   ]);
 
   const uploadFile = async (file: File) => {
@@ -202,7 +202,7 @@ function PureMultimodalInput({
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
-          <SuggestedActions append={append} chatId={chatId} />
+          <SuggestedActions append={append} channelId={channelId} />
         )}
 
       <input

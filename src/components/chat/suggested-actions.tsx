@@ -7,14 +7,14 @@ import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface SuggestedActionsProps {
-  chatId: string;
+  channelId: string;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
 }
 
-function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
+function PureSuggestedActions({ channelId, append }: SuggestedActionsProps) {
   const suggestedActions: any[] = [
     // {
     //   title: 'What are the advantages',
@@ -39,7 +39,7 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
   ];
 
   const navigate = useNavigate();
-  const {  chatId: cId } = useParams();
+  const {  channelId: cId } = useParams();
 
   return (
     <div data-name="suggested-actions" className="grid sm:grid-cols-2 gap-2 w-full">
@@ -55,8 +55,8 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
           <Button
             variant="ghost"
             onClick={async () => {
-              if (cId !== chatId) { 
-                navigate('c/' + chatId, { replace: true });
+              if (cId !== channelId) { 
+                navigate('c/' + channelId, { replace: true });
               }  
               
               append({

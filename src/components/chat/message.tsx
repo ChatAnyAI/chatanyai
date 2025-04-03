@@ -19,7 +19,7 @@ import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { SparklesIcon } from 'lucide-react';
 
 const PurePreviewMessage = ({
-  chatId,
+  channelId,
   message,
   isLoading,
   setMessages,
@@ -27,7 +27,7 @@ const PurePreviewMessage = ({
   isReadonly,
   showEdit,
 }: {
-  chatId: string;
+  channelId: string;
   message: Message;
   isLoading: boolean;
   setMessages: (

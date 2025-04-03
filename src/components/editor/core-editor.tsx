@@ -14,7 +14,7 @@ import {toast} from "@/hooks/use-toast";
 
 interface EditorProps {
     appId: string;
-    chatId: string;
+    channelId: string;
     readOnly?: boolean;
     initialValue?: any;
     onChange?: (value: any) => void;
@@ -22,7 +22,7 @@ interface EditorProps {
 }
 
 export function CoreEditor(props: EditorProps) {
-    const { readOnly, appId, onChange, chatId, initialValue } = props;
+    const { readOnly, appId, onChange, channelId, initialValue } = props;
     const editor = useCoreEditor(initialValue);
     const historyEditor = withHistory(editor);
     const [changes, setChanges] = useState<Operation[]>([]);
@@ -46,7 +46,7 @@ export function CoreEditor(props: EditorProps) {
 
 
         try {
-            ApiDocContent(appId,chatId,{
+            ApiDocContent(appId,channelId,{
                 content: newValue.value
             });
         } catch (error) {

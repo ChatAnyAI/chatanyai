@@ -68,7 +68,7 @@ export default (
                                                 <Share
                                                     className={"w-[400px]"}
                                                     appId={appInfo.id}
-                                                    chatId=""
+                                                    channelId=""
                                                     type={appInfo.type}
                                                     visibility={visibility}
                                                     permission={permission}

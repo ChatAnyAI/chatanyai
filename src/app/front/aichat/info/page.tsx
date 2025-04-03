@@ -12,7 +12,7 @@ import { useChatStore } from '@/store/chatStore';
 import { useTranslation } from 'react-i18next';
 
 export function ChatWrapper() {
-    const { appId, chatId: id } = useParams();
+    const { appId, channelId: id } = useParams();
     const user = useGlobalStore(state => state.user);
     const selectedModelId = useChatStore(state => state.modelSelectedId)
 

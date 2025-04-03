@@ -9,14 +9,14 @@ import {
 } from '@/service/api';
 import {AppVisibility, PermissionType} from '@/lib/constants/constants';
 
-export const usePermission = (initialPermission: PermissionType = 1,visibility: AppVisibility, appId: string, chatId: string) => {
+export const usePermission = (initialPermission: PermissionType = 1,visibility: AppVisibility, appId: string, channelId: string) => {
   const [permission, setPermission] = useState<PermissionType>(initialPermission);
   const { toast } = useToast();
 
   const handlePermissionChange = async (newPermission: PermissionType) => {
-    if (chatId) {
+    if (channelId) {
       try {
-        await ApiChatUpdatePermission(chatId, newPermission);
+        await ApiChatUpdatePermission(channelId, newPermission);
         toast({
           title: "change permission success",
         });

@@ -35,7 +35,7 @@ export default function Chat({
   const currentRound = useRef(0);
   const memberIndex = useRef(0);
   const currentName = useRef("");
-  const { chatId } = useParams();
+  const { channelId } = useParams();
   const navigate = useNavigate();
 
   const {
@@ -115,8 +115,8 @@ export default function Chat({
   useEffect(() => {
     console.log(Date.now(), "meetingData", id, meetingData, isReadonly, isStoreData);
     if (!id || isReadonly || !isStoreData) return;
-    // if (id !== chatId) {
-    //   console.log(Date.now(), "id", id, chatId);
+    // if (id !== channelId) {
+    //   console.log(Date.now(), "id", id, channelId);
     //   navigate(`c/${id}`, { replace: true });
     //   return;
     // }
@@ -147,7 +147,7 @@ export default function Chat({
       },
       allowEmptySubmit: true
     });
-  }, [id, chatId, isReadonly])
+  }, [id, channelId, isReadonly])
 
 
   if (error) {
@@ -175,7 +175,7 @@ export default function Chat({
       <div className="flex flex-auto flex-col min-w-0 bg-background">
         <div className="flex-1 flex flex-col overflow-hidden overflow-y-auto">
           <Messages
-            chatId={id}
+            channelId={id}
             isLoading={isLoading}
             messages={filteredMessages}
             setMessages={setMessages}

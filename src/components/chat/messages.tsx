@@ -5,7 +5,7 @@ import { memo } from 'react';
 import equal from 'fast-deep-equal';
 
 interface MessagesProps {
-  chatId: string;
+  channelId: string;
   isLoading: boolean;
   messages: Array<Message>;
   setMessages: (
@@ -19,7 +19,7 @@ interface MessagesProps {
 }
 
 function PureMessages({
-  chatId,
+  channelId,
   isLoading,
   messages,
   setMessages,
@@ -42,7 +42,7 @@ function PureMessages({
         <PreviewMessage
           showEdit={message.role === 'user' && index === messages.length - 2}
           key={message.id}
-          chatId={chatId}
+          channelId={channelId}
           message={message}
           isLoading={isLoading && messages.length - 1 === index}
           setMessages={setMessages}

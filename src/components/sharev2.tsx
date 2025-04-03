@@ -26,10 +26,10 @@ import { SingleUserPermissionDropdown } from "@/components/share/single-user-per
 import {UserAvatar} from "@/components/user-avatar";
 import {AppChatPermissionDropdown} from "@/components/share/app-chat-permission-dropdown";
 
-export default function ShareDialog({ className, appId, chatId, type, visibility: accessType, handleVisibilityChange,permission,handlePermissionChange }:
+export default function ShareDialog({ className, appId, channelId, type, visibility: accessType, handleVisibilityChange,permission,handlePermissionChange }:
     {
         appId: string;
-        chatId?: string;
+        channelId?: string;
         type?: AppType;
         visibility: AppVisibility;
         className?: string;
@@ -40,16 +40,16 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
     const [showInviteScreen, setShowInviteScreen] = useState(false)
 
     const { data: shareUser, mutate } = useSWR(
-        chatId ? ['ApiChatShareList', chatId] : ['ApiAppShareUserList', appId],
-        () => chatId ? ApiChatShareList(chatId) : ApiAppShareUserList(appId)
+        channelId ? ['ApiChatShareList', channelId] : ['ApiAppShareUserList', appId],
+        () => channelId ? ApiChatShareList(channelId) : ApiAppShareUserList(appId)
     )
 
     // const [permission, setPermission] = useState<PermissionType>(PermissionType.Full)
 
 
     const handleDeleteUser = useCallback(async (user: ShareUser) => {
-        if (chatId) {
-            await ApiChatShareDelete(chatId, user.id);
+        if (channelId) {
+            await ApiChatShareDelete(channelId, user.id);
         } else {
             await ApiAppShareDelete(appId, user.id);
         }
@@ -57,12 +57,12 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
             title: 'Delete user success',
         });
         mutate();
-    }, [appId, chatId, mutate]);
+    }, [appId, channelId, mutate]);
 
 
     const handleUpdateUserPermission = useCallback(async (user: ShareUser,permission: PermissionType) => {
-        if (chatId) {
-            await ApiChatShareUpdatePermission(chatId, user.id,permission);
+        if (channelId) {
+            await ApiChatShareUpdatePermission(channelId, user.id,permission);
         } else {
             await ApiAppShareUpdatePermission(appId, user.id,permission);
         }
@@ -70,12 +70,12 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
             title: 'Update user success',
         });
         mutate();
-    }, [appId, chatId, mutate]);
+    }, [appId, channelId, mutate]);
 
 
     // const handleUpdateAppOrChatPermission = useCallback(async (permission: PermissionType) => {
-    //     if (chatId) {
-    //         await ApiChatUpdatePermission(chatId, permission);
+    //     if (channelId) {
+    //         await ApiChatUpdatePermission(channelId, permission);
     //     } else {
     //         await ApiAppUpdatePermission(appId, permission);
     //     }
@@ -83,7 +83,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
     //         title: 'Update success',
     //     });
     //     mutate();
-    // }, [appId, chatId, mutate]);
+    // }, [appId, channelId, mutate]);
 
 
     return (
@@ -93,7 +93,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                     <InviteScreen
                         shareUser={shareUser || []}
                         appId={appId!}
-                        chatId={chatId}
+                        channelId={channelId}
                         onBack={() => { 
                             setShowInviteScreen(false);
                             mutate();
@@ -284,7 +284,7 @@ export default function ShareDialog({ className, appId, chatId, type, visibility
                                             let url;
                                             if (!appId) return;
                                             url = `/${RouteEnum[type!]}/${appId}`;
-                                            await navigator.clipboard.writeText(chatId ? window.location.href : window.location.origin + url);
+                                            await navigator.clipboard.writeText(channelId ? window.location.href : window.location.origin + url);
                                             toast({
                                                 title: 'Copy OK',
                                                 description: 'Copy OK'

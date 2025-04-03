@@ -467,13 +467,13 @@ export interface RespChannel {
   user: RespChannelUser;
   pdfLink: string;
 }
-export const ApiGetChat = (chatId: string) => {
-  return get<RespChannel>(`/api/channel/${chatId}`);
+export const ApiGetChat = (channelId: string) => {
+  return get<RespChannel>(`/api/channel/${channelId}`);
 }
 
 export interface RespChatHistoryMessage {
   id: string;
-  chatId: string;
+  channelId: string;
   role: string;
   content: string;
   ragContent: string;
@@ -482,32 +482,32 @@ export interface RespChatHistoryMessage {
   user: User;
 }
 
-export const ApiChatHistory = (chatId: string) => {
-  return get<RespChatHistoryMessage[]>(`/api/channel/${chatId}/history`);
+export const ApiChatHistory = (channelId: string) => {
+  return get<RespChatHistoryMessage[]>(`/api/channel/${channelId}/history`);
 }
 
 export interface UpdateChatInfoRequest {
   title?: string;
 }
 
-export const ApiUpdateChatInfo = (chatId: string, data: UpdateChatInfoRequest) => {
-  return put<void>(`/api/channel/${chatId}/info`, data);
+export const ApiUpdateChatInfo = (channelId: string, data: UpdateChatInfoRequest) => {
+  return put<void>(`/api/channel/${channelId}/info`, data);
 }
 
-export const ApiChatCreate = (appId: string, data: { fileId: string}) => { 
+export const ApiChatCreate = (appId: string, data: { fileId?: number}) => { 
   return post<{ guid: string }>(`/api/app/${appId}/channel`, data);
 }
 
-export const ApiUpdateChatVisibility = (chatId: string, visibility: AppVisibility) => {
-    return put<void>(`/api/channel/${chatId}/visibility`, { visibility });
+export const ApiUpdateChatVisibility = (channelId: string, visibility: AppVisibility) => {
+    return put<void>(`/api/channel/${channelId}/visibility`, { visibility });
 }
 
 export const ApiChannelListByAppId = (appId: string) => {
   return get<RespChannel[]>(`/api/app/${appId}/channel/-/list`);
 }
 
-export const ApiChatShareList = (chatId: string) => {
-  return get<ShareUser[]>(`/api/channel/${chatId}/share/-/userList`);
+export const ApiChatShareList = (channelId: string) => {
+  return get<ShareUser[]>(`/api/channel/${channelId}/share/-/userList`);
 }
 
 export interface ApiChatShareCreateRequest {
@@ -515,22 +515,22 @@ export interface ApiChatShareCreateRequest {
   permission: PermissionType;
 }
 
-export const ApiChatShareCreate = (chatId: string, req: ApiChatShareCreateRequest) => {
-  return put<void>(`/api/channel/${chatId}/share`, req);
+export const ApiChatShareCreate = (channelId: string, req: ApiChatShareCreateRequest) => {
+  return put<void>(`/api/channel/${channelId}/share`, req);
 }
 
-export const ApiChatShareDelete = (chatId: string, uid: number) => {
-  return del<void>(`/api/channel/${chatId}/share/${uid}`);
+export const ApiChatShareDelete = (channelId: string, uid: number) => {
+  return del<void>(`/api/channel/${channelId}/share/${uid}`);
 }
 
-export const ApiChatShareUpdatePermission = (chatId: string, uid: number, permission: PermissionType) => {
-    return put<void>(`/api/channel/${chatId}/share/${uid}/permission`,{
+export const ApiChatShareUpdatePermission = (channelId: string, uid: number, permission: PermissionType) => {
+    return put<void>(`/api/channel/${channelId}/share/${uid}/permission`,{
         permission
     });
 }
 
-export const ApiChatUpdatePermission = (chatId: string,  permission: PermissionType) => {
-    return put<void>(`/api/channel/${chatId}/permission`,{
+export const ApiChatUpdatePermission = (channelId: string,  permission: PermissionType) => {
+    return put<void>(`/api/channel/${channelId}/permission`,{
         permission
     });
 }
@@ -544,7 +544,7 @@ export interface MeetingRequest {
   maxRounds: number;
   members: MeetingMember[];
   messages: PostChatMessage[];
-  id: string;      // chatId
+  id: string;      // channelId
   appId: string;
   topic: string;   // meeting topic
   modelId: string;
@@ -648,12 +648,12 @@ export const ApiCreateDoc = (appId: string) => {
     return post<ApiCreateDocResp>(`/api/app/${appId}/doc`);
 }
 
-export const ApiDocContent = (appId: string,chatId: string,req:{content: string}) => {
-    return put<void>(`/api/app/${appId}/doc/${chatId}/content`,req);
+export const ApiDocContent = (appId: string,channelId: string,req:{content: string}) => {
+    return put<void>(`/api/app/${appId}/doc/${channelId}/content`,req);
 }
 
-export const ApiDocAppendContent = (appId: string,chatId: string,req:{content: string}) => {
-    return put<void>(`/api/app/${appId}/doc/${chatId}/appendContent`,req);
+export const ApiDocAppendContent = (appId: string,channelId: string,req:{content: string}) => {
+    return put<void>(`/api/app/${appId}/doc/${channelId}/appendContent`,req);
 }
 
 
@@ -678,8 +678,8 @@ export interface ApiCreateDocResp {
     content: string;
 }
 
-export const ApiGetDoc = (chatId: string) => {
-    return get<ApiCreateDocResp>(`/api/doc/${chatId}`);
+export const ApiGetDoc = (channelId: string) => {
+    return get<ApiCreateDocResp>(`/api/doc/${channelId}`);
 }
 
 

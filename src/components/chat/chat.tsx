@@ -113,7 +113,7 @@ function Chat({
     } else {
       // Create a new channel first
       ApiChatCreate(appId, {
-        fileId: pdfLink || ''
+        // fileId: pdfLink || ''
       }).then((res) => {
         setChannelId(res.guid);
         navgate(`c/${res.guid}`);
@@ -149,7 +149,7 @@ function Chat({
         {
           hiddenHeader ? null :
             <ChatHeader
-              chatId={channelId!}
+              channelId={channelId!}
               chatInfo={chatInfo}
               isReadonly={isReadonly}
               isNew={isNew}
@@ -160,7 +160,7 @@ function Chat({
             {
               hiddenMessage ? null :
                 <Messages
-                  chatId={channelId!}
+                  channelId={channelId!}
                   isLoading={isLoading}
                   messages={messages}
                   setMessages={setMessages}
@@ -173,7 +173,7 @@ function Chat({
             <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
               {!isReadonly && (
                 <MultimodalInput
-                  chatId={channelId!}
+                  channelId={channelId!}
                   input={input}
                   setInput={setInput}
                   handleSubmit={handleMsgSubmit}

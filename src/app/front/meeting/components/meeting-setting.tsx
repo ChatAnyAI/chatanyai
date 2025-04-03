@@ -65,9 +65,9 @@ export type MeetingData = {
 export default function DiscussionSetup({
   data,
   onStart,
-  chatId,
+  channelId,
 }: {
-  chatId: string,
+  channelId: string,
   data: MeetingData,
   onStart: (data: MeetingData) => void
 }) {
@@ -116,11 +116,10 @@ export default function DiscussionSetup({
       maxrounds,
       members: members.map(({ name, description }) => ({ name, description })),
     }
-    console.log("startDiscussion", data, chatId)
-    sessionStorage.setItem(`meeting-${chatId}`, JSON.stringify(data));
-    if (!chatId) {
+    console.log("startDiscussion", data, channelId)
+    sessionStorage.setItem(`meeting-${channelId}`, JSON.stringify(data));
+    if (!channelId) {
       ApiChatCreate(appId!, {
-        fileId: "",
       }).then((res) => {
         navigate(`c/${res.guid}`, { replace: true });
         onStart(data);

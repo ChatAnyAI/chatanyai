@@ -108,7 +108,7 @@ const router = createBrowserRouter(
           } />
         <Route
           index
-          path={`/s/:appId/c/:chatId`}
+          path={`/s/:appId/c/:channelId`}
           element={
             <Suspense fallback={<Loading />}>
               <Component6 />
@@ -123,7 +123,7 @@ const router = createBrowserRouter(
           }>
       </Route>
       <Route
-          path="/note/:appId/c/:chatId"
+          path="/note/:appId/c/:channelId"
           element={
               <Suspense fallback={<Loading />}>
                   <NoteInfoPage />
@@ -138,7 +138,7 @@ const router = createBrowserRouter(
             </Suspense>
           } />
         <Route
-          path="/chatpdf/:appId/c/:chatId"
+          path="/chatpdf/:appId/c/:channelId"
           element={
             <Suspense fallback={<Loading />} >
               <ChatPDFInfo />
@@ -146,7 +146,7 @@ const router = createBrowserRouter(
           } />
 
         <Route
-          path="/chatpdf/:appId/:chatId"
+          path="/chatpdf/:appId/:channelId"
           element={
             <Suspense fallback={<Loading />} >
               <ChatPDF />
@@ -161,7 +161,7 @@ const router = createBrowserRouter(
             </Suspense>
           } />
         <Route
-          path="/meeting/:appId/c/:chatId"
+          path="/meeting/:appId/c/:channelId"
           element={
             <Suspense fallback={<Loading />} >
               <MeetingInfo />

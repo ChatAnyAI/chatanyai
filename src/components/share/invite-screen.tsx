@@ -10,12 +10,12 @@ import {PermissionType} from "@/lib/constants/constants";
 
 interface InviteScreenProps {
     appId: string
-    chatId?: string
+    channelId?: string
     onBack?: () => void
     shareUser: ShareUser[]
 }
 
-export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }: InviteScreenProps) {
+export function InviteScreen({ appId, channelId, onBack, shareUser: shareUserList }: InviteScreenProps) {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedUsers, setSelectedUsers] = useState<User[]>([])
     const [permission, setPermission] = useState<PermissionType>(PermissionType.Full)
@@ -37,8 +37,8 @@ export function InviteScreen({ appId, chatId, onBack, shareUser: shareUserList }
     const handleInvite = async () => {
         try {
             const userIds = selectedUsers.map(item => item.id);
-            if (chatId) {
-                await ApiChatShareCreate(chatId, {
+            if (channelId) {
+                await ApiChatShareCreate(channelId, {
                     uids: userIds,
                     permission: permission,
                 });

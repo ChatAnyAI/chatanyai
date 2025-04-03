@@ -11,19 +11,19 @@ import { RespChannel } from "@/service/api";
 import { useChatStore } from '@/store/chatStore';
 
 function PureChatHeader({
-    chatId,
+    channelId,
     isReadonly,
     isNew,
     chatInfo,
 }: {
-    chatId: string;
+    channelId: string;
     isReadonly: boolean;
     isNew?: boolean;
     chatInfo?: RespChannel;
 }) {
     const { showSettings, setShowSettings } = useRightSetting();
     const [isExporting, setIsExporting] = useState(false);
-    const { chatId: cid } = useParams();
+    const { channelId: cid } = useParams();
     const currentAppInfo = useChatStore(state => state.currentAppInfo);
 
     const handleExport = async () => {
@@ -63,7 +63,7 @@ function PureChatHeader({
             }
 
             const link = document.createElement('a');
-            link.download = `chat-${chatId}.png`;
+            link.download = `chat-${channelId}.png`;
             link.href = finalCanvas.toDataURL();
             link.click();
         } catch (error) {
@@ -80,7 +80,7 @@ function PureChatHeader({
                 {/*{!isNew && !isReadonly && chatInfo && (*/}
                 {/*    <VisibilitySelector*/}
                 {/*        chatInfo={chatInfo}*/}
-                {/*        chatId={chatId}*/}
+                {/*        channelId={channelId}*/}
                 {/*    />*/}
                 {/*)}*/}
             </div>
@@ -103,7 +103,7 @@ function PureChatHeader({
                 {!isNew && !isReadonly && chatInfo && (
                     <VisibilitySelector
                         chatInfo={chatInfo}
-                        chatId={chatId}
+                        channelId={channelId}
                     />
                 )}
                 {!isReadonly && (

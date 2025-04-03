@@ -16,16 +16,16 @@ import {usePermission} from "@/hooks/use-permission";
 
 
 export function VisibilitySelector({
-  chatId,
+  channelId,
   className,
   chatInfo,
 }: {
-  chatId: string;
+  channelId: string;
   chatInfo: RespChannel;
 } & React.ComponentProps<typeof Button>) {
   const { appId } = useParams();
-  const { visibility, handleVisibilityChange } = useVisibility(chatInfo.visibility, appId!, chatId);
-  const { permission, handlePermissionChange } = usePermission(chatInfo.permission,visibility, appId!, chatId);
+  const { visibility, handleVisibilityChange } = useVisibility(chatInfo.visibility, appId!, channelId);
+  const { permission, handlePermissionChange } = usePermission(chatInfo.permission,visibility, appId!, channelId);
 
   return (
     <>
@@ -65,7 +65,7 @@ export function VisibilitySelector({
               handleVisibilityChange={handleVisibilityChange}
               handlePermissionChange={handlePermissionChange}
               appId={appId!}
-              chatId={chatId}
+              channelId={channelId}
             />
           </div>
         </DropdownMenuContent>

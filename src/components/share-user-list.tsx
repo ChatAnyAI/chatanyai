@@ -22,13 +22,13 @@ import { ApiAppShareUserList, ApiChatShareList, ApiChatShareDelete, ApiAppShareD
 import useSWR from "swr"
 import { useToast } from "@/hooks/use-toast"
 
-export default function UserList({ appId, chatId }: { appId: string, chatId: string }) {
+export default function UserList({ appId, channelId }: { appId: string, channelId: string }) {
     const [searchQuery, setSearchQuery] = useState("")
     const { toast } = useToast()
 
     const { data: respData, mutate } = useSWR(
-        chatId ? ['ApiChatShareList', chatId] : ['ApiAppShareUserList', appId],
-        () => chatId ? ApiChatShareList(chatId) : ApiAppShareUserList(appId)
+        channelId ? ['ApiChatShareList', channelId] : ['ApiAppShareUserList', appId],
+        () => channelId ? ApiChatShareList(channelId) : ApiAppShareUserList(appId)
     )
 
     const users = respData || [];
@@ -40,8 +40,8 @@ export default function UserList({ appId, chatId }: { appId: string, chatId: str
 
     const handleDeleteUser = async (id: number) => {
         try {
-            if (chatId) {
-                await ApiChatShareDelete(chatId, id);
+            if (channelId) {
+                await ApiChatShareDelete(channelId, id);
             } else {
                 await ApiAppShareDelete(appId, id);
             }

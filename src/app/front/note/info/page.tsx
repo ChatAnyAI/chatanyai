@@ -16,17 +16,17 @@ import { ChatHeader } from "../component/note-header";
 
 export default function Page() {
     const { t } = useTranslation();
-    const { appId, chatId } = useParams();
+    const { appId, channelId } = useParams();
     const user = useGlobalStore(state => state.user);
 
     const { data: chatResp } = useSWR<RespChannel>(
-        chatId ? ['ApiGetChat', chatId] : null,
-        () => ApiGetChat(chatId!),
+        channelId ? ['ApiGetChat', channelId] : null,
+        () => ApiGetChat(channelId!),
     );
 
     const { data: docResp } = useSWR<ApiCreateDocResp>(
-        chatId ? ['ApiGetDoc', chatId] : null,
-        () => ApiGetDoc(chatId!),
+        channelId ? ['ApiGetDoc', channelId] : null,
+        () => ApiGetDoc(channelId!),
     );
 
     return (
@@ -38,7 +38,7 @@ export default function Page() {
                 <div className="h-screen flex-col flex flex-1 overflow-hidden" >
                     <ChatHeader
                         chatInfo={chatResp!}
-                        chatId={chatResp?.channelId!}
+                        channelId={chatResp?.channelId!}
                         isReadonly={user.id !== chatResp?.uid}
                     />
                     
@@ -47,13 +47,13 @@ export default function Page() {
                             <CoreEditor
                                 initialValue={docResp?.content}
                                 appId={appId!}
-                                chatId={chatId!}
+                                channelId={channelId!}
                             />
                         </div>
                         <div className="w-[0px] border-l">
                             {/* <Chat 
                                 hiddenHeader
-                                chatId={chatId!} 
+                                channelId={channelId!} 
                             /> */}
                         </div>
                     </div>

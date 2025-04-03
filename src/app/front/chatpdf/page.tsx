@@ -24,7 +24,7 @@ export default function Page() {
                 {
                     !pdfUrl ? null :
                         <ChatHeader
-                            chatId={id}
+                            channelId={id}
                             isReadonly={false}
                             isNew={true}
                         />

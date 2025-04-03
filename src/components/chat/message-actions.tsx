@@ -81,7 +81,7 @@ export function PureMessageActions({
                 // const upvote = fetch('/api/vote', {
                 //   method: 'PATCH',
                 //   body: JSON.stringify({
-                //     chatId,
+                //     channelId,
                 //     messageId,
                 //     type: 'up',
                 //   }),
@@ -91,7 +91,7 @@ export function PureMessageActions({
                 //   loading: 'Upvoting Response...',
                 //   success: () => {
                 //     // mutate<Array<Vote>>(
-                //     //   `/api/vote?chatId=${chatId}`,
+                //     //   `/api/vote?channelId=${channelId}`,
                 //     //   (currentVotes) => {
                 //     //     if (!currentVotes) return [];
                 //     //
@@ -102,7 +102,7 @@ export function PureMessageActions({
                 //     //     return [
                 //     //       ...votesWithoutCurrent,
                 //     //       {
-                //     //         chatId,
+                //     //         channelId,
                 //     //         messageId: message.id,
                 //     //         isUpvoted: true,
                 //     //       },
@@ -135,7 +135,7 @@ export function PureMessageActions({
         {/*        const downvote = fetch('/api/vote', {*/}
         {/*          method: 'PATCH',*/}
         {/*          body: JSON.stringify({*/}
-        {/*            chatId,*/}
+        {/*            channelId,*/}
         {/*            messageId,*/}
         {/*            type: 'down',*/}
         {/*          }),*/}
@@ -145,7 +145,7 @@ export function PureMessageActions({
         {/*          loading: 'Downvoting Response...',*/}
         {/*          success: () => {*/}
         {/*            mutate<Array<Vote>>(*/}
-        {/*              `/api/vote?chatId=${chatId}`,*/}
+        {/*              `/api/vote?channelId=${channelId}`,*/}
         {/*              (currentVotes) => {*/}
         {/*                if (!currentVotes) return [];*/}
 
@@ -156,7 +156,7 @@ export function PureMessageActions({
         {/*                return [*/}
         {/*                  ...votesWithoutCurrent,*/}
         {/*                  {*/}
-        {/*                    chatId,*/}
+        {/*                    channelId,*/}
         {/*                    messageId: message.id,*/}
         {/*                    isUpvoted: false,*/}
         {/*                  },*/}

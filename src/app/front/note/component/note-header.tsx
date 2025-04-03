@@ -10,12 +10,12 @@ import { RespChannel } from "@/service/api";
 import { useChatStore } from '@/store/chatStore';
 
 function PureChatHeader({
-    chatId,
+    channelId,
     isReadonly,
     isNew,
     chatInfo,
 }: {
-    chatId: string;
+    channelId: string;
     isReadonly: boolean;
     isNew?: boolean;
     chatInfo?: RespChannel;
@@ -32,7 +32,7 @@ function PureChatHeader({
                 {!isNew && !isReadonly && chatInfo && (
                     <VisibilitySelector
                         chatInfo={chatInfo}
-                        chatId={chatId}
+                        channelId={channelId}
                     />
                 )}
                 {!isReadonly && (

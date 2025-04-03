@@ -23,7 +23,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
     const {isOpen, setIsOpen,content,setContent} = props;
     const {t} = useTranslation();
     const {data: documents} = useSWR([`ApiDocRecent`], () => ApiDocRecent());
-    const handleSendToDocument = (appId: string, chatId: string) => {
+    const handleSendToDocument = (appId: string, channelId: string) => {
         // Here you would implement the actual sending logic
         // const processor = unified().use(markdown).use(remarkToSlate);
 
@@ -36,7 +36,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
 
         const value = editor.api.markdown.deserialize(content);
         try {
-            ApiDocAppendContent(appId,chatId,{
+            ApiDocAppendContent(appId,channelId,{
                 content: value,
             });
         } catch (error) {
@@ -65,8 +65,8 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
                         <div className="space-y-3 p-1">
                             {documents?.map((doc) => (
                                 <div
-                                    key={doc.chatId}
-                                    onClick={() => handleSendToDocument(doc.appId,doc.chatId)}
+                                    key={doc.channelId}
+                                    onClick={() => handleSendToDocument(doc.appId,doc.channelId)}
                                     className="p-4 border rounded-lg hover:bg-slate-50 cursor-pointer flex items-center gap-3 transition-all duration-200 hover:shadow-sm"
                                 >
                                     <div className="bg-primary/10 p-3 rounded-md">

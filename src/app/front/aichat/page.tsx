@@ -10,7 +10,7 @@ import useSWR from 'swr';
 
 export default function Page() {
   // const { t } = useTranslation();
-  // const chatId = generateUUID();
+  // const channelId = generateUUID();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();
   const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChannelListByAppId(appId!));
@@ -44,7 +44,7 @@ export default function Page() {
         <ChatMenu
           position={menuPosition}
           onClose={handleMenuClose}
-          onDelete={() => selectedChatId && handleDelete(selectedChatId)}
+          onDelete={() => selectedchannelId && handleDelete(selectedchannelId)}
         />
       )} */}
     </div>

@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 export const useChat = () => {
   // const { keys, model } = useSettings();
 
-  const { chatId: id, appId } = useParams();
+  const { channelId: id, appId } = useParams();
 
   return useBaseChat({
     id: 'editor',

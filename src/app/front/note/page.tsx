@@ -12,7 +12,7 @@ import {RouteEnum} from "@/lib/constants/constants";
 import DocList from "@/app/front/note/component/doc-list";
 
 export default function Page() {
-    const chatId = generateUUID();
+    const channelId = generateUUID();
     const { appId } = useParams();
     return (
         <RightSettingProvider>
@@ -23,7 +23,7 @@ export default function Page() {
                 <div className="h-screen " data-registry="plate">
                     {/*<CoreEditor*/}
                     {/*    appId={appId!}*/}
-                    {/*    chatId={chatId}*/}
+                    {/*    channelId={channelId}*/}
                     {/*/>*/}
                 </div>
             </div>
