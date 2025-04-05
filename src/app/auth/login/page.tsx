@@ -11,8 +11,10 @@ import { useGlobalStore } from "@/store/globalStore";
 import Navbar from "./navbar";
 import {ApiAuthLogin, ApiUserProfile, ApiOauthSupport} from "@/service/api";
 import { useSWRConfig } from "swr"
+import { useTranslation } from "react-i18next"
 
 export default function Login() {
+    const { t } = useTranslation()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isLoading, setIsLoading] = useState(false)
@@ -83,15 +85,15 @@ export default function Login() {
                     setUser(profileResponse)
                     setIsLoading(false)
                     toast({
-                        title: "Login successful",
-                        description: "Welcome back!",
+                        title: t('login-page.Login successful'),
+                        description: t('login-page.Welcome back!'),
                     })
                     mutate("ApiUserProfile")
                     router("/home")
                 }
             } catch (error) {
                 toast({
-                    title: "Login fail",
+                    title: t('login-page.Login fail'),
                     description:  String(error),
                     variant: "destructive",
                 })
@@ -128,7 +130,7 @@ export default function Login() {
                                         <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full mr-3">
                                             <AlertCircle className="h-6 w-6" />
                                         </div>
-                                        <h3 className="text-lg font-semibold">Login Error</h3>
+                                        <h3 className="text-lg font-semibold">{t('login-page.Login Error')}</h3>
                                     </div>
 
                                     <p className="text-gray-700 dark:text-gray-300 mb-6">{error}</p>
@@ -153,15 +155,15 @@ export default function Login() {
                         className="relative bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700"
                     >
                         <motion.div variants={itemVariants} className="text-center mb-8">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome Back</h1>
-                            <p className="mt-2 text-gray-600 dark:text-gray-300">Sign in to your account</p>
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('login-page.Welcome Back')}</h1>
+                            <p className="mt-2 text-gray-600 dark:text-gray-300">{t('login-page.Sign in to your account')}</p>
                         </motion.div>
 
                         <form onSubmit={handleSubmit}>
                             <motion.div variants={itemVariants} className="space-y-6">
                                 <div className="space-y-2">
                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Email
+                                        {t('login-page.Email')}
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -184,7 +186,7 @@ export default function Login() {
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between">
                                         <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Password
+                                            {t('login-page.Password')}
                                         </label>
                                         {/*<div className="text-sm">*/}
                                         {/*    <a href="/forgot-password" className="text-blue-600 hover:text-blue-500">*/}
@@ -219,11 +221,11 @@ export default function Login() {
                                         {isLoading ? (
                                             <div className="flex items-center justify-center">
                                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                                <span className="ml-2">Signing in...</span>
+                                                <span className="ml-2">{t('login-page.Signing in...')}</span>
                                             </div>
                                         ) : (
                                             <div className="flex items-center justify-center">
-                                                <span>Sign in</span>
+                                                <span>{t('login-page.Sign in')}</span>
                                                 <ArrowRight className="ml-2 h-4 w-4" />
                                             </div>
                                         )}
@@ -240,17 +242,17 @@ export default function Login() {
                                     </div>
                                     <div className="relative flex justify-center text-sm">
                                       <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                                        Or continue with
+                                        {t('login-page.Or continue with')}
                                       </span>
                                     </div>
                                 </div>
 
                                 {oauthSupport.map((service, index) => (
-                                    <div className="mt-6">
+                                    <div className="mt-6" key={index}>
                                         <Button
                                             variant="outline"
                                             className="w-full border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
-                                            <img src={'/'+service+".svg"} alt="Dingtalk Icon" className="h-5 w-5 mr-2 text-gray-700 dark:text-gray-300"/>
+                                            <img src={'/'+service+".svg"} alt={`${capitalizeFirstLetter(service)} Icon`} className="h-5 w-5 mr-2 text-gray-700 dark:text-gray-300"/>
                                             <a href={"/api/oauth/login/"+service} target={"_self"} className="text-gray-700 dark:text-gray-300">
                                                 <span>{capitalizeFirstLetter(service)}</span>
                                             </a>

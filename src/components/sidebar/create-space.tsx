@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react"
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -14,10 +14,12 @@ import { SidebarGroupAction } from "@/components/ui/sidebar"
 import { AppType, AppIcons, AppLabelEnum } from "@/lib/constants/constants"
 import CopilotCreation from "@/app/front/space/components/copilot-creation"
 import { useCreateSpace } from "@/hooks/use-create-space";
+import { useTranslation } from "react-i18next";
+import { i18n } from "i18next";
 
-export const documentTypes = [1, 2, 3, 5].map((k) => {
+export const documentTypes = (t: i18n["t"]) => [1, 2, 3, 5].map((k) => {
     return {
-        name: AppLabelEnum[k as unknown as AppType],
+        name: t("constant." + AppLabelEnum[k as unknown as AppType]),
         icon: AppIcons[k as unknown as AppType].icon,
         color: AppIcons[k as unknown as AppType].color,
         type: +k as unknown as AppType,
@@ -27,7 +29,8 @@ export const documentTypes = [1, 2, 3, 5].map((k) => {
 export function CreateSpace() {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedType, setSelectedType] = useState<AppType | null>(null)
-    const {createSpace} = useCreateSpace()
+    const { createSpace } = useCreateSpace()
+    const { t } = useTranslation();
 
     const handleItemClick = (type: AppType) => {
         if (+type !== AppType.Copilot) {
@@ -61,7 +64,7 @@ export function CreateSpace() {
                     </SidebarGroupAction>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="right" align="start" className="w-[280px]" sideOffset={8}>
-                    {documentTypes.map((item) => (
+                    {documentTypes(t).map((item) => (
                         <DropdownMenuItem
                             key={item.name}
                             className="flex items-center gap-3 py-3"

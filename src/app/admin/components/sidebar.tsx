@@ -21,27 +21,29 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {TeamSwitcher} from "@/components/team-switcher";
-import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {useGlobalStore} from "@/store/globalStore";
 import {useTheme} from "next-themes";
+import {useTranslation} from "react-i18next";
+import { i18n } from "i18next";
 
 
-const menuItems: NavMenuItem[] = [
-    { icon: Monitor, name: "Overview", url: "/admin/overview" },
-    { icon: AppWindowMac, name: "Application", url: "/admin/application" },
-    { icon: Box, name: "Team Member", url: "/admin/teamMember" },
-    { icon: Cloud, name: "Model Provider", url: "/admin/modelProvider" },
-    // { icon: Keyboard, name: "Access Token", url: "#" },
-    // { icon: Bell, name: "WebHook", url: "#" },
-    { icon: Copyright, name: "License", url: "/admin/license" },
-    // { icon: Settings, name: "General Setting", url: "/admin/setting" },
-    {icon: Cog, name: "Preference", url: "/admin/preference"}
-]
+const menuItems = (t: i18n["t"]): NavMenuItem[] => ([
+    { icon: Monitor, name: t("admin-sidebar.Overview"), url: "/admin/overview" },
+    { icon: AppWindowMac, name: t("admin-sidebar.Application"), url: "/admin/application" },
+    { icon: Box, name: t("admin-sidebar.Team Member"), url: "/admin/teamMember" },
+    { icon: Cloud, name: t("admin-sidebar.Model Provider"), url: "/admin/modelProvider" },
+    // { icon: Keyboard, name: t("admin-sidebar.Access Token"), url: "#" },
+    // { icon: Bell, name: t("admin-sidebar.WebHook"), url: "#" },
+    { icon: Copyright, name: t("admin-sidebar.License"), url: "/admin/license" },
+    // { icon: Settings, name: t("admin-sidebar.General Setting"), url: "/admin/setting" },
+    { icon: Cog, name: t("admin-sidebar.Preference"), url: "/admin/preference" }
+])
 
 export function AdminSidebar() {
     const navigate = useNavigate();
     const user = useGlobalStore(state => state.user);
     const { theme, setTheme } = useTheme();
+    const { t } = useTranslation();
 
     return (
         <div className="flex h-full">
@@ -53,7 +55,7 @@ export function AdminSidebar() {
                     />
                 </SidebarHeader>
                 <SidebarContent>
-                    <WorkspaceGroup items={menuItems} />
+                    <WorkspaceGroup items={menuItems(t)} />
                 </SidebarContent>
                 <SidebarFooter className="cursor-pointer">
                     <SidebarMenu>
@@ -66,7 +68,7 @@ export function AdminSidebar() {
                             >
                                 <div>
                                     <ArrowLeft className="size-4" />
-                                    <span> Back to Desktop</span>
+                                    <span> {t('admin-components-sidebar.Back to Desktop')}</span>
                                 </div>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

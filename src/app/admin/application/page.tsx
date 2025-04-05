@@ -47,8 +47,8 @@ export default function Application() {
     mutate()
   }, [currentPage, pageSize, sort, mutate])
 
-  if (error) return <div>Failed to load applicationList</div>
-  if (!applicationList) return <div>Loading...</div>
+  if (error) return <div>{t("application-page.Failed to load")}</div>
+  if (!applicationList) return <div>{t("application-page.Loading")}</div>
 
   // const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   //   if (e.key === "Enter") {
@@ -64,15 +64,15 @@ export default function Application() {
         try {
             await ApiAdminAppUpdate(appId, data)
             toast({
-                title: "App Update successfully",
-                description: `Update user`,
+                title: t("application-page.App Update successfully"),
+                description: t("application-page.Update user"),
             })
             setIsUpdateUserModalOpen(false)
             // Here you would typically update the users list or refetch data
         } catch (error) {
             // setIsCreateUserModalOpen(false)
             toast({
-                title: "Error",
+                title: t("application-page.Error"),
                 description:  String(error),
                 variant: "destructive",
             })
@@ -86,16 +86,16 @@ export default function Application() {
     <div className="container mx-auto py-6">
       <div className="mb-8 flex flex-wrap gap-4">
         <Button variant="outline" className="rounded-full">
-          All <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.applicationCount}</span>
+          {t("application-page.All")} <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.applicationCount}</span>
         </Button>
         <Button variant="outline" className="rounded-full">
-          Copilot <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.copilotCount}</span>
+          {t("application-page.Copilot")} <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.copilotCount}</span>
         </Button>
         <Button variant="outline" className="rounded-full">
-          Dataset <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.datasetCount}</span>
+          {t("application-page.Dataset")} <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.datasetCount}</span>
         </Button>
         <Button variant="outline" className="rounded-full">
-          Tool <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.toolCount}</span>
+          {t("application-page.Tool")} <span className="ml-2 rounded-full bg-muted px-2">{applicationList.total.toolCount}</span>
         </Button>
       </div>
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -105,15 +105,15 @@ export default function Application() {
             />
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Sort by</span>
+                    <span className="text-sm text-muted-foreground">{t("application-page.Sort by")}</span>
                     <Select defaultValue="name" onValueChange={(value) => setSort(value)}>
                         <SelectTrigger className="w-[120px]">
                             <SelectValue/>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="name">Name</SelectItem>
-                            <SelectItem value="created_at">Created</SelectItem>
-                            <SelectItem value="activity_at">Last activity</SelectItem>
+                            <SelectItem value="name">{t("application-page.Name")}</SelectItem>
+                            <SelectItem value="created_at">{t("application-page.Created")}</SelectItem>
+                            <SelectItem value="activity_at">{t("application-page.Last activity")}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -124,11 +124,11 @@ export default function Application() {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Visibility</TableHead>
-                        <TableHead>Created on</TableHead>
-                        <TableHead>Last activity</TableHead>
+                        <TableHead>{t("application-page.Name header")}</TableHead>
+                        <TableHead>{t("application-page.Type")}</TableHead>
+                        <TableHead>{t("application-page.Visibility")}</TableHead>
+                        <TableHead>{t("application-page.Created on")}</TableHead>
+                        <TableHead>{t("application-page.Last activity header")}</TableHead>
                         <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -147,7 +147,7 @@ export default function Application() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{AppLabelEnum[application.type] || "Unknown"}</TableCell>
+                        <TableCell>{t("constant." + AppLabelEnum[application.type]) || t("application-page.Unknown")}</TableCell>
                   <TableCell>
                     <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -156,7 +156,7 @@ export default function Application() {
                                 : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
                         }`}
                     >
-                            {t(AppVisibilityEnum[application.visibility] || "Unknown")}
+                            {t("constant." + AppVisibilityEnum[application.visibility]) || t("application-page.Unknown")}
                                     </span>
                      </TableCell>
                   <TableCell>{new Date(application.createdAt * 1000).toLocaleString()}</TableCell>
@@ -167,7 +167,7 @@ export default function Application() {
                               setEditingApp(application)
                               setIsUpdateUserModalOpen(true)
                           }}>
-                              Edit
+                              {t("application-page.Edit")}
                           </Button>
                   </div>
                 </TableCell>
@@ -184,7 +184,7 @@ export default function Application() {
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          Prev
+          {t("application-page.Prev")}
         </Button>
         {[...Array(Math.ceil(applicationList.total.applicationCount / pageSize)).keys()].map((page) => (
           <Button
@@ -203,15 +203,15 @@ export default function Application() {
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={currentPage === Math.ceil(applicationList.total.applicationCount / pageSize)}
         >
-          Next
+          {t("application-page.Next")}
         </Button>
       </div>
         <Dialog open={isUpdateUserModalOpen} onOpenChange={setIsUpdateUserModalOpen}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle className="text-xl">Edit Application</DialogTitle>
+                    <DialogTitle className="text-xl">{t("application-page.Edit Application")}</DialogTitle>
                     <DialogDescription className="text-muted-foreground">
-                        Make changes to the application here.
+                        {t("application-page.Make changes")}
                     </DialogDescription>
                 </DialogHeader>
                 <UpdateAppForm

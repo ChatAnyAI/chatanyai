@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {ApiAdminUserCreateRequest} from "@/service/admin";
+import { useTranslation } from "react-i18next";
 
 
 interface CreateUserFormProps {
@@ -18,6 +19,7 @@ interface CreateUserFormProps {
 }
 
 export default function CreateUserForm({ onSubmit, isLoading }: CreateUserFormProps) {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false)
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -34,18 +36,18 @@ export default function CreateUserForm({ onSubmit, isLoading }: CreateUserFormPr
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input id="username" name="username" placeholder="Enter username" required disabled={isLoading} />
+                <Label htmlFor="username">{t('admin-teamMember-components-create-member.Username')}</Label>
+                <Input id="username" name="username" placeholder={t('admin-teamMember-components-create-member.Enter username')} required disabled={isLoading} />
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('admin-teamMember-components-create-member.Password')}</Label>
                 <div className="relative">
                     <Input
                         id="password"
                         name="password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Enter password"
+                        placeholder={t('admin-teamMember-components-create-member.Enter password')}
                         required
                         disabled={isLoading}
                     />
@@ -62,31 +64,31 @@ export default function CreateUserForm({ onSubmit, isLoading }: CreateUserFormPr
             </div>
 
             <div className="space-y-2">
-                <Label>Role</Label>
+                <Label>{t('admin-teamMember-components-create-member.Role')}</Label>
                 <RadioGroup name="role" defaultValue="1" className="flex flex-col space-y-2">
                     <div className="flex items-center space-x-2">
                         <RadioGroupItem value="1" id="normal" disabled={isLoading}/>
                         <Label htmlFor="normal" className="font-normal">
-                            Normal
+                            {t('admin-teamMember-components-create-member.Normal')}
                         </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                         <RadioGroupItem value="2" id="admin" disabled={isLoading}/>
                         <Label htmlFor="admin" className="font-normal">
-                            Admin
+                            {t('admin-teamMember-components-create-member.Admin')}
                         </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                         <RadioGroupItem value="3" id="editor" disabled={isLoading}/>
                         <Label htmlFor="editor" className="font-normal">
-                            Editor
+                            {t('admin-teamMember-components-create-member.Editor')}
                         </Label>
                     </div>
                 </RadioGroup>
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating..." : "Create User"}
+                {isLoading ? t('admin-teamMember-components-create-member.Creating') : t('admin-teamMember-components-create-member.Create User')}
             </Button>
         </form>
     )

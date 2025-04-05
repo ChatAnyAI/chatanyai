@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import {UserRole, UserRoleEnum, UserStatus, UserStatusEnum} from "@/lib/constants/constants";
 import {Input} from "@/components/ui/input";
+import { useTranslation } from "react-i18next";
 
 interface UpdateUserFormProps {
     onSubmit: (teamMemberId: number, data: UserFormValues) => void
@@ -30,6 +31,7 @@ const userFormSchema = z.object({
 
 export type UserFormValues = z.infer<typeof userFormSchema>
 export default function UpdateUserForm({ editingUser, onSubmit, isLoading }: UpdateUserFormProps) {
+    const { t } = useTranslation();
   
     const handleSubmit = async (data: UserFormValues) => {
          onSubmit(editingUser?.teamMemberId!, data)
@@ -74,15 +76,15 @@ export default function UpdateUserForm({ editingUser, onSubmit, isLoading }: Upd
                     </div>
                 </div>
                 <div className="grid gap-2">
-                    <Label className="text-sm font-medium">Email</Label>
-                    <Input {...form.register("email")} placeholder="Enter email" type="email"/>
+                    <Label className="text-sm font-medium">{t('admin-teamMember-components-edit-member.Email')}</Label>
+                    <Input {...form.register("email")} placeholder={t('admin-teamMember-components-edit-member.Enter email')} type="email"/>
                     {form.formState.errors.email && (
                         <p className="text-sm text-destructive">{form.formState.errors.email.message}</p>
                     )}
                 </div>
 
                 <div className="grid gap-2">
-                    <Label className="text-sm font-medium">Status</Label>
+                    <Label className="text-sm font-medium">{t('admin-teamMember-components-edit-member.Status')}</Label>
                     <RadioGroup
                         defaultValue={form.getValues("status").toString()}
                         onValueChange={(value) => form.setValue("status", Number(value) as UserStatus)}
@@ -106,7 +108,7 @@ export default function UpdateUserForm({ editingUser, onSubmit, isLoading }: Upd
                     )}
                 </div>
                 <div className="grid gap-2">
-                    <Label className="text-sm font-medium">Role</Label>
+                    <Label className="text-sm font-medium">{t('admin-teamMember-components-edit-member.Role')}</Label>
                     <Select
                         defaultValue={form.getValues("role").toString()}
                         onValueChange={(value) => form.setValue("role", Number(value) as UserRole)}
@@ -126,10 +128,10 @@ export default function UpdateUserForm({ editingUser, onSubmit, isLoading }: Upd
             </div>}
             <DialogFooter className="gap-2">
                 <Button variant="outline">
-                    Cancel
+                    {t('admin-teamMember-components-edit-member.Cancel')}
                 </Button>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Updating..." : "Update User"}
+                    {isLoading ? t('admin-teamMember-components-edit-member.Updating') : t('admin-teamMember-components-edit-member.Update User')}
                 </Button>
             </DialogFooter>
         </form>

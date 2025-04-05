@@ -134,7 +134,7 @@ export default function DashboardPage() {
                                                         </span>
                                                         <span
                                                             className="text-xs px-2 py-0.5 rounded-full bg-background/80 text-muted-foreground">
-                                                            {AppLabelEnum[application.type]}
+                                                            {t("constant." + AppLabelEnum[application.type])}
                                                         </span>
                                                     </div>
                                                     <h3 className="font-medium truncate">{application.name}</h3>

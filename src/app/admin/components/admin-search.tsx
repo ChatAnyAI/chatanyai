@@ -29,7 +29,7 @@ export function AdminSearch({searchQuery, setSearchQuery} : AdminSearchProps) {
                     type="button"
                 >
                     <X className="h-4 w-4"/>
-                    <span className="sr-only">Clear search</span>
+                    <span className="sr-only">{t('admin-components-admin-search.Clear search')}</span>
                 </button>
             )}
         </div>

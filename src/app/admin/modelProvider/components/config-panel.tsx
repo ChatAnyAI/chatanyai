@@ -4,11 +4,12 @@ import React, {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {ExternalLink, Eye, EyeOff, Settings, Trash2} from "lucide-react"
-import {RespModelProviderInfo} from "@/service/admin";
+import {RespModelProviderInfo}from "@/service/admin";
 import {useForm}from "react-hook-form";
 import {zodResolver}from "@hookform/resolvers/zod";
 import * as z from "zod"
 import {Switch}from "@/components/ui/switch";
+import { useTranslation } from "react-i18next";
 
 type ProviderListProps = {
     onSubmit: (providerId: number, data: ProviderFormValues) => void
@@ -43,6 +44,7 @@ const providerFormSchema = z.object({
 export type ProviderFormValues = z.infer<typeof providerFormSchema>
 
 export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListProps) {
+    const { t } = useTranslation();
     const [isActive, setIsActive] = useState(false)
     const [showApiKey, setShowApiKey] = useState(false)
     const [isAddingModel, setIsAddingModel] = useState(false)
@@ -170,10 +172,10 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
               )}
           </div>
           <div className="space-y-4">
-              <h2 className="text-lg font-semibold">API Key</h2>
+              <h2 className="text-lg font-semibold">{t("config-panel.API Key")}</h2>
               <div className="flex gap-2">
                   <div className="relative flex-1">
-                      <Input type={showApiKey ? "text" : "password"} placeholder="Enter your API key"
+                      <Input type={showApiKey ? "text" : "password"} placeholder={t("config-panel.Enter your API key")}
                              {...form.register("apiKey")} />
                       <Button
                           type="button"
@@ -185,7 +187,7 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
                           {showApiKey ? <EyeOff className="w-4 h-4"/> : <Eye className="w-4 h-4"/>}
                       </Button>
                   </div>
-                  <Button  type="button" >Check</Button>
+                  <Button type="button">{t("config-panel.Check")}</Button>
               </div>
               {form.formState.errors.apiKey && (
                   <p className="text-sm text-destructive">{form.formState.errors.apiKey.message}</p>
@@ -193,14 +195,14 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
           </div>
 
           <div className="space-y-4">
-              <h2 className="text-lg font-semibold">API Host</h2>
+              <h2 className="text-lg font-semibold">{t("config-panel.API Host")}</h2>
               <div className="flex gap-2">
                   <Input {...form.register("apiHost")} />
                   <Button type="button" variant="outline" 
-                    onClick={() => form.setValue("apiHost", provider.apiHost)}>Reset</Button>
+                    onClick={() => form.setValue("apiHost", provider.apiHost)}>{t("config-panel.Reset")}</Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                  Ending with /v1/ ignores v1, ending with # forces use of input address
+                  {t("config-panel.Ending with /v1/ ignores v1, ending with # forces use of input address")}
               </p>
               {form.formState.errors.apiHost && (
                   <p className="text-sm text-destructive">{form.formState.errors.apiHost.message}</p>
@@ -208,13 +210,13 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
           </div>
 
           <div className="space-y-4">
-              <h2 className="text-lg font-semibold">Keep Alive Time</h2>
+              <h2 className="text-lg font-semibold">{t("config-panel.Keep Alive Time")}</h2>
               <div className="flex gap-2 items-center">
                   <Input type="number" defaultValue="0" className="w-32"   {...form.register("keepAliveTime", { valueAsNumber: true})}/>
-                  <span>Minutes</span>
+                  <span>{t("config-panel.Minutes")}</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                  The time in minutes to keep the connection alive, default is 5 minutes.
+                  {t("config-panel.The time in minutes to keep the connection alive, default is 5 minutes")}
               </p>
               {form.formState.errors.keepAliveTime && (
                   <p className="text-sm text-destructive">{form.formState.errors.keepAliveTime.message}</p>
@@ -222,7 +224,7 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
           </div>
 
           <div className="space-y-4">
-              <h2 className="text-lg font-semibold">Models</h2>
+              <h2 className="text-lg font-semibold">{t("config-panel.Models")}</h2>
               {localModelList.map((model, i) => (
                   <div key={model.modelId} className="flex items-center justify-between p-2 bg-muted/50 rounded-lg">
                       <div className="flex items-center gap-2">
@@ -253,58 +255,58 @@ export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListPr
                   <div className="p-3 border rounded-lg space-y-3">
                       <div className="grid grid-cols-2 gap-3">
                           <div>
-                              <label className="text-sm font-medium">Model ID <span className="text-red-500">*</span></label>
+                              <label className="text-sm font-medium">{t("config-panel.Model ID")} <span className="text-red-500">*</span></label>
                               <Input 
                                   value={newModel.modelId}
                                   onChange={(e) => setNewModel({...newModel, modelId: e.target.value})}
-                                  placeholder="Enter model ID"
+                                  placeholder={t("config-panel.Model ID")}
                                   className={modelErrors.modelId ? "border-red-500" : ""}
                               />
                               {modelErrors.modelId && (
-                                  <p className="text-sm text-red-500 mt-1">Model ID is required</p>
+                                  <p className="text-sm text-red-500 mt-1">{t("config-panel.Model ID is required")}</p>
                               )}
                           </div>
                           <div>
-                              <label className="text-sm font-medium">Model Name <span className="text-red-500">*</span></label>
+                              <label className="text-sm font-medium">{t("config-panel.Model Name")} <span className="text-red-500">*</span></label>
                               <Input 
                                   value={newModel.modelName}
                                   onChange={(e) => setNewModel({...newModel, modelName: e.target.value})}
-                                  placeholder="Enter model name"
+                                  placeholder={t("config-panel.Model Name")}
                                   className={modelErrors.modelName ? "border-red-500" : ""}
                               />
                               {modelErrors.modelName && (
-                                  <p className="text-sm text-red-500 mt-1">Model Name is required</p>
+                                  <p className="text-sm text-red-500 mt-1">{t("config-panel.Model Name is required")}</p>
                               )}
                           </div>
                       </div>
                       <div className="flex items-center gap-2">
                           <Button type="button" onClick={handleAddModel}>
-                              Save Model
+                              {t("config-panel.Save Model")}
                           </Button>
                           <Button type="button" variant="outline" onClick={() => setIsAddingModel(false)}>
-                              Cancel
+                              {t("config-panel.Cancel")}
                           </Button>
                       </div>
                   </div>
               )}
 
               <div className="flex gap-2">
-                  <Button type="button" variant="outline" onClick={() => setIsAddingModel(true)}>Add</Button>
+                  <Button type="button" variant="outline" onClick={() => setIsAddingModel(true)}>{t("config-panel.Add")}</Button>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                  Check{" "}
+                  {t("config-panel.Check")}{" "}
                   <a className="text-blue-500">
-                      {provider.name} Docs
+                      {provider.name} {t("config-panel.Docs")}
                   </a>{" "}
-                  and{" "}
+                  {t("config-panel.and")}{" "}
                   <a className="text-blue-500">
-                      Models
+                      {t("config-panel.Models")}
                   </a>{" "}
-                  for more details
+                  {t("config-panel.for more details")}
               </p>
               <div className="flex gap-2">
-                  <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600">Save</Button>
+                  <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600">{t("config-panel.Save")}</Button>
               </div>
           </div>
       </form>

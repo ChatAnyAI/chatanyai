@@ -28,9 +28,11 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {AdminSearch} from "@/app/admin/components/admin-search";
 import {AvatarUser, UserProfile} from "@/service/api";
 import {UserAvatar} from "@/components/user-avatar";
+import { useTranslation } from "react-i18next";
 
 
 export default function TeamMember() {
+    const { t } = useTranslation();
     const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false)
     const [isUpdateUserModalOpen, setIsUpdateUserModalOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -49,8 +51,8 @@ export default function TeamMember() {
             }
         }));
 
-    if (error) return <div>Failed to load TeamMemberList</div>;
-    if (!teamMemberList) return <div>Loading...</div>;
+    if (error) return <div>{t('admin-teamMember-page.Failed to load')}</div>;
+    if (!teamMemberList) return <div>{t('admin-teamMember-page.Loading')}</div>;
 
 
     const handleCreateUser = async (data: ApiAdminUserCreateRequest) => {
@@ -58,15 +60,15 @@ export default function TeamMember() {
         try {
             await ApiAdminUserCreate(data)
             toast({
-                title: "User created successfully",
-                description: `Created user ${data.name} with role ${data.role}`,
+                title: t('admin-teamMember-page.User created successfully'),
+                description: `${t('admin-teamMember-page.Created user')} ${data.name} ${t('admin-teamMember-page.with role')} ${data.role}`,
             })
             setIsCreateUserModalOpen(false)
             // Here you would typically update the users list or refetch data
         } catch (error) {
             // setIsCreateUserModalOpen(false)
             toast({
-                title: "Error",
+                title: t('admin-teamMember-page.Error'),
                 description:  String(error),
                 variant: "destructive",
             })
@@ -82,15 +84,15 @@ export default function TeamMember() {
         try {
             await ApiAdminUserUpdate(teamMemberId, data)
             toast({
-                title: "User created successfully",
-                description: `Update user`,
+                title: t('admin-teamMember-page.User created successfully'),
+                description: t('admin-teamMember-page.Update user'),
             })
             setIsUpdateUserModalOpen(false)
             // Here you would typically update the users list or refetch data
         } catch (error) {
             // setIsCreateUserModalOpen(false)
             toast({
-                title: "Error",
+                title: t('admin-teamMember-page.Error'),
                 description:  String(error),
                 variant: "destructive",
             })
@@ -121,16 +123,16 @@ export default function TeamMember() {
         <div className="container mx-auto py-6">
             <div className="mb-8 flex flex-wrap gap-4">
                 <Button variant="outline" className="rounded-full">
-                    All <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.count}</span>
+                    {t('admin-teamMember-page.All')} <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.count}</span>
                 </Button>
                 <Button variant="outline" className="rounded-full">
-                    Admins <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.adminCount}</span>
+                    {t('admin-teamMember-page.Admins')} <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.adminCount}</span>
                 </Button>
                 <Button variant="outline" className="rounded-full">
-                    Active <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.activeCount}</span>
+                    {t('admin-teamMember-page.Active')} <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.activeCount}</span>
                 </Button>
                 <Button variant="outline" className="rounded-full">
-                    Blocked <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.blockCount}</span>
+                    {t('admin-teamMember-page.Blocked')} <span className="ml-2 rounded-full bg-muted px-2">{teamMemberList.total.blockCount}</span>
                 </Button>
 
             </div>
@@ -141,27 +143,26 @@ export default function TeamMember() {
                 />
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Sort by</span>
+                        <span className="text-sm text-muted-foreground">{t('admin-teamMember-page.Sort by')}</span>
                         <Select defaultValue="name">
                             <SelectTrigger className="w-[120px]">
                                 <SelectValue/>
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="name">Name</SelectItem>
-                                <SelectItem value="created">Created</SelectItem>
-                                <SelectItem value="activity">Last activity</SelectItem>
+                                <SelectItem value="name">{t('admin-teamMember-page.Name')}</SelectItem>
+                                <SelectItem value="created">{t('admin-teamMember-page.Created')}</SelectItem>
+                                <SelectItem value="activity">{t('admin-teamMember-page.Last activity')}</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
                     <Dialog open={isCreateUserModalOpen} onOpenChange={setIsCreateUserModalOpen}>
                         <DialogTrigger asChild>
-                            <Button>New user</Button>
+                            <Button>{t('admin-teamMember-page.New user')}</Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
-                                <DialogTitle>Create New User</DialogTitle>
-                                <DialogDescription>Add a new user to the system. Click save when you're
-                                    done.</DialogDescription>
+                                <DialogTitle>{t('admin-teamMember-page.Create New User')}</DialogTitle>
+                                <DialogDescription>{t('admin-teamMember-page.Add a new user')}</DialogDescription>
                             </DialogHeader>
                             <CreateUserForm onSubmit={handleCreateUser} isLoading={isLoading}/>
                         </DialogContent>
@@ -173,11 +174,11 @@ export default function TeamMember() {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>Created on</TableHead>
-                            <TableHead>Last activity</TableHead>
+                            <TableHead>{t('admin-teamMember-page.Name')}</TableHead>
+                            <TableHead>{t('admin-teamMember-page.Status')}</TableHead>
+                            <TableHead>{t('admin-teamMember-page.Role')}</TableHead>
+                            <TableHead>{t('admin-teamMember-page.Created on')}</TableHead>
+                            <TableHead>{t('admin-teamMember-page.Last activity')}</TableHead>
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
@@ -202,7 +203,7 @@ export default function TeamMember() {
                                               : "bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20"
                                       }`}
                                   >
-                                    {UserStatusEnum[item.status] || "Unknown"}
+                                    {UserStatusEnum[item.status] || t('constant.Unknown')}
                                   </span>
                                 </TableCell>
                                 <TableCell>
@@ -213,7 +214,7 @@ export default function TeamMember() {
                                                 : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
                                         }`}
                                     >
-                                        {UserRoleEnum[item.roleId] || "Unknown"}
+                                        {UserRoleEnum[item.roleId] || t('constant.Unknown')}
                                     </span>
 
                                 </TableCell>
@@ -223,12 +224,12 @@ export default function TeamMember() {
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" size="sm">
-                                                Edit
+                                                {t('admin-teamMember-page.Edit')}
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => handleEditUser(item)}>Edit user</DropdownMenuItem>
-                                            <DropdownMenuItem className="text-destructive">Delete user</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleEditUser(item)}>{t('admin-teamMember-page.Edit user')}</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-destructive">{t('admin-teamMember-page.Delete user')}</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>
@@ -248,9 +249,9 @@ export default function TeamMember() {
              <Dialog open={isUpdateUserModalOpen} onOpenChange={setIsUpdateUserModalOpen}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle className="text-xl">Edit User</DialogTitle>
+                        <DialogTitle className="text-xl">{t('admin-teamMember-page.Edit User')}</DialogTitle>
                         <DialogDescription className="text-muted-foreground">
-                            Make changes to the user account here.
+                            {t('admin-teamMember-page.Make changes')}
                         </DialogDescription>
                     </DialogHeader>
                     <UpdateUserForm
@@ -258,7 +259,6 @@ export default function TeamMember() {
                         onSubmit={handleUpdateUser}
                         isLoading={isLoading}
                     />
-
                 </DialogContent>
             </Dialog>
         </div>

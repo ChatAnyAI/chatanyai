@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { SettingsForm } from "./settings-form"
+import { useTranslation } from "react-i18next"
 
 const models = [
   { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo", description: "Quick and efficient for most tasks" },
@@ -21,6 +22,7 @@ const models = [
 ]
 
 export function ModelList() {
+  const { t } = useTranslation();
   const [selectedModel, setSelectedModel] = useState<string | null>(null)
 
   return (
@@ -30,19 +32,19 @@ export function ModelList() {
           <DialogTrigger asChild>
             <Card className="cursor-pointer hover:bg-accent">
               <CardHeader>
-                <CardTitle>{model.name}</CardTitle>
-                <CardDescription>{model.description}</CardDescription>
+                <CardTitle>{t(`model-list.${model.name}`)}</CardTitle>
+                <CardDescription>{t(`model-list.${model.description}`)}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Click to configure</p>
+                <p className="text-sm text-muted-foreground">{t("model-list.Click to configure")}</p>
               </CardContent>
             </Card>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>{model.name} Settings</DialogTitle>
+              <DialogTitle>{t(`model-list.${model.name}`)} {t("model-list.Settings")}</DialogTitle>
               <DialogDescription>
-                Configure the settings for {model.name}. Click save when you're done.
+                {t("model-list.Configure the settings for")} {t(`model-list.${model.name}`)}. {t("model-list.Click save when you're done")}
               </DialogDescription>
             </DialogHeader>
             <SettingsForm modelId={model.id} />

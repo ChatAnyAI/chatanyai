@@ -16,7 +16,7 @@ import {
     ApiUpdateAdminTeamPreference,
     EmailConfig
 } from "@/service/admin";
-
+import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react"
 
 // Form validation schema
@@ -32,6 +32,7 @@ const formSchema = z.object({
 })
 
 export default function TeamPreferencesPage() {
+    const { t } = useTranslation();
     const { data: preference, error, isLoading } = useSWR<ApiAdminTeamPreference>('ApiGetAdminTeamPreference', ApiGetAdminTeamPreference);
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -114,14 +115,14 @@ export default function TeamPreferencesPage() {
             await ApiUpdateAdminTeamPreference(requestData)
 
             toast({
-                title: "Preferences saved",
-                description: "Your team preferences have been updated successfully.",
+                title: t("admin-preference-page.Preferences saved"),
+                description: t("admin-preference-page.Preferences updated"),
             })
         } catch (error) {
             console.error("Error saving preferences:", error)
             toast({
-                title: "Error",
-                description: "Failed to save preferences. Please try again.",
+                title: t("admin-preference-page.Error"),
+                description: t("admin-preference-page.Failed to save"),
                 variant: "destructive",
             })
         }
@@ -131,7 +132,7 @@ export default function TeamPreferencesPage() {
         return (
             <div className="container mx-auto py-10 flex justify-center items-center min-h-[400px]">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <span className="ml-2">Loading preferences...</span>
+                <span className="ml-2">{t("admin-preference-page.Loading preferences")}</span>
             </div>
         )
     }
@@ -141,12 +142,12 @@ export default function TeamPreferencesPage() {
             <div className="container mx-auto py-10">
                 <Card className="max-w-2xl mx-auto">
                     <CardHeader>
-                        <CardTitle>Error</CardTitle>
-                        <CardDescription>Failed to load team preferences. Please try again later.</CardDescription>
+                        <CardTitle>{t("admin-preference-page.Error")}</CardTitle>
+                        <CardDescription>{t("admin-preference-page.Failed to load")}</CardDescription>
                     </CardHeader>
                     <CardFooter>
                         <Button onClick={() => window.location.reload()} className="ml-auto">
-                            Retry
+                            {t("admin-preference-page.Retry")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -158,8 +159,8 @@ export default function TeamPreferencesPage() {
         <div className="container mx-auto py-10">
             <Card className="max-w-2xl mx-auto">
                 <CardHeader>
-                    <CardTitle>Team Preferences</CardTitle>
-                    <CardDescription>Configure your team's email settings and preferences.</CardDescription>
+                    <CardTitle>{t("admin-preference-page.Team Preferences")}</CardTitle>
+                    <CardDescription>{t("admin-preference-page.Configure team")}</CardDescription>
                 </CardHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -170,8 +171,8 @@ export default function TeamPreferencesPage() {
                                 render={({ field }) => (
                                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                         <div className="space-y-0.5">
-                                            <FormLabel className="text-base">Email Functionality</FormLabel>
-                                            <FormDescription>Enable email notifications for your team</FormDescription>
+                                            <FormLabel className="text-base">{t("admin-preference-page.Email Functionality")}</FormLabel>
+                                            <FormDescription>{t("admin-preference-page.Enable email")}</FormDescription>
                                         </div>
                                         <FormControl>
                                             <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -182,7 +183,7 @@ export default function TeamPreferencesPage() {
 
                             {emailEnabled && (
                                 <div className="space-y-4 border rounded-lg p-4">
-                                    <h3 className="text-lg font-medium">SMTP Configuration</h3>
+                                    <h3 className="text-lg font-medium">{t("admin-preference-page.SMTP Configuration")}</h3>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <FormField
@@ -190,9 +191,9 @@ export default function TeamPreferencesPage() {
                                             name="host"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Host</FormLabel>
+                                                    <FormLabel>{t("admin-preference-page.Host")}</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="smtp.example.com" {...field} />
+                                                        <Input placeholder={t("admin-preference-page.smtp placeholder")} {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -204,9 +205,9 @@ export default function TeamPreferencesPage() {
                                             name="port"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Port</FormLabel>
+                                                    <FormLabel>{t("admin-preference-page.Port")}</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="587" {...field} />
+                                                        <Input placeholder={t("admin-preference-page.port placeholder")} {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -219,9 +220,9 @@ export default function TeamPreferencesPage() {
                                         name="username"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Username</FormLabel>
+                                                <FormLabel>{t("admin-preference-page.Username")}</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="username" {...field} />
+                                                    <Input placeholder={t("admin-preference-page.username placeholder")} {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -233,9 +234,9 @@ export default function TeamPreferencesPage() {
                                         name="password"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Password</FormLabel>
+                                                <FormLabel>{t("admin-preference-page.Password")}</FormLabel>
                                                 <FormControl>
-                                                    <Input type="password" placeholder="••••••••" {...field} />
+                                                    <Input type="password" placeholder={t("admin-preference-page.password placeholder")} {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -247,9 +248,9 @@ export default function TeamPreferencesPage() {
                                         name="subject"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Default Subject</FormLabel>
+                                                <FormLabel>{t("admin-preference-page.Default Subject")}</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Notification from Team" {...field} />
+                                                    <Input placeholder={t("admin-preference-page.subject placeholder")} {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -262,9 +263,9 @@ export default function TeamPreferencesPage() {
                                             name="fromEmail"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>From Email</FormLabel>
+                                                    <FormLabel>{t("admin-preference-page.From Email")}</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="notifications@example.com" {...field} />
+                                                        <Input placeholder={t("admin-preference-page.email placeholder")} {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -276,9 +277,9 @@ export default function TeamPreferencesPage() {
                                             name="fromName"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>From Name</FormLabel>
+                                                    <FormLabel>{t("admin-preference-page.From Name")}</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="Team Notifications" {...field} />
+                                                        <Input placeholder={t("admin-preference-page.name placeholder")} {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -290,7 +291,7 @@ export default function TeamPreferencesPage() {
                         </CardContent>
                         <CardFooter>
                             <Button type="submit" className="ml-auto">
-                                Save Preferences
+                                {t("admin-preference-page.Save Preferences")}
                             </Button>
                         </CardFooter>
                     </form>

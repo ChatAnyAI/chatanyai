@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
 
 export default function Navbar() {
+    const { t } = useTranslation()
     const [scrolled, setScrolled] = useState(false)
 
     useEffect(() => {
@@ -25,7 +27,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
                         <a href="/" className="flex items-center">
-                            <span className="text-primary text-2xl font-bold">ChatAnyAI</span>
+                            <span className="text-primary text-2xl font-bold">{t('login-navbar.ChatAnyAI')}</span>
                         </a>
                     </div>
                 </div>

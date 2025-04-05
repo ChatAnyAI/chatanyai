@@ -77,7 +77,7 @@ export default function UpdateAppForm({ editingApp, onSubmit, isLoading,onCancel
                     </div>
                 </div>
                 <div className="grid gap-2">
-                    <Label className="text-sm font-medium">Visibility</Label>
+                    <Label className="text-sm font-medium">{t("edit-app.Visibility")}</Label>
                     <RadioGroup
                         defaultValue={form.getValues("visibility").toString()}
                         onValueChange={(value) => form.setValue("visibility", Number(value) as AppVisibility)}
@@ -86,25 +86,25 @@ export default function UpdateAppForm({ editingApp, onSubmit, isLoading,onCancel
                         <div className="flex items-center space-x-3">
                             <RadioGroupItem value={AppVisibility.Public.toString()} id="active"/>
                             <Label htmlFor="active" className="font-normal">
-                                {t(AppVisibilityEnum[AppVisibility.Public])}
+                                {t("constant." + AppVisibilityEnum[AppVisibility.Public])}
                             </Label>
                         </div>
                         <div className="flex items-center space-x-3">
                             <RadioGroupItem value={AppVisibility.Private.toString()} id="blocked"/>
                             <Label htmlFor="blocked" className="font-normal">
-                                {t(AppVisibilityEnum[AppVisibility.Private])}
+                                {t("constant." + AppVisibilityEnum[AppVisibility.Private])}
                             </Label>
                         </div>
                     </RadioGroup>
                     {form.formState.errors.visibility && (
-                        <p className="text-sm text-destructive">{form.formState.errors.visibility.message}</p>
+                        <p className="text-sm text-destructive">{t("edit-app.Please select")}</p>
                     )}
                 </div>
                 <div className="grid gap-2">
-                    <Label className="text-sm font-medium">Enabled</Label>
+                    <Label className="text-sm font-medium">{t("edit-app.Enabled")}</Label>
                     <div className="flex items-center justify-between space-x-4">
                         <div className="space-y-0.5">
-                            <Label className="text-base">App Enabled</Label>
+                            <Label className="text-base">{t("edit-app.App Enabled")}</Label>
                         </div>
                         <Switch
                             checked={isActive}
@@ -122,10 +122,10 @@ export default function UpdateAppForm({ editingApp, onSubmit, isLoading,onCancel
             </div>}
             <DialogFooter className="gap-2">
                 <Button type="button" variant="outline" onClick={onCancel}>
-                    Cancel
+                    {t("edit-app.Cancel")}
                 </Button>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Updating..." : "Update User"}
+                    {isLoading ? t("edit-app.Updating") : t("edit-app.Update User")}
                 </Button>
             </DialogFooter>
         </form>

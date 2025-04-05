@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Plus } from "lucide-react"
 import { RespModelProviderInfo} from "@/service/admin";
 import {cn} from "@/lib/utils";
-
+import { useTranslation } from "react-i18next";
 
 type ProviderListProps = {
     modelProvider: string
@@ -14,6 +14,7 @@ type ProviderListProps = {
 }
 
 export function ProviderList(props: ProviderListProps) {
+    const { t } = useTranslation();
     const { modelProvider, providerList } = props
 
     return (
@@ -41,14 +42,14 @@ export function ProviderList(props: ProviderListProps) {
                                     ? "bg-blue-50 text-green-700 ring-1 ring-inset ring-green-600/20"
                                     : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
                             }`}
-                        >{provider.enabled === 1 ? 'Enabled': 'Disabled'}</span>
+                        >{provider.enabled === 1 ? t('provider-list.Enabled'): t('provider-list.Disabled')}</span>
 
 
                     </div>
                 ))}
                 {/* <Button variant="outline" className="w-full mt-4">
                     <Plus className="w-4 h-4 mr-2"/>
-                    Add
+                    {t('provider-list.Add')}
                 </Button> */}
             </div>
         </div>

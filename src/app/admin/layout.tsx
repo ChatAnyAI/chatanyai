@@ -10,7 +10,7 @@ export default function AdminPage() {
     const user = useGlobalStore(({ user }) => user);
     return (
         <SettingsLayout>
-            {user.roleId == UserRole.Admin && <SidebarProvider>
+            {user.roleId === UserRole.Admin && <SidebarProvider>
                 <AdminSidebar />
                 <div className="flex flex-1 gap-4 p-4 pt-0">
                     <SidebarToggleMobile />

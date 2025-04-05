@@ -22,8 +22,10 @@ import useSWR from "swr";
 import {ApiAdminTeamLicense, ApiAdminTeamLicenseResp, ApiUpdateAdminTeamLicense} from "@/service/admin";
 import {toast} from "@/hooks/use-toast";
 import {ProductTypeEnum} from "@/lib/constants/constants";
+import { useTranslation } from "react-i18next";
 
 export default function LicensePage() {
+    const { t } = useTranslation();
     const [licenseKey, setLicenseKey] = useState("")
     const [isUpdating, setIsUpdating] = useState(false)
     const [updateSuccess, setUpdateSuccess] = useState<boolean | null>(null)
@@ -55,7 +57,7 @@ export default function LicensePage() {
             setIsDialogOpen(false)
         } catch (error) {
             toast({
-                title: "Error",
+                title: t("admin-license-page.Error"),
                 description:  String(error),
                 variant: "destructive",
             })
@@ -89,11 +91,11 @@ export default function LicensePage() {
                                 <CardTitle className="text-2xl font-bold flex items-center gap-2">
                                     {adminTeamLicense.licenseIssuedTo}
                                     <Badge variant="outline" className="ml-2 bg-blue-50 text-blue-700 hover:bg-blue-50">
-                                        In Use
+                                        {t("admin-license-page.In Use")}
                                     </Badge>
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-sm text-gray-500">
-                                    License ID:
+                                    {t("admin-license-page.License ID")}
                                     <span className="font-mono ml-1">{adminTeamLicense.licenseId}</span>
                                     <TooltipProvider>
                                         <Tooltip>
@@ -107,7 +109,7 @@ export default function LicensePage() {
                                                 </Button>
                                             </TooltipTrigger>
                                             <TooltipContent>
-                                                <p>{copied ? "Copied!" : "Copy license ID"}</p>
+                                                <p>{copied ? t("admin-license-page.Copied") : t("admin-license-page.Copy license ID")}</p>
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
@@ -115,16 +117,16 @@ export default function LicensePage() {
                             </div>
                             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                 <DialogTrigger asChild>
-                                    <Button className="bg-blue-500 hover:bg-blue-600">Update License</Button>
+                                    <Button className="bg-blue-500 hover:bg-blue-600">{t("admin-license-page.Update License")}</Button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle>Update License</DialogTitle>
-                                        <DialogDescription>Please enter the new license key to update your license</DialogDescription>
+                                        <DialogTitle>{t("admin-license-page.Update License")}</DialogTitle>
+                                        <DialogDescription>{t("admin-license-page.Enter license key prompt")}</DialogDescription>
                                     </DialogHeader>
                                     <div className="grid gap-4 py-4">
                                         <Textarea
-                                            placeholder="Enter license key..."
+                                            placeholder={t("admin-license-page.License key placeholder")}
                                             value={licenseKey}
                                             onChange={(e) => setLicenseKey(e.target.value)}
                                             className="min-h-[100px] font-mono"
@@ -132,15 +134,15 @@ export default function LicensePage() {
                                         {updateSuccess === true && (
                                             <Alert className="border-gray-200">
                                                 <CheckCircle className="h-4 w-4" />
-                                                <AlertTitle>Success</AlertTitle>
-                                                <AlertDescription>License updated successfully</AlertDescription>
+                                                <AlertTitle>{t("admin-license-page.Success")}</AlertTitle>
+                                                <AlertDescription>{t("admin-license-page.License updated")}</AlertDescription>
                                             </Alert>
                                         )}
                                         {updateSuccess === false && (
                                             <Alert className="border-gray-200">
                                                 <XCircle className="h-4 w-4" />
-                                                <AlertTitle>Error</AlertTitle>
-                                                <AlertDescription>License update failed, please check the key</AlertDescription>
+                                                <AlertTitle>{t("admin-license-page.Error")}</AlertTitle>
+                                                <AlertDescription>{t("admin-license-page.License update failed")}</AlertDescription>
                                             </Alert>
                                         )}
                                     </div>
@@ -153,7 +155,7 @@ export default function LicensePage() {
                                                 setUpdateSuccess(null)
                                             }}
                                         >
-                                            Cancel
+                                            {t("admin-license-page.Cancel")}
                                         </Button>
                                         <Button
                                             onClick={handleUpdateLicense}
@@ -162,7 +164,7 @@ export default function LicensePage() {
                                         >
                                             {isUpdating ? (
                                                 <>
-                                                    <span className="opacity-0">Update</span>
+                                                    <span className="opacity-0">{t("admin-license-page.Update")}</span>
                                                     <span className="absolute inset-0 flex items-center justify-center">
                             <svg
                                 className="animate-spin h-5 w-5 text-white"
@@ -187,7 +189,7 @@ export default function LicensePage() {
                           </span>
                                                 </>
                                             ) : (
-                                                "Update"
+                                                t("admin-license-page.Update")
                                             )}
                                         </Button>
                                     </DialogFooter>
@@ -199,13 +201,13 @@ export default function LicensePage() {
                     <CardContent className="grid gap-8">
                         {/* License Status Area */}
                         <div className="bg-linear-to-br from-blue-50 to-indigo-50 border rounded-lg p-6">
-                            <h3 className="text-lg font-medium mb-4 text-blue-800">License Status</h3>
+                            <h3 className="text-lg font-medium mb-4 text-blue-800">{t("admin-license-page.License Status")}</h3>
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="space-y-4">
                                     <div>
                                         <div className="flex justify-between mb-1">
-                                            <span className="text-sm text-blue-700">License Validity</span>
-                                            <span className="text-sm font-medium text-blue-900">{remainingDays} days</span>
+                                            <span className="text-sm text-blue-700">{t("admin-license-page.License Validity")}</span>
+                                            <span className="text-sm font-medium text-blue-900">{remainingDays} {t("admin-license-page.days")}</span>
                                         </div>
                                         <div className="w-full bg-blue-100 rounded-full h-2">
                                             <div
@@ -218,7 +220,7 @@ export default function LicensePage() {
                                     </div>
                                     <div>
                                         <div className="flex justify-between mb-1">
-                                            <span className="text-sm text-blue-700">User Usage</span>
+                                            <span className="text-sm text-blue-700">{t("admin-license-page.User Usage")}</span>
                                             <span className="text-sm font-medium text-blue-900">
                         {adminTeamLicense.staticActiveUsers} / {adminTeamLicense.licenseMaxUsers}
                       </span>
@@ -235,13 +237,13 @@ export default function LicensePage() {
                                 </div>
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-blue-700">License Type</span>
+                                        <span className="text-sm text-blue-700">{t("admin-license-page.License Type")}</span>
                                         <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
                                             {ProductTypeEnum[adminTeamLicense.licenseProduct]}
                                         </Badge>
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-blue-700">Version</span>
+                                        <span className="text-sm text-blue-700">{t("admin-license-page.Version")}</span>
                                         <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-200">
                                             {adminTeamLicense.licenseVersion}
                                         </Badge>
@@ -253,14 +255,14 @@ export default function LicensePage() {
                         <div className="grid md:grid-cols-2 gap-8">
                             {/* Basic Info */}
                             <div className="border rounded-lg p-6 bg-white">
-                                <h3 className="text-lg font-medium mb-4 text-gray-800">Basic Info</h3>
+                                <h3 className="text-lg font-medium mb-4 text-gray-800">{t("admin-license-page.Basic Info")}</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-3">
                                         <div className="p-2 rounded-md bg-blue-50 text-blue-600">
                                             <Info className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">Licensed To</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.Licensed To")}</p>
                                             <p className="font-medium text-gray-900">{adminTeamLicense.licenseIssuedTo}</p>
                                         </div>
                                     </div>
@@ -270,7 +272,7 @@ export default function LicensePage() {
                                             <Calendar className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">Issued Time</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.Issued Time")}</p>
                                             <p className="font-medium text-gray-900">{new Date(adminTeamLicense.licenseIssuedTime * 1000).toLocaleString()}</p>
                                         </div>
                                     </div>
@@ -280,10 +282,10 @@ export default function LicensePage() {
                                             <Clock className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">Expiration Time</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.Expiration Time")}</p>
                                             <p className="font-medium text-gray-900">{new Date(adminTeamLicense.licenseExpirationTime * 1000).toLocaleString()}</p>
                                             <p className="text-xs text-amber-600 font-medium">
-                                                {remainingDays > 0 ? `Remaining ${remainingDays} days` : "Expired"}
+                                                {remainingDays > 0 ? `${t("admin-license-page.Remaining")} ${remainingDays} ${t("admin-license-page.days")}` : t("admin-license-page.Expired")}
                                             </p>
                                         </div>
                                     </div>
@@ -292,14 +294,14 @@ export default function LicensePage() {
 
                             {/* Usage Limits */}
                             <div className="border rounded-lg p-6 bg-white">
-                                <h3 className="text-lg font-medium mb-4 text-gray-800">Usage Limits</h3>
+                                <h3 className="text-lg font-medium mb-4 text-gray-800">{t("admin-license-page.Usage Limits")}</h3>
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-3">
                                         <div className="p-2 rounded-md bg-rose-50 text-rose-600">
                                             <Users className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">User Limit</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.User Limit")}</p>
                                             <p className="font-medium text-gray-900">{adminTeamLicense.licenseMaxUsers}</p>
                                         </div>
                                     </div>
@@ -309,7 +311,7 @@ export default function LicensePage() {
                                             <Server className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">Maximum Instances</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.Maximum Instances")}</p>
                                             <p className="font-medium text-gray-900">{adminTeamLicense.licenseMaxInstances}</p>
                                         </div>
                                     </div>
@@ -319,7 +321,7 @@ export default function LicensePage() {
                                             <Users className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">Maximum Active Users</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.Maximum Active Users")}</p>
                                             <p className="font-medium text-gray-900">{adminTeamLicense.licenseMaxUsers}</p>
                                         </div>
                                     </div>
@@ -329,7 +331,7 @@ export default function LicensePage() {
                                             <Globe className="h-5 w-5" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-gray-500">Allowed Domains</p>
+                                            <p className="text-sm font-medium text-gray-500">{t("admin-license-page.Allowed Domains")}</p>
                                             <div className="flex flex-wrap gap-1 mt-1">
                                                 {adminTeamLicense.licenseAllowedDomains.map((domain, index) => (
                                                     <Badge key={index} variant="outline" className="bg-sky-50 text-sky-700 border-sky-200">
@@ -345,7 +347,7 @@ export default function LicensePage() {
 
                         {/* Included Features */}
                         <div className="border rounded-lg p-6 bg-linear-to-br from-gray-50 to-gray-100">
-                            <h3 className="text-lg font-medium mb-4 text-gray-800">Included Features</h3>
+                            <h3 className="text-lg font-medium mb-4 text-gray-800">{t("admin-license-page.Included Features")}</h3>
                             <div className="grid md:grid-cols-2 gap-4">
                                 {licenseInfo.features.map((feature, index) => (
                                     <div key={index} className="flex items-center gap-2 bg-white p-3 rounded-lg border border-gray-100">
@@ -363,14 +365,14 @@ export default function LicensePage() {
                         <div className="flex justify-between items-center w-full text-sm text-gray-500">
                             <div>
                                 <p>
-                                    For assistance, please contact{" "}
+                                    {t("admin-license-page.For assistance")}{" "}
                                     <a href="mailto:support@chatanyai.com" className="text-blue-600 hover:underline">
-                                        support@chatanyai.com
+                                        {t("admin-license-page.Support email")}
                                     </a>
                                 </p>
                             </div>
                             <div>
-                                <p>© 2025 ChatAnyAI</p>
+                                <p>{t("admin-license-page.Copyright")}</p>
                             </div>
                         </div>
                     </CardFooter>

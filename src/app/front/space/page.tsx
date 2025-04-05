@@ -197,7 +197,7 @@ export default function SpaceSettings() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{t("space-page.Space Settings")}</h1>
           <p className="text-muted-foreground">
-            {t("space-page.Manage your")} {space?.type ? AppLabelEnum[space.type] : "workspace"} {t("space-page.settings")}
+            {t("space-page.Manage your")} {space?.type ? t("constant." + AppLabelEnum[space.type]): "workspace"} {t("space-page.settings")}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -212,7 +212,7 @@ export default function SpaceSettings() {
           {space?.type && (
             <Badge variant="outline" className="flex items-center gap-1 px-3 py-1">
               {getWorkspaceIcon(space.type)}
-              <span>{AppLabelEnum[space.type]}</span>
+              <span>{t("constant." + AppLabelEnum[space.type])}</span>
             </Badge>
           )}
           <Badge variant={space?.visibility === 1 ? "secondary" : "outline"} className="px-3 py-1">
