@@ -177,6 +177,7 @@ export function WorkspaceGroup({
                       onClickMenu({
                         appId: item.id,
                         name: item.name!,
+                        type: item.type
                       });
                       return;
                     }

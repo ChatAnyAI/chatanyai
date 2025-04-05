@@ -17,7 +17,7 @@ import { useInitialFetchRobots } from "@/hooks/use-initial-fetch-robots"
 import { NavHeader } from "@/components/nav-header";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { useSpaceDrag } from "@/hooks/use-space-api"
-import { UserRole } from "@/lib/constants/constants";
+import { AppType, UserRole } from "@/lib/constants/constants";
 import { i18n } from "i18next"
 import { useTranslation } from "react-i18next"
 
@@ -35,6 +35,7 @@ const data = (t: i18n['t']) => ({
 export type ActiveMenu = {
   appId: string;
   name: string;
+  type?:AppType;
 } | null;
 export const AppSideBarHistoryListContext = React.createContext<{
   activeMenu: ActiveMenu;

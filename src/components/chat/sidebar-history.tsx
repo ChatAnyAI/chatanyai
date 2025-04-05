@@ -49,7 +49,8 @@ import { useAppSideBarHistoryListContext } from '@/components/app-sidebar';
 import React from 'react';
 import { getFirstPathSegment } from '@/lib/utils';
 import { useSidebarDialog } from '../sidebar/sidebar-dialog';
-import { fetchRecentchannelId, useRecentchannelId } from '@/hooks/useRecentchannelId';
+import { fetchRecentchannelId, useRecentchannelId } from '@/hooks/use-recentchannelId';
+import { RouteEnum } from '@/lib/constants/constants';
 
 type GroupedChats = {
   today: RespChannel[];
@@ -217,20 +218,17 @@ export function SidebarHistory() {
       fallbackData: [],
     });
   const navigator = useNavigate();
-  const location = useLocation();
   useEffect(() => {
     if (!appId) return;
     (async () => {
       try {
         const channelId = await fetchRecentchannelId(appId);
-        setTimeout(() => { 
-          if (channelId) navigator(`${getFirstPathSegment(location.pathname)}/${appId}/c/${channelId}`);
-        }, 200)
+        if (channelId) navigator(`/${RouteEnum[activeMenu.type!]}/${appId}/c/${channelId}`);
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [appId]);
+  }, [appId, activeMenu]);
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
