@@ -14,7 +14,7 @@ i18n
       escapeValue: false // Don't escape interpolation
     },
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json' // Path to load translation files
+      loadPath: '/static/locales/{{lng}}/{{ns}}.json' // Path to load translation files
     }
   });
 

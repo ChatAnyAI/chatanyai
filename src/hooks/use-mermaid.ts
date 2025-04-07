@@ -10,7 +10,7 @@ declare global {
 let loadedMermaid: Promise<unknown> | null = null;
 export const useMermaid = () => {
   const mermaid = loadedMermaid || new Promise((resolve) => {
-    loadScript('/mermaid.min.js').then(() => {
+    loadScript('/static/mermaid.min.js').then(() => {
       window.mermaid.initialize({
         startOnLoad: false,
       })

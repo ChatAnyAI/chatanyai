@@ -205,7 +205,7 @@ export function Guide() {
   );
 
   const currentStepData = steps[currentStep];
-  const imageSrc = stepImages[currentStep] || "/placeholder.svg?height=240&width=480";
+  const imageSrc = stepImages[currentStep] || "/static/placeholder.svg?height=240&width=480";
   
   const tooltip = (
     <div 
@@ -275,19 +275,19 @@ export function Guide() {
 
 // Map step index to image path
 const stepImages: Record<number, string> = {
-  0: "/tour-images/welcome.svg", // Welcome
-  1: "/tour-images/sidebar-overview.svg", // Left Sidebar
-  2: "/tour-images/home-navigation.svg", // Home Navigation
-  3: "/tour-images/recent-files.svg", // Recent Files
-  4: "/tour-images/shared-content.svg", // Shared Content
-  5: "/tour-images/workspaces.svg", // Workspaces
-  6: "/tour-images/add-workspace.svg", // Add Workspace
-  7: "/tour-images/admin-area.svg", // Admin Area
-  8: "/tour-images/user-profile.svg", // User Profile
-  9: "/tour-images/chat-header.svg", // Chat Header
-  10: "/tour-images/model-selector.svg", // AI Model Selection
-  11: "/tour-images/chat-messages.svg", // Conversation Area
-  12: "/tour-images/chat-suggestions.svg", // Quick Suggestions
-  13: "/tour-images/chat-input.svg", // Message Input
-  14: "/tour-images/utility-buttons.svg", // Utility Tools
+  0: "/static/tour-images/welcome.svg", // Welcome
+  1: "/static/tour-images/sidebar-overview.svg", // Left Sidebar
+  2: "/static/tour-images/home-navigation.svg", // Home Navigation
+  3: "/static/tour-images/recent-files.svg", // Recent Files
+  4: "/static/tour-images/shared-content.svg", // Shared Content
+  5: "/static/tour-images/workspaces.svg", // Workspaces
+  6: "/static/tour-images/add-workspace.svg", // Add Workspace
+  7: "/static/tour-images/admin-area.svg", // Admin Area
+  8: "/static/tour-images/user-profile.svg", // User Profile
+  9: "/static/tour-images/chat-header.svg", // Chat Header
+  10: "/static/tour-images/model-selector.svg", // AI Model Selection
+  11: "/static/tour-images/chat-messages.svg", // Conversation Area
+  12: "/static/tour-images/chat-suggestions.svg", // Quick Suggestions
+  13: "/static/tour-images/chat-input.svg", // Message Input
+  14: "/static/tour-images/utility-buttons.svg", // Utility Tools
 }
