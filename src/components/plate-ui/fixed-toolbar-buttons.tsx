@@ -88,7 +88,7 @@ export function FixedToolbarButtons() {
   const showIndentation = screenWidth > 1300;
 
   return (
-    <div className = "flex w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent [&::-webkit-scrollbar-thumb]:h-[1px]" >
+    <div className = "flex w-full overflow-x-auto scrollbar-thin" >
       {!readOnly && (
       <>
         <ToolbarGroup>

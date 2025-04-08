@@ -252,7 +252,7 @@ export default function Login() {
                                         <Button
                                             variant="outline"
                                             className="w-full border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center">
-                                            <img src={'/'+service+".svg"} alt={`${capitalizeFirstLetter(service)} Icon`} className="h-5 w-5 mr-2 text-gray-700 dark:text-gray-300"/>
+                                            <img src={'/static/'+service+".svg"} alt={`${capitalizeFirstLetter(service)} Icon`} className="h-5 w-5 mr-2 text-gray-700 dark:text-gray-300"/>
                                             <a href={"/api/oauth/login/"+service} target={"_self"} className="text-gray-700 dark:text-gray-300">
                                                 <span>{capitalizeFirstLetter(service)}</span>
                                             </a>

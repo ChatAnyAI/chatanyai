@@ -59,13 +59,13 @@ export default function DocList() {
     }, [appId]);
 
     return (
-        <div className="w-60 bg-gray-50 border-r border-gray-200 overflow-y-auto">
+        <div className="w-60 border-r overflow-y-auto">
             <div className="p-4">
-                <div className="bg-white rounded-lg shadow-sm p-4 h-32 flex items-center justify-center mb-3 cursor-pointer"
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 h-32 flex items-center justify-center mb-3 cursor-pointer"
                     onClick={() => {
                         createNote();
                     }}>
-                    <PlusIcon className="w-6 h-6 text-gray-400" />
+                    <PlusIcon className="w-6 h-6 text-gray-400 dark:text-gray-300" />
                 </div>
                 {/* Document cards */}
                 <div className="space-y-3">
