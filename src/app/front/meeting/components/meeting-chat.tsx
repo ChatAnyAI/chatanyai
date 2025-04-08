@@ -36,7 +36,7 @@ export default function Chat({
   const memberIndex = useRef(0);
   const currentName = useRef("");
   const { channelId } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const {
     messages,
@@ -80,6 +80,18 @@ export default function Chat({
         allowEmptySubmit: true
       });
     },
+    onError: (err: Error) => {
+      let errmsg = err.message;
+      try {
+        errmsg = JSON.parse(err.message).msg || err.message;
+      } catch (error) {
+      }
+      toast({
+        title: "Error",
+        description: errmsg || "Failed to chat. Please check model provider setting.",
+        variant: "destructive"
+      });
+    },
   });
 
   // Generate the "Now, let {name} take the floor." prompt based on members and maxrounds
@@ -114,7 +126,7 @@ export default function Chat({
 
   useEffect(() => {
     console.log(Date.now(), "meetingData", id, meetingData, isReadonly, isStoreData);
-    if (!id || isReadonly || !isStoreData) return;
+    if (isReadonly || !isStoreData) return;
     // if (id !== channelId) {
     //   console.log(Date.now(), "id", id, channelId);
     //   navigate(`c/${id}`, { replace: true });
@@ -125,7 +137,7 @@ export default function Chat({
       "content": "You are a multi-role teamwork dialogue model. Each role has its own responsibilities and revolves around a given topic."
     }, {
       "role": "system",
-      "content":`When constructing a response, consider:\n- Your initial thoughts on the topic?\n- Anything from previous remarks that caught your interest?\n- Any relevant experience to share?\n- How do you want to move the discussion forward?\n\nGuide:\n- Keep it natural and real, like a real conversation\n- One person speaks per turn, response length 10-500 words\n- Include main ideas, questions, insights, or replies\n- Express emotion or use humor as appropriate\n- You don't need to mention your background each time unless it's relevant`
+      "content": `When constructing a response, consider:\n- Your initial thoughts on the topic?\n- Anything from previous remarks that caught your interest?\n- Any relevant experience to share?\n- How do you want to move the discussion forward?\n\nGuide:\n- Keep it natural and real, like a real conversation\n- One person speaks per turn, response length 10-500 words\n- Include main ideas, questions, insights, or replies\n- Express emotion or use humor as appropriate\n- You don't need to mention your background each time unless it's relevant`
     }];
     meetingData?.members.forEach((member, i) => {
       msgs.push({
@@ -149,22 +161,13 @@ export default function Chat({
     });
   }, [id, channelId, isReadonly])
 
-
-  if (error) {
-    console.error(error);
-    toast({
-      title: t('meeting-chat.error'),
-      description: t('meeting-chat.chat-failed'),
-      variant: "destructive"
-    });
-  }
-
-  const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
 
   const filteredMessages = useMemo(() => {
     return messages.filter((msg) => {
-      return (msg.annotations as Array<{ type: number }>)?.some(a => a.type === 2);
+      return (msg.annotations as Array<{
+        data: any; type: number
+      }>)?.some(a => a.type === 2 && a?.data?.name);
     })
   }, [messages])
 
@@ -178,7 +181,7 @@ export default function Chat({
             channelId={id}
             isLoading={isLoading}
             messages={filteredMessages}
-            setMessages={setMessages}
+            setMessages={() => { }}
             reload={reload}
             isReadonly={isReadonly}
             isBlockVisible={isBlockVisible}

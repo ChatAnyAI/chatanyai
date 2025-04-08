@@ -117,12 +117,11 @@ export default function DiscussionSetup({
       members: members.map(({ name, description }) => ({ name, description })),
     }
     console.log("startDiscussion", data, channelId)
-    sessionStorage.setItem(`meeting-${channelId}`, JSON.stringify(data));
-    if (!channelId) {
+    if (!+channelId) {
       ApiChatCreate(appId!, {
       }).then((res) => {
-        navigate(`c/${res.guid}`, { replace: true });
-        onStart(data);
+        sessionStorage.setItem(`meeting-${res.guid}`, JSON.stringify(data));
+        navigate(`c/${res.guid}`);
       })
     } else { 
       onStart(data);
