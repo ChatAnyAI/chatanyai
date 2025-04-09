@@ -51,7 +51,6 @@ export default function Chat({
     error,
   } = useChat({
     api: `/api/app/${appId}/channel/${id}/meeting`,
-    id,
     body: {
       id,
       ...meetingData,
@@ -72,13 +71,15 @@ export default function Chat({
       ) return;
       const lastMsg = getApiMessages();
       if (!lastMsg) return;
-      handleSubmit(undefined, {
-        body: {
-          messages: [lastMsg!],
-          current: currentName.current,
-        },
-        allowEmptySubmit: true
-      });
+      setTimeout(() => { 
+        handleSubmit(undefined, {
+          body: {
+            messages: [lastMsg!],
+            current: currentName.current,
+          },
+          allowEmptySubmit: true
+        });
+      }, 1500)
     },
     onError: (err: Error) => {
       let errmsg = err.message;
@@ -171,7 +172,7 @@ export default function Chat({
     })
   }, [messages])
 
-  console.log("filteredMessages", messages, filteredMessages)
+  console.log("filteredMessages", isLoading, messages, filteredMessages)
 
   return (
     <>
@@ -181,7 +182,7 @@ export default function Chat({
             channelId={id}
             isLoading={isLoading}
             messages={filteredMessages}
-            setMessages={() => { }}
+            setMessages={setMessages}
             reload={reload}
             isReadonly={isReadonly}
             isBlockVisible={isBlockVisible}

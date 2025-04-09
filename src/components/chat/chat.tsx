@@ -100,7 +100,7 @@ function Chat({
     }
   }, [channelId, id, setMessages]);
 
-  console.log('chatInfo messages', messages);
+  console.log('chatInfo messages', isLoading, messages);
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
