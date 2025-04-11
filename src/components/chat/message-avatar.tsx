@@ -11,7 +11,7 @@ export interface MessageAvatarProps {
 }
 
 export const MessageAssistantAvatar = ({ role, name }: MessageAvatarProps) => {
-  if (role !== 'assistant') return null;
+  if (role !== 'assistant' && role !== 'system') return null;
 
   return (
     <div className="flex flex-col items-center gap-1">

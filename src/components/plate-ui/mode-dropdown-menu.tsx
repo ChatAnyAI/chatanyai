@@ -42,12 +42,12 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
         <span className="hidden lg:inline">Editing</span>
       </>
     ),
-    suggestion: (
-      <>
-        <PencilLineIcon />
-        <span className="hidden lg:inline">Suggestion</span>
-      </>
-    ),
+    // suggestion: (
+    //   <>
+    //     <PencilLineIcon />
+    //     <span className="hidden lg:inline">Suggestion</span>
+    //   </>
+    // ),
     viewing: (
       <>
         <Eye />

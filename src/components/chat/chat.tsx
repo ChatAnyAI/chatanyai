@@ -13,7 +13,7 @@ import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { ApiChatCreate, RespChannel } from "@/service/api";
 import { toast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { data, useNavigate } from 'react-router-dom';
 
 function Chat({
   hiddenHeader,
@@ -79,17 +79,38 @@ function Chat({
     onFinish: () => {
       mutate('ApiChatListByAppId');
     },
-    onError: (err: Error) => { 
-      let errmsg = err.message;
+    onError: (err: Error) => {
       try {
-        errmsg = JSON.parse(err.message).msg || err.message;
+        const data = JSON.parse(err.message).data;
+        setMessages((prevMessages) => { 
+          return [...prevMessages, {
+            id: `error-${Date.now()}`,
+            content: "An error occurred",
+            role: "assistant",
+            annotations: [{
+              type: 3,
+              data
+            }]
+          }]
+        });
       } catch (error) {
+        setMessages((prevMessages) => {
+          return [...prevMessages, {
+            id: `error-${Date.now()}`,
+            content: "An error occurred",
+            role: "assistant",
+            annotations: [{
+              type: 3,
+              data: { msg: err.message}
+            }]
+          }]
+        });
       }
-      toast({
-        title: "Error",
-        description: errmsg || "Failed to chat. Please check model provider setting.",
-        variant: "destructive"
-      });
+      // toast({
+      //   title: "Error",
+      //   description: errmsg || "Failed to chat. Please check model provider setting.",
+      //   variant: "destructive"
+      // });
     },
   });
 

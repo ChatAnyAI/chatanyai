@@ -20,12 +20,12 @@ import {
 } from 'lucide-react';
 
 import { AIToolbarButton } from './ai-toolbar-button';
-import { CommentToolbarButton } from './comment-toolbar-button';
+// import { CommentToolbarButton } from './comment-toolbar-button';
 import { InlineEquationToolbarButton } from './inline-equation-toolbar-button';
 import { LinkToolbarButton } from './link-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
 import { MoreDropdownMenu } from './more-dropdown-menu';
-import { SuggestionToolbarButton } from './suggestion-toolbar-button';
+// import { SuggestionToolbarButton } from './suggestion-toolbar-button';
 import { ToolbarGroup } from './toolbar';
 import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
 
@@ -83,8 +83,8 @@ export function FloatingToolbarButtons() {
       )}
 
       <ToolbarGroup>
-        <CommentToolbarButton />
-        <SuggestionToolbarButton />
+        {/* <CommentToolbarButton /> */}
+        {/* <SuggestionToolbarButton /> */}
 
         {!readOnly && <MoreDropdownMenu />}
       </ToolbarGroup>

@@ -32,7 +32,7 @@ export function ChatList({ channelList }: ChatListProps) {
                 <span className="text-gray-600">{channel?.user?.name}</span>
                 <span className="text-gray-400 text-sm ml-2">{dayjs.unix(channel.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
               </div>
-              <ChatItemAction chat={channel} isActive={true} onDelete={() => { }} >
+              <ChatItemAction chat={channel} onDelete={() => { }} >
                 <button className="p-1 rounded-full hover:bg-gray-100">
                   <MoreVertical size={16} className="text-gray-500" />
                 </button>

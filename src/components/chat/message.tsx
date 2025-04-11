@@ -44,8 +44,18 @@ const PurePreviewMessage = ({
   const { showDivider, useSerifFont, messageFontSize, showTokens, } = settingData;
 
   const avatarInfo = useMemo(() => {
-    return (message?.annotations as Array<{ type: number; data: { name: string; avatar?: string} }>)
+    return (message?.annotations as Array<{ type: number; data: { name: string; avatar?: string } }>)
       ?.find((a) => a.type === 2)?.data;
+  }, [message.annotations]);
+
+  const errorMsg = useMemo(() => {
+    const annotation = (message?.annotations as Array<{ type: number; data: { code: number; msg: string } }>)
+      ?.find((a: any) => a.type === 3);
+    const data = typeof annotation === 'object' && annotation ? annotation.data : undefined;
+    if (data) {
+      return data;
+    }
+    return null;
   }, [message.annotations]);
 
 
@@ -68,7 +78,7 @@ const PurePreviewMessage = ({
             },
           )}
         >
-       
+
           <MessageAssistantAvatar role={message.role} name={avatarInfo?.name} />
 
           <div className="flex flex-col gap-2 w-full">
@@ -83,7 +93,7 @@ const PurePreviewMessage = ({
               </div>
             )}
 
-            {message.content && mode === 'view' && (
+            {message.content && mode === 'view' && !errorMsg && (
               <div className="flex flex-row gap-2 items-start">
                 {message.role === 'user' && !isReadonly && showEdit && (
                   <Tooltip>
@@ -102,43 +112,52 @@ const PurePreviewMessage = ({
                   </Tooltip>
                 )}
 
-                  {(message.content.startsWith('https://') || message.content.startsWith('http://')) ? (
-                      <img src={message.content} alt="" />
-                  ) : (
-                      <div
-                          className={cn('flex flex-col gap-4', {
-                              'bg-primary text-primary-foreground px-3 py-2 rounded-xl':
-                                  message.role === 'user',
-                              'font-serif': useSerifFont,
-                          })}
-                          style={{
-                              fontSize: `${messageFontSize}px`,
-                          }}
-                      >
-                          <Markdown>{message.content as string}</Markdown>
-                          {showTokens && message.content && (
-                              <div className="text-xs text-muted-foreground mt-1">
-                                  {(message.content as string).length} token
-                              </div>
-                          )}
+                {(message.content.startsWith('https://') || message.content.startsWith('http://')) ? (
+                  <img src={message.content} alt="" />
+                ) : (
+                  <div
+                    className={cn('flex flex-col gap-4', {
+                      'bg-primary text-primary-foreground px-3 py-2 rounded-xl':
+                        message.role === 'user',
+                      'font-serif': useSerifFont,
+                    })}
+                    style={{
+                      fontSize: `${messageFontSize}px`,
+                    }}
+                  >
+                    <Markdown>{message.content as string}</Markdown>
+                    {showTokens && message.content && (
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {(message.content as string).length} token
                       </div>
-                  )}
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
-              {message.content && mode === 'edit' && (
-                  <div className="flex flex-row gap-2 items-start">
-                      <div className="size-8"/>
+            {message.content && mode === 'edit' && !errorMsg && (
+              <div className="flex flex-row gap-2 items-start">
+                <div className="size-8" />
 
-                      <MessageEditor
-                          key={message.id}
-                          message={message}
-                          setMode={setMode}
-                          setMessages={setMessages}
-                          reload={reload}
-                      />
-                  </div>
-              )}
+                <MessageEditor
+                  key={message.id}
+                  message={message}
+                  setMode={setMode}
+                  setMessages={setMessages}
+                  reload={reload}
+                />
+              </div>
+            )}
+
+            {errorMsg && (
+              <div className="flex flex-row gap-2 items-start mt-2">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md w-full">
+                  <p className="text-sm font-medium">Error {errorMsg.code && `(${errorMsg.code})`}</p>
+                  <p className="text-sm">{errorMsg.msg}</p>
+                </div>
+              </div>
+            )}
 
             {!isReadonly && (
               <MessageActions

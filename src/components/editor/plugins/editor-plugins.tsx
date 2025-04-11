@@ -23,15 +23,15 @@ import { TrailingBlockPlugin } from '@udecode/plate-trailing-block';
 
 import { FixedToolbarPlugin } from '@/components/editor/plugins/fixed-toolbar-plugin';
 import { FloatingToolbarPlugin } from '@/components/editor/plugins/floating-toolbar-plugin';
-import { BlockDiscussion } from '@/components/plate-ui/block-discussion';
-import { SuggestionBelowNodes } from '@/components/plate-ui/suggestion-line-break';
+// import { BlockDiscussion } from '@/components/plate-ui/block-discussion';
+// import { SuggestionBelowNodes } from '@/components/plate-ui/suggestion-line-break';
 
 import { aiPlugins } from './ai-plugins';
 import { alignPlugin } from './align-plugin';
 import { autoformatPlugin } from './autoformat-plugin';
 import { basicNodesPlugins } from './basic-nodes-plugins';
 import { blockMenuPlugins } from './block-menu-plugins';
-import { commentsPlugin } from './comments-plugin';
+// import { commentsPlugin } from './comments-plugin';
 import { cursorOverlayPlugin } from './cursor-overlay-plugin';
 import { deletePlugins } from './delete-plugins';
 import { dndPlugins } from './dnd-plugins';
@@ -77,12 +77,12 @@ export const viewPlugins = [
   lineHeightPlugin,
 
   // Collaboration
-  commentsPlugin.configure({
-    render: { aboveNodes: BlockDiscussion as any },
-  }),
-  suggestionPlugin.configure({
-    render: { belowNodes: SuggestionBelowNodes as any },
-  }),
+  // commentsPlugin.configure({
+  //   render: { aboveNodes: BlockDiscussion as any },
+  // }),
+  // suggestionPlugin.configure({
+  //   render: { belowNodes: SuggestionBelowNodes as any },
+  // }),
 ] as const;
 
 export const editorPlugins = [

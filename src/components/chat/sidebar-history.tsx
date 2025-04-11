@@ -126,14 +126,14 @@ export const ChatItemAction = ({
       method: 'DELETE',
     });
 
-    toast.promise(deletePromise, {
-      loading: 'Deleting conversation...',
-      success: () => {
-        onDelete(chat.channelId);
-        return 'Conversation deleted successfully';
-      },
-      error: 'Failed to delete conversation',
-    });
+    // toast.promise(deletePromise, {
+    //   loading: 'Deleting conversation...',
+    //   success: () => {
+    //     onDelete(chat.channelId);
+    //     return 'Conversation deleted successfully';
+    //   },
+    //   error: 'Failed to delete conversation',
+    // });
 
     setShowDeleteDialog(false);
 

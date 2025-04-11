@@ -20,6 +20,18 @@ interface ApplicationError extends Error {
 
 
 export function getAnnotations(message: RespChatHistoryMessage) {
+    // error msg
+    try {
+        const data = JSON.parse(message.content);
+        if (data.type === 3) { 
+            return [{
+                type: 3,
+                data: data.data,
+            }];
+        }
+    } catch (error) {
+    }
+
     if (message.ragContent && message.role === 'assistant') {
         return JSON.parse(message.ragContent);
     }

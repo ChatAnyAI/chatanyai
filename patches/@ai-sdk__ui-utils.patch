@@ -1,7 +1,22 @@
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 13f8e7a8e4e2cedc32d045541e2c77efd2c611a4..8e28eb160df4d3afe38bde340f79ef07324c4d1b 100644
+index 13f8e7a8e4e2cedc32d045541e2c77efd2c611a4..dcc6e9e7cf470e80f342bce2d1be6883c5dfd875 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
+@@ -16,10 +16,10 @@ var errorStreamPart = {
+   code: "3",
+   name: "error",
+   parse: (value) => {
+-    if (typeof value !== "string") {
+-      throw new Error('"error" parts expect a string value.');
+-    }
+-    return { type: "error", value };
++    // if (typeof value !== "string") {
++    //   throw new Error('"error" parts expect a string value.');
++    // }
++     return { type: "error", value: typeof value !== "string" ? JSON.stringify(value) : value };
+   }
+ };
+ var assistantMessageStreamPart = {
 @@ -101,7 +101,7 @@ var parseAssistantStreamPart = (line) => {
    }
    const prefix = line.slice(0, firstSeparatorIndex);
@@ -11,6 +26,21 @@ index 13f8e7a8e4e2cedc32d045541e2c77efd2c611a4..8e28eb160df4d3afe38bde340f79ef07
    }
    const code = prefix;
    const textValue = line.slice(firstSeparatorIndex + 1);
+@@ -494,10 +494,10 @@ var errorStreamPart2 = {
+   code: "3",
+   name: "error",
+   parse: (value) => {
+-    if (typeof value !== "string") {
+-      throw new Error('"error" parts expect a string value.');
+-    }
+-    return { type: "error", value };
++    // if (typeof value !== "string") {
++    //   throw new Error('"error" parts expect a string value.');
++    // }
++    return { type: "error", value: typeof value !== "string" ? JSON.stringify(value) : value };
+   }
+ };
+ var messageAnnotationsStreamPart = {
 @@ -733,7 +733,7 @@ var parseDataStreamPart = (line) => {
    }
    const prefix = line.slice(0, firstSeparatorIndex);

@@ -82,16 +82,32 @@ export default function Chat({
       }, 1500)
     },
     onError: (err: Error) => {
-      let errmsg = err.message;
-      try {
-        errmsg = JSON.parse(err.message).msg || err.message;
-      } catch (error) {
-      }
-      toast({
-        title: "Error",
-        description: errmsg || "Failed to chat. Please check model provider setting.",
-        variant: "destructive"
-      });
+    try {
+           const data = JSON.parse(err.message).data;
+           setMessages((prevMessages) => { 
+             return [...prevMessages, {
+               id: `error-${Date.now()}`,
+               content: "An error occurred",
+               role: "assistant",
+               annotations: [{
+                 type: 3,
+                 data
+               }]
+             }]
+           });
+         } catch (error) {
+           setMessages((prevMessages) => {
+             return [...prevMessages, {
+               id: `error-${Date.now()}`,
+               content: "An error occurred",
+               role: "assistant",
+               annotations: [{
+                 type: 3,
+                 data: { msg: err.message}
+               }]
+             }]
+           });
+         }
     },
   });
 
