@@ -37,7 +37,7 @@ export default function Page() {
             selectedModelId={selectedModelId}
             isReadonly={false} />
         </RightSettingProvider>
-        {chats?.length! > 0 ? <ChatList channelList={chats!} onMenuOpen={() => { }} /> : <EmptyState />}
+        {chats?.length! > 0 ? <ChatList channelList={chats!} /> : <EmptyState />}
       </div>
       {/* 
       {showMenu && menuPosition && (

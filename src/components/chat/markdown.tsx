@@ -10,16 +10,17 @@ const components: Partial<Components> = {
   },
   pre: ({ children }) => {
     // @ts-ignore
-    return <CodeBlock inline={false} >{children?.props?.children}</CodeBlock>;
+    const { children: cChidren, ...props } = children?.props || {};
+    return <CodeBlock inline={false} {...props}>{cChidren}</CodeBlock>;
   },
-  ol: ({node, children, ...props }) => {
+  ol: ({ node, children, ...props }) => {
     return (
       <ol className="list-decimal list-outside ml-4" {...props}>
         {children}
       </ol>
     );
   },
-  li: ({node, children, ...props }) => {
+  li: ({ node, children, ...props }) => {
     return (
       <li className="py-1" {...props}>
         {children}

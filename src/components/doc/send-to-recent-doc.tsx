@@ -40,7 +40,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
                 content: value,
             });
             toast({
-                title: 'Create Success',
+                title: 'Send to Docs Success',
                 variant: 'default'
             });
         } catch (error) {

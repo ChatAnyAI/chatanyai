@@ -41,10 +41,10 @@ export function NavSecondary() {
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickOutside, true);
     
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside, true);
     };
   }, [isVisible, toggleMenu]);
 
@@ -110,31 +110,8 @@ export function NavSecondary() {
                     animation: "breathingBg 2s ease-in-out infinite",
                     opacity: 0.2
                   }}></span>
-                  <Plus className="h-8 w-8 stroke-3 relative z-10" style={{
-                    animation: "breathing 2s ease-in-out infinite"
-                  }} />
-                  <style>{`
-                    @keyframes breathing {
-                      0%, 100% {
-                        opacity: 0.6;
-                        transform: scale(0.95);
-                      }
-                      50% {
-                        opacity: 1;
-                        transform: scale(1.05);
-                      }
-                    }
-                    @keyframes breathingBg {
-                      0%, 100% {
-                        background-color: transparent;
-                        opacity: 0;
-                      }
-                      50% {
-                        background-color: #3b82f6;
-                        opacity: 0.3;
-                      }
-                    }
-                  `}</style>
+                  <Plus className="h-8 w-8 stroke-3 relative z-10" />
+                
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

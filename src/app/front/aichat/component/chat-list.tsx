@@ -2,21 +2,18 @@
 
 import type React from "react"
 import { MoreVertical, LockIcon } from "lucide-react"
-import {AvatarUser, RespChannel} from "@/service/api"
+import { AvatarUser, RespChannel } from "@/service/api"
 import dayjs from "dayjs"
 import { Link } from "react-router-dom"
-import {UserAvatar} from "@/components/user-avatar";
+import { UserAvatar } from "@/components/user-avatar";
+import { ChatItemAction } from "@/components/chat/sidebar-history"
 
 interface ChatListProps {
   channelList: RespChannel[]
-  onMenuOpen: (channelId: string, x: number, y: number) => void
+  // onMenuOpen: (channelId: string, x: number, y: number) => void
 }
 
-export function ChatList({ channelList, onMenuOpen }: ChatListProps) {
-  const handleMenuClick = (e: React.MouseEvent, channelId: string) => {
-    e.preventDefault()
-    onMenuOpen(channelId, e.clientX, e.clientY)
-  }
+export function ChatList({ channelList }: ChatListProps) {
 
   return (
     <div className="flex-1 overflow-auto p-4">
@@ -35,9 +32,11 @@ export function ChatList({ channelList, onMenuOpen }: ChatListProps) {
                 <span className="text-gray-600">{channel?.user?.name}</span>
                 <span className="text-gray-400 text-sm ml-2">{dayjs.unix(channel.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
               </div>
-              <button onClick={(e) => handleMenuClick(e, channel.channelId)} className="p-1 rounded-full hover:bg-gray-100">
-                <MoreVertical size={16} className="text-gray-500" />
-              </button>
+              <ChatItemAction chat={channel} isActive={true} onDelete={() => { }} >
+                <button className="p-1 rounded-full hover:bg-gray-100">
+                  <MoreVertical size={16} className="text-gray-500" />
+                </button>
+              </ChatItemAction>
             </div>
           </div>
         </Link>

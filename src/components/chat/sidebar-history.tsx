@@ -4,10 +4,8 @@ import { isToday, isYesterday, subMonths, subWeeks } from 'date-fns';
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams, useLocation, useNavigate as useRouter } from 'react-router-dom';
 import { memo, useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import useSWR from 'swr';
 import { useGlobalStore } from '@/store/globalStore';
-
 
 import {
   MoreHorizontalIcon,
@@ -75,13 +73,74 @@ const PureChatItem = ({
   const { activeMenu } = useAppSideBarHistoryListContext();
   const appId = activeMenu?.appId;
   const location = useLocation();
-  const { toast } = useToast();
-  const [title, setTitle] = useState(chat.name);
-  const [isUpdating, setIsUpdating] = useState(false);
   const {
     setRecentchannelId
   } = useRecentchannelId(appId!);
 
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild isActive={isActive}>
+        <Link
+          to={`${getFirstPathSegment(location.pathname)}/${appId}/c/${chat.channelId}`}
+          onClick={() => {
+            setRecentchannelId(chat.channelId);
+            setOpenMobile(false);
+            handleClose();
+          }}
+        >
+          <span>{chat.name || 'chat'}</span>
+        </Link>
+
+      </SidebarMenuButton>
+        <ChatItemAction chat={chat} onDelete={onDelete} >
+          <SidebarMenuAction
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5"
+            showOnHover={!isActive}
+          >
+            <MoreHorizontalIcon />
+            <span className="sr-only">More</span>
+          </SidebarMenuAction>
+        </ChatItemAction>
+    </SidebarMenuItem>
+  );
+};
+
+export const ChatItemAction = ({
+  chat,
+  onDelete,
+  children,
+}: {
+  chat: RespChannel;
+  onDelete: (channelId: string) => void;
+  children: React.ReactNode;
+}) => {
+  const { toast } = useToast();
+  const [title, setTitle] = useState(chat.name);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const router = useRouter();
+  const { channelId } = useParams();
+
+  const handleDelete = async () => {
+    const deletePromise = fetch(`/api/channel/${chat.channelId}`, {
+      method: 'DELETE',
+    });
+
+    toast.promise(deletePromise, {
+      loading: 'Deleting conversation...',
+      success: () => {
+        onDelete(chat.channelId);
+        return 'Conversation deleted successfully';
+      },
+      error: 'Failed to delete conversation',
+    });
+
+    setShowDeleteDialog(false);
+
+    if (chat.channelId === channelId) {
+      router('/');
+    }
+  };
 
   const handleUpdateChat = async () => {
     try {
@@ -106,62 +165,47 @@ const PureChatItem = ({
   const [showUpdatePopover, setShowUpdatePopover] = useState(false);
 
   return (
-    <SidebarMenuItem>
-      <SidebarMenuButton asChild isActive={isActive}>
-        <Link
-          to={`${getFirstPathSegment(location.pathname)}/${appId}/c/${chat.channelId}`}
-          onClick={() => {
-            setRecentchannelId(chat.channelId);
-            setOpenMobile(false);
-            handleClose();
-          }}
+    <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+      <DropdownMenu modal={true}>
+        <DropdownMenuTrigger asChild>
+            {children}
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent side="bottom" align="end">
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onSelect={() => {
+              setShowUpdatePopover(true)
+            }}
+          >
+            <EditIcon />
+            <span>Update</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
+            onSelect={() => setShowDeleteDialog(true)}
+          >
+            <TrashIcon />
+            <span>Delete</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Popover open={showUpdatePopover} modal={true}>
+        <PopoverTrigger asChild>
+          <div style={{ display: 'none' }} />
+        </PopoverTrigger>
+        <PopoverContent
+          className="fixed inset-0 w-[100vw] h-[100vh] bg-black/50 flex items-center justify-center"
+          side="bottom"
+          align="end"
+          sideOffset={5}
+          alignOffset={-30}
         >
-          <span>{chat.name || 'chat'}</span>
-        </Link>
-      </SidebarMenuButton>
-
-      <div className="flex items-center gap-2">
-        <DropdownMenu modal={true}>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuAction
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5"
-              showOnHover={!isActive}
-            >
-              <MoreHorizontalIcon />
-              <span className="sr-only">More</span>
-            </SidebarMenuAction>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent side="bottom" align="end" onMouseDown={(e) => {
-            e.stopPropagation()
-          }}>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onSelect={() => {
-                setShowUpdatePopover(true)
-              }}
-            >
-              <EditIcon />
-              <span>Update</span>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="cursor-pointer text-destructive focus:bg-destructive/15 focus:text-destructive dark:text-red-500"
-              onSelect={() => onDelete(chat.channelId)}
-            >
-              <TrashIcon />
-              <span>Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <Popover open={showUpdatePopover} modal={true}>
-          <PopoverTrigger asChild>
-            <div style={{ display: 'none' }} />
-          </PopoverTrigger>
-          <PopoverContent className="ml-80 w-80" side="bottom" align="end"
-            sideOffset={5} alignOffset={-30} onMouseDown={e => e.stopPropagation()}>
-            <div className="grid gap-4">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-[90vw] max-w-md">
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Edit Chat</h3>
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
                 <Input
@@ -171,7 +215,7 @@ const PureChatItem = ({
                   placeholder="Enter chat title"
                 />
               </div>
-              <div className="flex gap-2 justify-end">
+              <div className="flex gap-2 justify-end pt-4">
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -189,12 +233,30 @@ const PureChatItem = ({
                 </Button>
               </div>
             </div>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </SidebarMenuItem>
+          </div>
+        </PopoverContent>
+      </Popover>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your
+              chat and remove it from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
-};
+}
 
 export const ChatItem = memo(PureChatItem, (prevProps, nextProps) => {
   if (prevProps.isActive !== nextProps.isActive) return false;
@@ -218,6 +280,7 @@ export function SidebarHistory() {
       fallbackData: [],
     });
   const navigator = useNavigate();
+
   useEffect(() => {
     if (!appId) return;
     (async () => {
@@ -230,29 +293,9 @@ export function SidebarHistory() {
     })();
   }, [appId, activeMenu]);
 
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const router = useRouter();
-  const handleDelete = async () => {
-    const deletePromise = fetch(`/api/channel/${deleteId}`, {
-      method: 'DELETE',
-    });
-
-    toast.promise(deletePromise, {
-      loading: 'Deleting conversation...',
-      success: () => {
-        mutate();
-        handleClose();
-        return 'Conversation deleted successfully';
-      },
-      error: 'Failed to delete conversation',
-    });
-
-    setShowDeleteDialog(false);
-
-    if (deleteId === channelId) {
-      router('/');
-    }
+  const handleDeleteCallback = () => {
+    mutate();
+    handleClose();
   };
 
   if (!user) {
@@ -363,10 +406,7 @@ export function SidebarHistory() {
                             key={chat.channelId}
                             chat={chat}
                             isActive={chat.channelId === channelId}
-                            onDelete={(channelId) => {
-                              setDeleteId(channelId);
-                              setShowDeleteDialog(true);
-                            }}
+                            onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
                         ))}
@@ -383,10 +423,7 @@ export function SidebarHistory() {
                             key={chat.channelId}
                             chat={chat}
                             isActive={chat.channelId === channelId}
-                            onDelete={(channelId) => {
-                              setDeleteId(channelId);
-                              setShowDeleteDialog(true);
-                            }}
+                            onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
                         ))}
@@ -403,10 +440,7 @@ export function SidebarHistory() {
                             key={chat.channelId}
                             chat={chat}
                             isActive={chat.channelId === channelId}
-                            onDelete={(channelId) => {
-                              setDeleteId(channelId);
-                              setShowDeleteDialog(true);
-                            }}
+                            onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
                         ))}
@@ -423,10 +457,7 @@ export function SidebarHistory() {
                             key={chat.channelId}
                             chat={chat}
                             isActive={chat.channelId === channelId}
-                            onDelete={(channelId) => {
-                              setDeleteId(channelId);
-                              setShowDeleteDialog(true);
-                            }}
+                            onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
                         ))}
@@ -443,10 +474,7 @@ export function SidebarHistory() {
                             key={chat.channelId}
                             chat={chat}
                             isActive={chat.channelId === channelId}
-                            onDelete={(channelId) => {
-                              setDeleteId(channelId);
-                              setShowDeleteDialog(true);
-                            }}
+                            onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
                         ))}
@@ -458,23 +486,6 @@ export function SidebarHistory() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              chat and remove it from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Continue
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 }

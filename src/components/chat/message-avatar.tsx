@@ -3,6 +3,7 @@
 import { SparklesIcon } from './icons';
 import { MyUserAvatar, UserAvatar as UAvatar } from "@/components/user-avatar";
 import {AvatarUser, UserProfile} from '@/service/api';
+import { Logo } from '../team-switcher';
 
 export interface MessageAvatarProps {
   role: string;
@@ -18,8 +19,9 @@ export const MessageAssistantAvatar = ({ role, name }: MessageAvatarProps) => {
         {name ? (
           <span className="text-sm font-medium">{name.charAt(0)}</span>
         ) : (
-          <div className="translate-y-px">
-            <SparklesIcon size={14} />
+            <div className="translate-y-px">
+              {/* <SparklesIcon size={14} /> */}
+              <Logo />
           </div>
         )}
       </div>
