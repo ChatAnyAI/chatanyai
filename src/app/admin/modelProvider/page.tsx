@@ -15,7 +15,7 @@ export default function SettingsPage() {
     const [modelProvider,setModelProvider] = useState<string>("siliconflow");
     // const [isLoading, setIsLoading] = useState(false)
 
-    const { data: providerList, error } = useSWR<RespModelProviderInfo[]>('ApiAdminModelProviderList', ApiAdminModelProviderList);
+    const { data: providerList, error, mutate } = useSWR<RespModelProviderInfo[]>('ApiAdminModelProviderList', ApiAdminModelProviderList);
     if (error) return <div>{t("modelProvider-page.Failed to load providerList")}</div>;
     if (!providerList) return <div>{t("modelProvider-page.Loading")}</div>;
 
@@ -24,6 +24,7 @@ export default function SettingsPage() {
         // setIsLoading(true)
         try {
             await ApiAdminProviderUpdate(providerId, data)
+            mutate()
             toast({
                 title: t("modelProvider-page.Provider Update successfully"),
                 description: t("modelProvider-page.Update provider"),
@@ -48,7 +49,6 @@ export default function SettingsPage() {
             <ProviderList modelProvider={modelProvider} providerList={providerList} setModelProvider={setModelProvider} />
             <ConfigPanel
                 onSubmit={handleUpdateApp}
-                modelProvider={modelProvider}
                 provider={providerList.find((item) => modelProvider === item.name)}
             />
         </>

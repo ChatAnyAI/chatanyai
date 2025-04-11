@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {ExternalLink, Eye, EyeOff, Settings, Trash2} from "lucide-react"
+import {ExternalLink, Eye, EyeOff, Trash2} from "lucide-react"
 import {RespModelProviderInfo}from "@/service/admin";
 import {useForm}from "react-hook-form";
 import {zodResolver}from "@hookform/resolvers/zod";
@@ -13,8 +13,7 @@ import { useTranslation } from "react-i18next";
 
 type ProviderListProps = {
     onSubmit: (providerId: number, data: ProviderFormValues) => void
-    modelProvider: string
-    provider: RespModelProviderInfo|undefined
+    provider: RespModelProviderInfo | undefined
 }
 
 // define form validation schema
@@ -43,7 +42,7 @@ const providerFormSchema = z.object({
 
 export type ProviderFormValues = z.infer<typeof providerFormSchema>
 
-export function ConfigPanel({ provider,onSubmit, modelProvider }: ProviderListProps) {
+export function ConfigPanel({ provider,onSubmit }: ProviderListProps) {
     const { t } = useTranslation();
     const [isActive, setIsActive] = useState(false)
     const [showApiKey, setShowApiKey] = useState(false)
