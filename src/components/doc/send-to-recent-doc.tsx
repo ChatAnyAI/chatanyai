@@ -39,6 +39,10 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
             ApiDocAppendContent(appId,channelId,{
                 content: value,
             });
+            toast({
+                title: 'Create Success',
+                variant: 'default'
+            });
         } catch (error) {
             toast({
                 title: 'ApiDocContent Fail',

@@ -39,17 +39,17 @@ export function ModelSelector({
         data-name="model-selector"
         asChild
         className={cn(
-          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+          'w-fit data-[state=open]:bg-transparent data-[state=open]:text-accent-foreground',
           className,
         )}
       >
-        <Button variant="outline" className="md:px-2 md:h-[34px]">
+        <Button variant="outline" className="md:px-2 md:h-[34px] bg-transparent">
             <Avatar className="h-5 w-5">
                 <AvatarImage src={selectedModel.icon} alt={selectedModel.label}/>
                 <AvatarFallback className="bg-muted">{selectedModel.label.charAt(0)}</AvatarFallback>
             </Avatar>
             <span className="font-medium">{selectedModel.label}</span>
-          <ChevronDownIcon />
+            <ChevronDownIcon />
         </Button>
       </DropdownMenuTrigger>}
       <DropdownMenuContent align="start" className="min-w-[300px]">

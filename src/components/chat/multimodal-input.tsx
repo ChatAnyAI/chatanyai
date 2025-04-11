@@ -28,6 +28,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { SuggestedActions } from './suggested-actions';
 import equal from 'fast-deep-equal';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ModelSelector } from './model-selector';
 
 function PureMultimodalInput({
   channelId,
@@ -261,7 +262,8 @@ function PureMultimodalInput({
       />
 
       <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start">
-        <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} />
+        {/* <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} /> */}
+        <ModelSelector />
       </div>
 
       <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">

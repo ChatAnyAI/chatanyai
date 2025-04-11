@@ -482,8 +482,12 @@ export interface RespChatHistoryMessage {
   user: User;
 }
 
-export const ApiChatHistory = (channelId: string) => {
-  return get<RespChatHistoryMessage[]>(`/api/channel/${channelId}/history`);
+export const ApiChatHistory = (channelId: string, data?: Pagination) => {
+  return get<RespChatHistoryMessage[]>(`/api/channel/${channelId}/history`, {
+    params: {
+      pagination: JSON.stringify(data)
+    }
+  });
 }
 
 export interface UpdateChatInfoRequest {

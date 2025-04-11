@@ -13,7 +13,7 @@ export default function Page() {
   // const channelId = generateUUID();
   const selectedModelId = useChatStore(state => state.modelSelectedId)
   const { appId } = useParams();
-  const { data: chats } = useSWR([`ApiChatHistory`, appId], () => ApiChannelListByAppId(appId!));
+  const { data: chats } = useSWR([`ApiChannelListByAppId`, appId], () => ApiChannelListByAppId(appId!));
   const currentAppInfo = useChatStore(state => state.currentAppInfo);
 
   return (
