@@ -30,6 +30,7 @@ import equal from 'fast-deep-equal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ModelSelector } from './model-selector';
 import {Settings2} from "lucide-react";
+import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 
 function PureMultimodalInput({
   channelId,
@@ -119,6 +120,7 @@ function PureMultimodalInput({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
   const navigate = useNavigate();
   const param = useParams();
+  const { showSettings, setShowSettings } = useRightSetting();
 
   const submitForm = useCallback(() => {
     if (channelId !== param.channelId) {
@@ -262,18 +264,21 @@ function PureMultimodalInput({
               }}
           />
 
-          <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start">
+          <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start gap-0.5">
               {/* <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} /> */}
-              <ModelSelector/>
-              <Button
-                  className={ 'w-fit data-[state=open]:bg-transparent data-[state=open]:text-accent-foreground'}
+              <ModelSelector />
+                <Button
+                  className={'w-fit cursor-pointer bg-transparent'}
                   variant="outline"
                   size="sm"
-                  // onClick={() => setShowSettings(!showSettings)}
-                  // className={cn("flex-end", showSettings ? "text-primary" : "text-muted-foreground")}
-              >
+                  onClick={(e) => { 
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowSettings(!showSettings)
+                  }}
+                >
                   <Settings2 />
-              </Button>
+                </Button>
           </div>
           <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
               {isLoading ? (

@@ -71,6 +71,7 @@ const PurePreviewMessage = ({
         data-role={message.role}
       >
         <div
+          id={`anchorId=${message.id}`}
           className={cn(
             'flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl',
             {
