@@ -59,6 +59,16 @@ const PurePreviewMessage = ({
     return null;
   }, [message.annotations]);
 
+  const anchorId = useMemo(() => {
+    const annotation = (message?.annotations as Array<{ type: number; data: number }>)
+      ?.find((a: any) => a.type === 4);
+    const data = typeof annotation === 'object' && annotation ? annotation.data : undefined;
+    if (data) {
+      return data;
+    }
+    return message.id;
+  }, [message.annotations, message.id]);
+
 
   return (
     <AnimatePresence>
@@ -71,7 +81,7 @@ const PurePreviewMessage = ({
         data-role={message.role}
       >
         <div
-          id={`anchorId=${message.id}`}
+          id={`anchorId=${anchorId}`}
           className={cn(
             'flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl',
             {
