@@ -1,6 +1,7 @@
 'use client';
 
 import { toast } from '@/hooks/use-toast';
+import { useChatStore } from '@/store/chatStore';
 import { faker } from '@faker-js/faker';
 import { useChat as useBaseChat } from 'ai/react';
 
@@ -11,13 +12,14 @@ export const useChat = () => {
   // const { keys, model } = useSettings();
 
   const { channelId: id, appId } = useParams();
+  const modelId = useChatStore((state) => state.modelSelectedId);
 
   return useBaseChat({
     id: 'editor',
     api: `/api/app/${appId}/channel/${id}`,
     body: {
       id,
-      modelId: 'openai-gpt-4o-mini',
+      modelId,
       options: {
         "frequency_penalty": 0.2,
         "max_tokens": 2048,
@@ -37,10 +39,11 @@ export const useChat = () => {
     fetch: async (input, init) => {
       if (!init) return fetch(input);
       const { system, ...rest } = JSON.parse(init?.body as string);
-      rest.messages = [{
-        role: 'system',
-        text: system,
-      }].concat(rest.messages);
+      // [{
+      // role: 'system',
+      //   text: system,
+      // }]
+      rest.messages =  [].concat(rest.messages);
       init.body = JSON.stringify(rest);
       const res = await fetch(input, init);
 
