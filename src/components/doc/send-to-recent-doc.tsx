@@ -14,13 +14,14 @@ import {
 
 interface SendToRecentDocProps {
     isOpen: boolean;
-    content: string;
-    setContent:  (value: "") => void;
+    referContent: string;
+    referChannelId: string;
+    referAnchorId: string;
     setIsOpen: (value: boolean) => void;
 }
 
 export function SendToRecentDoc(props: SendToRecentDocProps) {
-    const {isOpen, setIsOpen,content,setContent} = props;
+    const {isOpen, setIsOpen,referContent} = props;
     const {t} = useTranslation();
     const {data: documents} = useSWR([`ApiDocRecent`], () => ApiDocRecent());
     const handleSendToDocument = (appId: string, channelId: string) => {
@@ -34,10 +35,13 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
             ],
         });
 
-        const value = editor.api.markdown.deserialize(content);
+        const value = editor.api.markdown.deserialize(referContent);
         try {
+            // js number to string
             ApiDocAppendContent(appId,channelId,{
-                content: value,
+                referContent: value,
+                referChannelId: props.referChannelId,
+                referAnchorId: props.referAnchorId.toString(),
             });
             toast({
                 title: 'Send to Docs Success',
@@ -50,13 +54,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
                 variant: 'destructive'
             });
         }
-
-        console.log(value);
-
-        // console.log(`Sending content to document content with ID: ${docId} ${content}`)
         setIsOpen(false)
-        setContent("")
-        // You could show a success message here
     }
     return (
         <>
@@ -79,7 +77,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
                                     <div className="flex-1">
                                         <div className="font-medium text-base">{doc.name}</div>
                                         <div className="text-sm text-muted-foreground mt-0.5">
-                                            Last Modified: {doc.updatedAt}
+                                            Last Modified: {new Date(doc.updatedAt * 1000).toLocaleString()}
                                         </div>
                                     </div>
                                     <Button size="sm" variant="ghost"

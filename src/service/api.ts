@@ -656,7 +656,13 @@ export const ApiDocContent = (appId: string,channelId: string,req:{content: stri
     return put<void>(`/api/app/${appId}/doc/${channelId}/content`,req);
 }
 
-export const ApiDocAppendContent = (appId: string,channelId: string,req:{content: string}) => {
+export interface ApiDocAppendContentReq {
+    referContent: string;
+    referChannelId: string;
+    referAnchorId: string;
+}
+
+export const ApiDocAppendContent = (appId: string,channelId: string,req: ApiDocAppendContentReq) => {
     return put<void>(`/api/app/${appId}/doc/${channelId}/appendContent`,req);
 }
 

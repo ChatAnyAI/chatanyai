@@ -162,6 +162,7 @@ const PurePreviewMessage = ({
             {!isReadonly && (
               <MessageActions
                 key={`action-${message.id}`}
+                channelId={channelId}
                 message={message}
                 isLoading={isLoading}
               />

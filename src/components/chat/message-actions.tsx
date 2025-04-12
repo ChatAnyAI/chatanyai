@@ -18,33 +18,20 @@ import { SendToRecentDoc } from "@/components/doc/send-to-recent-doc";
 
 export function PureMessageActions({
   message,
+  channelId,
   isLoading,
 }: {
+  channelId: string;
   message: Message;
   isLoading: boolean;
 }) {
   const [_, copyToClipboard] = useCopyToClipboard();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false)
-  const [content, setContent] = useState("")
-  console.log('send to note', content);
   if (isLoading) return null;
   if (message.role === 'user') return null;
   if (message.toolInvocations && message.toolInvocations.length > 0)
     return null;
-
-
-  // const recentDoc = async () => {
-  //     try {
-  //         const resp = await ApiDocRecent();
-  //     } catch (error) {
-  //         toast({
-  //             title: t('note-doc-list.Create Fail'),
-  //             description: t('note-doc-list.Create Fail'),
-  //             variant: 'destructive'
-  //         });
-  //     }
-  // }
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -75,7 +62,7 @@ export function PureMessageActions({
               variant="outline"
               onClick={async () => {
                 setIsOpen(true)
-                setContent(message.content as string)
+                // setContent(message.content as string)
 
                 // const messageId = getMessageIdFromAnnotations(message);
                 //
@@ -179,8 +166,9 @@ export function PureMessageActions({
         {/*</Tooltip> */}
       </div>
       <SendToRecentDoc
-        content={content}
-        setContent={setContent}
+        referChannelId={channelId}
+        referAnchorId={message.id}
+        referContent={message.content}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
       />

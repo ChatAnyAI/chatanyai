@@ -252,7 +252,7 @@
   "pnpm": {
     "patchedDependencies": {
       "@ai-sdk/ui-utils": "patches/@ai-sdk__ui-utils.patch",
-      "@ai-sdk/react": "/Users/chuanliang/workspace/business/chatanyai/patches/@ai-sdk__react.patch"
+      "@ai-sdk/react": "patches/@ai-sdk__react.patch"
     }
   }
 }
