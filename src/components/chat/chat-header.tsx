@@ -106,14 +106,14 @@ function PureChatHeader({
                         channelId={channelId}
                     />
                 )}
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowSettings(!showSettings)}
-                    className={cn("flex-end", showSettings ? "text-primary" : "text-muted-foreground")}
-                >
-                    <Settings2 className="h-4 w-4" />
-                </Button>
+                {/*<Button*/}
+                {/*    variant="outline"*/}
+                {/*    size="sm"*/}
+                {/*    onClick={() => setShowSettings(!showSettings)}*/}
+                {/*    className={cn("flex-end", showSettings ? "text-primary" : "text-muted-foreground")}*/}
+                {/*>*/}
+                {/*    <Settings2 className="h-4 w-4" />*/}
+                {/*</Button>*/}
             </div>
         </header>
     );

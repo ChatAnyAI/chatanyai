@@ -31,10 +31,10 @@ export function VisibilitySelector({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className={cn(
-          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+          'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground cursor',
           className,
         )}>
-          <Button variant="outline" className="hidden md:flex md:px-2 md:h-[34px]">
+          <Button variant="outline" className="hidden md:flex md:px-2 md:h-[34px] cursor">
               {(() => {
                   switch (visibility) {
                       case AppVisibility.Private:

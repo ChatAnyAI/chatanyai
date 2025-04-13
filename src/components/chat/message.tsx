@@ -4,17 +4,12 @@ import type { ChatRequestOptions, Message } from 'ai';
 import cx from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo, useMemo, useState } from 'react';
-
-import { PencilEditIcon } from './icons';
 import { MessageAssistantAvatar, UserAvatar } from './message-avatar';
 import { Markdown } from './markdown';
 import { MessageActions } from './message-actions';
 import { PreviewAttachment } from './preview-attachment';
 import equal from 'fast-deep-equal';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { MessageEditor } from './message-editor';
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { SparklesIcon } from 'lucide-react';
 import { ErrorMessage } from './error-message';
@@ -26,7 +21,6 @@ const PurePreviewMessage = ({
   setMessages,
   reload,
   isReadonly,
-  showEdit,
 }: {
   channelId: string;
   message: Message;
@@ -38,7 +32,6 @@ const PurePreviewMessage = ({
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
-  showEdit: boolean;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
   const { settingData } = useRightSetting();
@@ -90,9 +83,7 @@ const PurePreviewMessage = ({
             },
           )}
         >
-
           <MessageAssistantAvatar role={message.role} name={avatarInfo?.name} />
-
           <div className="flex flex-col gap-2 w-full">
             {message.experimental_attachments && (
               <div className="flex flex-row justify-end gap-2">
@@ -107,23 +98,6 @@ const PurePreviewMessage = ({
 
             {message.content && mode === 'view' && !errorMsg && (
               <div className="flex flex-row gap-2 items-start">
-                {message.role === 'user' && !isReadonly && showEdit && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="px-2 h-fit rounded-full text-muted-foreground opacity-0 group-hover/message:opacity-100"
-                        onClick={() => {
-                          setMode('edit');
-                        }}
-                      >
-                        <PencilEditIcon />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Edit message</TooltipContent>
-                  </Tooltip>
-                )}
-
                 {(message.content.startsWith('https://') || message.content.startsWith('http://')) ? (
                   <img src={message.content} alt="" />
                 ) : (
@@ -147,23 +121,7 @@ const PurePreviewMessage = ({
                 )}
               </div>
             )}
-
-            {message.content && mode === 'edit' && !errorMsg && (
-              <div className="flex flex-row gap-2 items-start">
-                <div className="size-8" />
-
-                <MessageEditor
-                  key={message.id}
-                  message={message}
-                  setMode={setMode}
-                  setMessages={setMessages}
-                  reload={reload}
-                />
-              </div>
-            )}
-
             {errorMsg && <ErrorMessage code={errorMsg.code} msg={errorMsg.msg} />}
-
             {!isReadonly && (
               <MessageActions
                 key={`action-${message.id}`}

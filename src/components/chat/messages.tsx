@@ -40,7 +40,6 @@ function PureMessages({
 
       {messages.map((message, index) => (
         <PreviewMessage
-          showEdit={message.role === 'user' && index === messages.length - 2}
           key={message.id}
           channelId={channelId}
           message={message}
