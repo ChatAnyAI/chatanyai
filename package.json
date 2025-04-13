@@ -139,6 +139,7 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
+    "jotai-x": "^2.3.2",
     "js-cookie": "^3.0.5",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.454.0",
@@ -169,6 +170,7 @@
     "react-hook-form": "^7.54.1",
     "react-i18next": "^15.4.1",
     "react-joyride": "^2.9.3",
+    "react-lazy-load-image-component": "^1.6.3",
     "react-lite-youtube-embed": "^2.4.0",
     "react-markdown": "^9.0.3",
     "react-pdf": "^9.2.1",
@@ -180,6 +182,8 @@
     "react-tweet": "^3.2.2",
     "recharts": "2.15.0",
     "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
+    "remark-mdx": "^3.1.0",
     "resolve": "^1.20.0",
     "resolve-url-loader": "^4.0.0",
     "sass-loader": "^12.3.0",
@@ -252,7 +256,8 @@
   "pnpm": {
     "patchedDependencies": {
       "@ai-sdk/ui-utils": "patches/@ai-sdk__ui-utils.patch",
-      "@ai-sdk/react": "patches/@ai-sdk__react.patch"
+      "@ai-sdk/react": "patches/@ai-sdk__react.patch",
+      "@udecode/utils": "patches/@udecode__utils.patch"
     }
   }
 }

@@ -1,0 +1,19 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 273f6b3fe910f73dad6ac9fbead4e57271a0c863..7436dbc41d8e08562e6f798ec9a95fefbff77b9c 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -88,7 +88,13 @@ var sanitizeUrl = (url, { allowedSchemes, permitInvalid = false }) => {
+   if (!url) return null;
+   let parsedUrl = null;
+   try {
+-    parsedUrl = new URL(url);
++    if (url.startsWith('/') && typeof window !== 'undefined') {
++      // If URL starts with '/' and we're in browser environment,
++      // prepend with current origin
++      parsedUrl = new URL(url, window.location.origin);
++    } else {
++      parsedUrl = new URL(url);
++    }
+   } catch {
+     return permitInvalid ? url : null;
+   }

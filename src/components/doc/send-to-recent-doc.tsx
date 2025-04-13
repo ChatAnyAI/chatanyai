@@ -38,7 +38,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
         const value = editor.api.markdown.deserialize(referContent);
         try {
             // js number to string
-            ApiDocAppendContent(appId,channelId,{
+            ApiDocAppendContent(appId, channelId, {
                 referContent: value,
                 referChannelId: props.referChannelId,
                 referAnchorId: props.referAnchorId.toString(),

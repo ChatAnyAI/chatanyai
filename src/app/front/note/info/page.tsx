@@ -1,5 +1,5 @@
 import { RightSettingProvider } from "@/app/front/aichat/component/rightSetting";
-import { CoreEditor } from "@/components/editor/core-editor";
+import { CoreEditor } from "@/components/editor-pro/components/editor/core-editor";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import {
