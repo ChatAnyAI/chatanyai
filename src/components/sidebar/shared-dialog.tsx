@@ -34,7 +34,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
     const handleItemClick = (item: any) => {
         if (item.chat?.id) {
             const route = RouteEnum[item.chat.type as AppType] || 's';
-            router(`/${route}/${item.chat.appId}/c/${item.chat.id}`);
+            router(`/${route}/${item.chat.appId}/c/${item.chat.guid}`);
             onClose();
         } else if (item.app) {
             const route = RouteEnum[item.app.type as AppType] || 's';

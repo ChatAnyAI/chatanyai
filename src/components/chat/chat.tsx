@@ -172,7 +172,6 @@ function Chat({
             <ChatHeader
               channelId={channelId!}
               chatInfo={chatInfo}
-              isReadonly={isReadonly}
               isNew={isNew}
             />
         }

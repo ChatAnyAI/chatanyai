@@ -43,8 +43,7 @@ export default function Page() {
                     !chatResp?.pdfLink! ? null :
                         <ChatHeader
                             chatInfo={chatResp!}
-                            channelId={chatResp?.channelId!}
-                            isReadonly={user.id !== chatResp?.uid}
+                            channelId={chatResp?.guid}
                         />
                 }
                 <div className="flex justify-center flex-1 overflow-hidden">

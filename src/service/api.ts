@@ -456,15 +456,20 @@ export interface RespChannelUser {
     avatar: string;
 }
 
+export interface MyPermission {
+    permissionType: PermissionType;
+}
 
 export interface RespChannel {
-  channelId: string;
+  guid: string;
   name: string;
   createdAt: number;
+  updatedAt: number;
   uid: number;
   visibility: AppVisibility;
   permission: PermissionType;
   user: RespChannelUser;
+  myPermission: MyPermission;
   pdfLink: string;
 }
 export const ApiGetChat = (channelId: string) => {

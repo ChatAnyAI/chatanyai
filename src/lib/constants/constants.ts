@@ -113,7 +113,8 @@ export enum PermissionType {
     Read = 1,
     Comment = 2,
     Edit = 3,
-    Full = 4,
+    Full = 599,
+    Owner = 999,
 }
 
 export const PermissionTypeEnum = {

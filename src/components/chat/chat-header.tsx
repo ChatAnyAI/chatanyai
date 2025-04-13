@@ -1,23 +1,21 @@
-// import { ModelSelector } from '@/components/chat/model-selector';
 import { Button } from '@/components/ui/button';
 import { memo, useState } from 'react';
 import html2canvas from 'html2canvas-pro';
 import { VisibilitySelector } from './visibility-selector';
-import { Settings2, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { useParams } from "react-router-dom";
 import { RespChannel } from "@/service/api";
 import { useChatStore } from '@/store/chatStore';
+import {PermissionType} from "@/lib/constants/constants";
 
 function PureChatHeader({
     channelId,
-    isReadonly,
     isNew,
     chatInfo,
 }: {
     channelId: string;
-    isReadonly: boolean;
     isNew?: boolean;
     chatInfo?: RespChannel;
 }) {
@@ -75,15 +73,7 @@ function PureChatHeader({
 
     return (
         <header data-name="chat-header" className="flex sticky top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2 justify-between shadow-md">
-            <div className="flex flex-auto min-w-0 items-center gap-2">
-                {/*<div>{chatInfo?.title || currentAppInfo?.name}</div>*/}
-                {/*{!isNew && !isReadonly && chatInfo && (*/}
-                {/*    <VisibilitySelector*/}
-                {/*        chatInfo={chatInfo}*/}
-                {/*        channelId={channelId}*/}
-                {/*    />*/}
-                {/*)}*/}
-            </div>
+            <div className="flex flex-auto min-w-0 items-center gap-2"></div>
             <div className="flex items-center gap-2">
                 {
                     !cid ?
@@ -100,7 +90,7 @@ function PureChatHeader({
                             </Button>
                         </>
                 }
-                {!isNew && !isReadonly && chatInfo && (
+                {!isNew  && chatInfo && (chatInfo.myPermission.permissionType > PermissionType.Edit) && (
                     <VisibilitySelector
                         chatInfo={chatInfo}
                         channelId={channelId}

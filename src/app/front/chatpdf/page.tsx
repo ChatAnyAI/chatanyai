@@ -25,7 +25,6 @@ export default function Page() {
                     !pdfUrl ? null :
                         <ChatHeader
                             channelId={id}
-                            isReadonly={false}
                             isNew={true}
                         />
                 }
@@ -40,8 +39,8 @@ export default function Page() {
                                 {selectedModelId && <Chat
                                     hiddenHeader
                                     pdfLink={pdfUrl}
-                                    key={id}
-                                    id={id}
+                                    // key={id}
+                                    // id={id}
                                     appId={appId!}
                                     initialMessages={[]}
                                     selectedModelId={selectedModelId}
