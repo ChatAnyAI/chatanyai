@@ -23,8 +23,8 @@ const MeetingInfo = lazy(() => import('@/app/front/meeting/info/page'));
 const SpaceSetting = lazy(() => import('@/app/front/space/page'));
 const NotePage = lazy(() => import('@/app/front/note/page'));
 const NoteInfoPage = lazy(() => import('@/app/front/note/info/page'));
-
 const NotFound = lazy(() => import('@/app/not-found'));
+const EmployeePage = lazy(() => import('@/app/front/employee/page'));
 
 const AdminLayout = lazy(() => import('@/app/admin/layout'));
 const AdminOverview = lazy(() => import('@/app/admin/overview/page'));
@@ -75,6 +75,13 @@ const router = createBrowserRouter(
             </Suspense>
           }>
         </Route>
+        <Route
+          path="/employee"
+          element={
+            <Suspense fallback={<Loading />}>
+              <EmployeePage />
+            </Suspense>
+          } />
 
         <Route
           path="/dataset/:datasetId/docList"

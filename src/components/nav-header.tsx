@@ -4,7 +4,7 @@
 import {
     type LucideIcon,
     Plus,
-    House, Share2, Folder
+    House, Share2, Folder, UserRoundPlus
 } from "lucide-react"
 import { Collapsible } from "@/components/ui/collapsible"
 import { Link, useLocation, useNavigate } from "react-router-dom"
@@ -64,8 +64,12 @@ export function NavHeader({
         name: t("sidebar.Shared with me"),
         url: "#",
         icon: Share2,
+    }, {
+        id: "employees",
+        name: t("sidebar.MyEmployee"),
+        url: "/employee",
+        icon: UserRoundPlus,
     }]
-
     return (
         <SidebarGroup className={cn(className)}>
             {
