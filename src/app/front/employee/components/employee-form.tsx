@@ -37,7 +37,7 @@ interface AIEmployeeFormProps {
 export default function AIEmployeeForm({ employee, onSubmit, onCancel }: AIEmployeeFormProps) {
     const [name, setName] = useState(employee?.name || "")
     const [role, setRole] = useState(employee?.role || "")
-    const [status, setStatus] = useState(employee?.status || "active")
+    const [status, setStatus] = useState<string>(employee?.status || "active")
     const [capabilities, setCapabilities] = useState<string[]>(employee?.capabilities || [])
     const [newCapability, setNewCapability] = useState("")
     const [avatarUrl, setAvatarUrl] = useState(employee?.avatarUrl || "")
@@ -205,7 +205,9 @@ ${capabilities.map((cap, index) => `${index + 1}. ${cap}：[描述该能力的�
 
                             <div className="space-y-2">
                                 <Label htmlFor="status">状态</Label>
-                                <Select value={status} onValueChange={setStatus}>
+                                <Select value={status} onValueChange={(flag)=>{
+                                    setStatus(flag)
+                                }}>
                                     <SelectTrigger id="status">
                                         <SelectValue placeholder="选择状态" />
                                     </SelectTrigger>
