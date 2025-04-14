@@ -24,7 +24,7 @@ export default function Page() {
           !meetingData ? null :
             <ChatHeader
               channelId={'0'}
-              isReadonly={false}
+              // isReadonly={false}
               isNew={true}
             />
         }

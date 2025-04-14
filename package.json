@@ -209,7 +209,7 @@
     "zustand": "^5.0.3"
   },
   "scripts": {
-    "dev": "node scripts/start.js",
+    "dev": "node scripts/start.js --max-old-space-size=8192",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },

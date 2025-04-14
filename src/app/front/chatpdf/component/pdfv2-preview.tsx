@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function PdfViewV2({ url }: { url: string }) {
+    
     const { t } = useTranslation();
     const [numPages, setNumPages] = useState<number>();
     const [pageNumber, setPageNumber] = useState<number>(1);
@@ -42,7 +43,6 @@ function PdfViewV2({ url }: { url: string }) {
 
     // Fetch the PDF file
     useEffect(() => {
-        console.log("url",url)
         const fetchFile = async () => {
             try {
                 setError(null);

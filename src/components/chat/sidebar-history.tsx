@@ -81,9 +81,9 @@ const PureChatItem = ({
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive}>
         <Link
-          to={`${getFirstPathSegment(location.pathname)}/${appId}/c/${chat.channelId}`}
+          to={`${getFirstPathSegment(location.pathname)}/${appId}/c/${chat.guid}`}
           onClick={() => {
-            setRecentchannelId(chat.channelId);
+            setRecentchannelId(chat.guid);
             setOpenMobile(false);
             handleClose();
           }}
@@ -122,7 +122,7 @@ export const ChatItemAction = ({
   const { channelId } = useParams();
 
   const handleDelete = async () => {
-    const deletePromise = fetch(`/api/channel/${chat.channelId}`, {
+    const deletePromise = fetch(`/api/channel/${chat.guid}`, {
       method: 'DELETE',
     });
 
@@ -137,7 +137,7 @@ export const ChatItemAction = ({
 
     setShowDeleteDialog(false);
 
-    if (chat.channelId === channelId) {
+    if (chat.guid === channelId) {
       router('/');
     }
   };
@@ -145,7 +145,7 @@ export const ChatItemAction = ({
   const handleUpdateChat = async () => {
     try {
       setIsUpdating(true);
-      await ApiUpdateChatInfo(chat.channelId, {
+      await ApiUpdateChatInfo(chat.guid, {
         title,
       });
       toast({
@@ -403,9 +403,9 @@ export function SidebarHistory() {
                         </div>
                         {groupedChats.today.map((chat) => (
                           <ChatItem
-                            key={chat.channelId}
+                            key={chat.guid}
                             chat={chat}
-                            isActive={chat.channelId === channelId}
+                            isActive={chat.guid === channelId}
                             onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
@@ -420,9 +420,9 @@ export function SidebarHistory() {
                         </div>
                         {groupedChats.yesterday.map((chat) => (
                           <ChatItem
-                            key={chat.channelId}
+                            key={chat.guid}
                             chat={chat}
-                            isActive={chat.channelId === channelId}
+                            isActive={chat.guid === channelId}
                             onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
@@ -437,9 +437,9 @@ export function SidebarHistory() {
                         </div>
                         {groupedChats.lastWeek.map((chat) => (
                           <ChatItem
-                            key={chat.channelId}
+                            key={chat.guid}
                             chat={chat}
-                            isActive={chat.channelId === channelId}
+                            isActive={chat.guid === channelId}
                             onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
@@ -454,9 +454,9 @@ export function SidebarHistory() {
                         </div>
                         {groupedChats.lastMonth.map((chat) => (
                           <ChatItem
-                            key={chat.channelId}
+                            key={chat.guid}
                             chat={chat}
-                            isActive={chat.channelId === channelId}
+                            isActive={chat.guid === channelId}
                             onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />
@@ -471,9 +471,9 @@ export function SidebarHistory() {
                         </div>
                         {groupedChats.older.map((chat) => (
                           <ChatItem
-                            key={chat.channelId}
+                            key={chat.guid}
                             chat={chat}
-                            isActive={chat.channelId === channelId}
+                            isActive={chat.guid === channelId}
                             onDelete={handleDeleteCallback}
                             setOpenMobile={setOpenMobile}
                           />

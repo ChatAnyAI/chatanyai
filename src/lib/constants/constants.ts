@@ -122,4 +122,5 @@ export const PermissionTypeEnum = {
     [PermissionType.Comment]: 'Can comment',
     [PermissionType.Edit]: 'Can edit',
     [PermissionType.Full]: 'Full access',
+    [PermissionType.Owner]: 'Owner access',
 }

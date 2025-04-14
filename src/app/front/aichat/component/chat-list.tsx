@@ -18,8 +18,8 @@ export function ChatList({ channelList }: ChatListProps) {
   return (
     <div className="flex-1 overflow-auto p-4">
       {channelList.map((channel) => (
-        <Link to={`c/${channel.channelId}`} className="no-underline">
-          <div key={channel.channelId} className="border rounded-lg mb-4 overflow-hidden">
+        <Link to={`c/${channel.guid}`} className="no-underline">
+          <div key={channel.guid} className="border rounded-lg mb-4 overflow-hidden">
             <div className="p-4 flex items-center justify-between border-b">
               <div className="flex items-center">
                 <h3 className="font-medium">{channel.name}</h3>

@@ -87,7 +87,7 @@ export function SharedDialog({ isOpen, onClose }: SharedItemsDialogProps) {
                     <ScrollArea className="h-full w-full">
                         <div className="p-3 space-y-2 w-full">
                             {items.map((item, index) => {
-                                const isApp = !item.chat?.channelId;
+                                const isApp = !item.chat?.guid;
                                 const data = isApp ? item.app : item.chat;
 
                                 if (!data) return null;
