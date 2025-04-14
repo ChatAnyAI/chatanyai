@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import {ChevronDown, ChevronUp, MessageSquare, PlusCircle} from "lucide-react"
 import AIEmployeesList from "./components/employee-list"
 // import AIEmployeeForm from "./employee-form"
-import type { AIEmployee } from "./components/employee-form"
+import AIEmployeeForm, { AIEmployee } from "./components/employee-form"
 // import SampleEmployees from "./sample-employees"
 import useSWR from "swr";
 import {ApiEmployeeList, ApiEmployeeListResp, ApiHomeRecent, ApiHomeRecentRes} from "@/service/api";
@@ -21,6 +21,8 @@ import {
     EmployeeStatusEnum,
     RouteEnum
 } from "@/lib/constants/constants";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
 import {Icon} from "@/components/workspace-group";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
@@ -47,23 +49,6 @@ export default function AIEmployeesDashboard() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
-
-    // Load initial data from localStorage if available
-    // useEffect(() => {
-    //     const savedEmployees = localStorage.getItem("aiEmployees")
-    //     if (savedEmployees) {
-    //         try {
-    //             setEmployees(JSON.parse(savedEmployees))
-    //         } catch (e) {
-    //             console.error("Failed to parse saved employees", e)
-    //         }
-    //     }
-    // }, [])
-
-    // Save to localStorage whenever employees change
-    // useEffect(() => {
-    //     localStorage.setItem("aiEmployees", JSON.stringify(employees))
-    // }, [employees])
 
     const handleCreateEmployee = (employee: AIEmployee) => {
         setEmployees([...employees, employee])
@@ -92,14 +77,6 @@ export default function AIEmployeesDashboard() {
                     <h1 className="text-xl sm:text-2xl font-bold mb-2">{t('home-page.hello')} {user.name}</h1>
                     <p className="text-muted-foreground">Welcome to Your Team</p>
                 </motion.div>
-                {/*<div className="flex justify-between items-center">*/}
-                {/*    <h2 className="text-2xl font-semibold">Your employees</h2>*/}
-                {/*    <Button onClick={() => setIsCreating(true)}>*/}
-                {/*        <PlusCircle className="mr-2 h-4 w-4"/>*/}
-                {/*        创建 AI 员工*/}
-                {/*    </Button>*/}
-                {/*</div>*/}
-                {/* Recent pages with visual categories */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -108,7 +85,7 @@ export default function AIEmployeesDashboard() {
                 >
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold">Your employees</h2>
-                        <Button variant="ghost" size="sm" className="gap-1">
+                        <Button variant="ghost" size="sm" className="gap-1" onClick={() => setIsCreating(true)}>
                             <PlusCircle className="mr-2 h-4 w-4" />
                             <span className="hidden sm:inline">Create</span>
                         </Button>
@@ -218,32 +195,26 @@ export default function AIEmployeesDashboard() {
                     )}
                 </motion.div>
 
-
-                {/*<AIEmployeesList employeeList={employeeList}/>*/}
-                {/*{employees.length === 0 && <SampleEmployees onLoad={setEmployees} />}*/}
             </div>
-            {/*{!isCreating && !editingEmployee ? (*/}
-            {/*    <>*/}
-            {/*        <div className="flex justify-between items-center">*/}
-            {/*            <h2 className="text-2xl font-semibold">AI 员工列表</h2>*/}
-            {/*            <Button onClick={() => setIsCreating(true)}>*/}
-            {/*                <PlusCircle className="mr-2 h-4 w-4" />*/}
-            {/*                创建 AI 员工*/}
-            {/*            </Button>*/}
-            {/*        </div>*/}
-            {/*        <AIEmployeesList employees={employees} onEdit={setEditingEmployee} onDelete={handleDeleteEmployee} />*/}
-            {/*        {employees.length === 0 && <SampleEmployees onLoad={setEmployees} />}*/}
-            {/*    </>*/}
-            {/*) : (*/}
-            {/*    <AIEmployeeForm*/}
-            {/*        employee={editingEmployee}*/}
-            {/*        onSubmit={editingEmployee ? handleUpdateEmployee : handleCreateEmployee}*/}
-            {/*        onCancel={() => {*/}
-            {/*            setIsCreating(false)*/}
-            {/*            setEditingEmployee(null)*/}
-            {/*        }}*/}
-            {/*    />*/}
-            {/*)}*/}
+
+            {/* Create Employee Dialog */}
+            <Dialog open={isCreating} onOpenChange={setIsCreating}>
+                <DialogContent className="sm:max-w-[800px] p-0 bg-white">
+                    <DialogHeader className="px-6 pt-6 pb-2">
+                        <DialogTitle>Create AI Employee</DialogTitle>
+                        <DialogDescription>Add a new AI employee to your team</DialogDescription>
+                    </DialogHeader>
+                    <div className="px-6 pb-6">
+                        <AIEmployeeForm
+                            employee={null}
+                            onSubmit={handleCreateEmployee}
+                            onCancel={() => setIsCreating(false)}
+                            isDialog={true}
+                        />
+                    </div>
+                </DialogContent>
+            </Dialog>
+
         </div>
     )
 }
