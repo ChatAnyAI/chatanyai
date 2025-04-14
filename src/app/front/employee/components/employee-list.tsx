@@ -24,7 +24,7 @@ import {EmployeeStatus, EmployeeStatusEnum} from "@/lib/constants/constants";
 
 interface AIEmployeesListProps {
     employeeList: ApiEmployeeListResp[]
-    onEdit: (employee: AIEmployee) => void
+    onEdit: (employee: ApiEmployeeListResp) => void
     onDelete: (id: string) => void
 }
 

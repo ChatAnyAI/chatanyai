@@ -250,6 +250,7 @@ export function useDebouncedCallback<T extends (...args: any) => ReturnType<T>>(
       const isInvoking = shouldInvoke(time);
 
       lastArgs.current = args;
+      // @ts-ignore
       lastThis.current = this;
       lastCallTime.current = time;
 
@@ -261,7 +262,7 @@ export function useDebouncedCallback<T extends (...args: any) => ReturnType<T>>(
           startTimer(timerExpired, wait);
 
           // Invoke the leading edge.
-          return leading ? invokeFunc(lastCallTime.current) : result.current;
+          return leading ? invokeFunc(lastCallTime.current) : (result.current as ReturnType<T>);
         }
         if (maxing) {
           // Handle invocations in a tight loop.

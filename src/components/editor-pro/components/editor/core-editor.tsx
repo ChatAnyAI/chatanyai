@@ -5,7 +5,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Plate } from '@udecode/plate/react';
 
-import { playgroundValue } from '@/components/editor-pro/example/playground-value';
 import { Editor, EditorContainer } from '@/components/editor-pro/potion-ui/editor';
 import { TocSidebar } from '@/components/editor-pro/potion-ui/toc-sidebar';
 

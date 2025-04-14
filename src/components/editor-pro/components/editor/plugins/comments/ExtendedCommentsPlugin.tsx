@@ -116,8 +116,8 @@ export const ExtendedCommentsPlugin = CommentsPlugin.extend({
             const { newProperties, properties } = operation;
 
             if (
-              properties?.[getDraftCommentKey()] ||
-              newProperties?.[getDraftCommentKey()]
+              (properties as Record<string, unknown>)?.[getDraftCommentKey()] ||
+              (newProperties as Record<string, unknown>)?.[getDraftCommentKey()]
             )
               return;
 

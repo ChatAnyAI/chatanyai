@@ -100,7 +100,7 @@ export const blockMenuItems = {
     label: 'Ask AI',
     shortcut: '⌘+J',
     value: 'askAI',
-    onSelect: ({ editor }) => {
+    onSelect: ({ editor }: { editor: PlateEditor }) => {
       editor.getApi(AIChatPlugin).aiChat.show();
     },
   },
@@ -109,7 +109,7 @@ export const blockMenuItems = {
     keywords: ['alt'],
     label: 'Caption',
     value: 'caption',
-    onSelect: ({ editor }) => {
+    onSelect: ({ editor }: { editor: PlateEditor }) => {
       const firstBlock = editor
         .getApi(BlockSelectionPlugin)
         .blockSelection.getNodes()[0];
@@ -147,7 +147,7 @@ export const blockMenuItems = {
     label: 'Delete',
     shortcut: 'Del or Ctrl+D',
     value: 'delete',
-    onSelect: ({ editor }) => {
+    onSelect: ({ editor }: { editor: PlateEditor }) => {
       editor.getTransforms(BlockSelectionPlugin).blockSelection.removeNodes();
     },
   },
@@ -158,10 +158,11 @@ export const blockMenuItems = {
     label: 'Duplicate',
     shortcut: '⌘+D',
     value: 'duplicate',
-    onSelect: ({ editor }) => {
+    onSelect: ({ editor }: { editor: PlateEditor }) => {
       editor
         .getTransforms(BlockSelectionPlugin)
         .blockSelection.duplicate(
+          //@ts-ignore
           editor.getApi(BlockSelectionPlugin).blockSelection.getNodes()
         );
 
@@ -263,6 +264,7 @@ export function BlockMenuItems() {
       {menuGroups.map((group, index) => (
         <MenuGroup key={index} label={group.label}>
           {group.items?.map((item: Action) => {
+            //@ts-ignore
             const menuItem = blockMenuItems[item.value!];
 
             if (menuItem.component) {

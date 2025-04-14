@@ -6,6 +6,7 @@ import remarkMdx from 'remark-mdx';
 
 export const markdownPlugin = MarkdownPlugin.configure({
   options: {
+    //@ts-ignore
     disallowedNodes: [SuggestionPlugin.key],
     remarkPlugins: [remarkMath, remarkGfm, remarkMdx],
   },

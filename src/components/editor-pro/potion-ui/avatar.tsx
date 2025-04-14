@@ -37,7 +37,7 @@ export function AvatarImage({
   className,
   onLoadingStatusChange,
   ...props
-}: React.ComponentProps<typeof Image> &
+}: React.ComponentProps<'img'> &
   Pick<AvatarImageProps, 'onLoadingStatusChange'>) {
   return (
     <AvatarPrimitive.Image

@@ -98,12 +98,20 @@ export const aiPlugins = [
   AIPlugin,
   AIChatPlugin.configure({
     options: {
-      promptTemplate: ({ isBlockSelecting, isSelecting }) => {
-        return isBlockSelecting
-          ? PROMPT_TEMPLATES.userBlockSelecting
-          : isSelecting
-            ? PROMPT_TEMPLATES.userSelecting
-            : PROMPT_TEMPLATES.userDefault;
+      promptTemplate: ({ isBlockSelecting, isSelecting, editor }) => {
+        const editorContent =
+          // @ts-ignore
+          editor.api.markdown.serialize(isSelecting ? {
+            // @ts-ignore
+            value: editor.getFragment()
+          } : null);
+        if (isBlockSelecting) {
+          return PROMPT_TEMPLATES.userBlockSelecting + editorContent + '</Selection>';
+        } else if (isSelecting) {
+          return PROMPT_TEMPLATES.userSelecting + editorContent + '</Selection>';
+        } else {
+          return PROMPT_TEMPLATES.userDefault;
+        }
       },
       systemTemplate: ({ isBlockSelecting, isSelecting }) => {
         return isBlockSelecting

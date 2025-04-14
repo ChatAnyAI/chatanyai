@@ -226,15 +226,15 @@ export default function PDFUploader({  appId, onPdfUploaded }: PDFUploaderProps)
                         {!selectedFile ? (
                             <div className="space-y-4">
                                 <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto">
-                                    <Upload className="h-8 w-8 text-indigo-600" />
+                                    <Upload className="cursor-pointer h-8 w-8 text-indigo-600" onClick={() => fileInputRef.current?.click()} />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-medium">{t("pdf-upload.Upload your PDF")}</h3>
                                     <p className="text-sm text-gray-500 mt-1">{t("pdf-upload.Drag and drop")}</p>
                                 </div>
-                                <Button variant="outline" onClick={() => fileInputRef.current?.click()} className="mt-4">
+                                {/* <Button variant="outline"  className="mt-4">
                                     {t("pdf-upload.Select PDF")}
-                                </Button>
+                                </Button> */}
                                 <input
                                     type="file"
                                     ref={fileInputRef}

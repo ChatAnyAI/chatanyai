@@ -24,7 +24,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
     const {isOpen, setIsOpen,referContent} = props;
     const {t} = useTranslation();
     const {data: documents} = useSWR([`ApiDocRecent`], () => ApiDocRecent());
-    const handleSendToDocument = (appId: string, channelId: string) => {
+    const handleSendToDocument = async (appId: string, channelId: string) => {
         // Here you would implement the actual sending logic
         // const processor = unified().use(markdown).use(remarkToSlate);
 
@@ -38,7 +38,7 @@ export function SendToRecentDoc(props: SendToRecentDocProps) {
         const value = editor.api.markdown.deserialize(referContent);
         try {
             // js number to string
-            ApiDocAppendContent(appId, channelId, {
+           await ApiDocAppendContent(appId, channelId, {
                 referContent: value,
                 referChannelId: props.referChannelId,
                 referAnchorId: props.referAnchorId.toString(),

@@ -342,6 +342,7 @@ export function AIMenuItems() {
       {menuGroups.map((group, index) => (
         <MenuGroup key={index} label={group.label}>
           {group.items?.map((item: Action) => {
+            // @ts-ignore
             const menuItem = aiChatItems[item.value!];
 
             if (menuItem.component) {

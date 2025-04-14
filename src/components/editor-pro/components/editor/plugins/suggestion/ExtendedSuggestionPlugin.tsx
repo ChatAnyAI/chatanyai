@@ -64,5 +64,6 @@ export const ExtendedSuggestionPlugin = SuggestionPlugin.extend({
       if (!isSet) unsetActiveSuggestion();
     },
   },
+  //@ts-ignore
   useHooks: useHooksSuggestion,
 });
