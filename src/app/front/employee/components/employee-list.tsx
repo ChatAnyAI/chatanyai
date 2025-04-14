@@ -122,7 +122,7 @@ export default function AIEmployeesList({ employees, onEdit, onDelete }: AIEmplo
                                                 </Tooltip>
                                             </TooltipProvider>
                                         )}
-                                        <Badge variant={employee.status === "active" ? "success" : "secondary"} className="ml-auto">
+                                        <Badge variant={employee.status === "active" ? "default" : "secondary"} className="ml-auto">
                                             {employee.status === "active" ? "活跃" : "非活跃"}
                                         </Badge>
                                     </div>
