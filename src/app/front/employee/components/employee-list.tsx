@@ -19,14 +19,16 @@ import { useState } from "react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import {AIEmployee} from "./employee-form";
+import {ApiEmployeeListResp} from "@/service/api";
+import {EmployeeStatus, EmployeeStatusEnum} from "@/lib/constants/constants";
 
 interface AIEmployeesListProps {
-    employees: AIEmployee[]
+    employeeList: ApiEmployeeListResp[]
     onEdit: (employee: AIEmployee) => void
     onDelete: (id: string) => void
 }
 
-export default function AIEmployeesList({ employees, onEdit, onDelete }: AIEmployeesListProps) {
+export default function AIEmployeesList({ employeeList, onEdit, onDelete }: AIEmployeesListProps) {
     const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null)
     const [expandedPrompts, setExpandedPrompts] = useState<Record<string, boolean>>({})
 
@@ -83,7 +85,7 @@ export default function AIEmployeesList({ employees, onEdit, onDelete }: AIEmplo
         return colors[numericPart % colors.length]
     }
 
-    if (employees.length === 0) {
+    if (employeeList.length === 0) {
         return (
             <div className="text-center p-10 border rounded-lg bg-muted/20">
                 <p className="text-muted-foreground">暂无 AI 员工，请点击"创建 AI 员工"按钮添加</p>
@@ -94,36 +96,36 @@ export default function AIEmployeesList({ employees, onEdit, onDelete }: AIEmplo
     return (
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {employees.map((employee) => (
+                {employeeList.map((employee) => (
                     <Card key={employee.id} className="overflow-hidden flex flex-col">
                         <CardHeader className="pb-2">
                             <div className="flex items-center gap-4">
                                 <Avatar className="h-16 w-16 border-2 border-background shadow-md">
-                                    <AvatarImage src={employee.avatarUrl || "/placeholder.svg"} alt={employee.name} />
-                                    <AvatarFallback className={getAvatarColor(employee.id)}>{getInitials(employee.name)}</AvatarFallback>
+                                    <AvatarImage src={employee.avatar || "/placeholder.svg"} alt={employee.name} />
+                                    {/*<AvatarFallback className={getAvatarColor(employee.id)}>{getInitials(employee.name)}</AvatarFallback>*/}
                                 </Avatar>
                                 <div className="space-y-1 flex-1">
                                     <div className="flex items-center gap-2">
                                         <CardTitle className="text-xl">{employee.name}</CardTitle>
-                                        {employee.mcpEnabled && (
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <Badge
-                                                            variant="outline"
-                                                            className="ml-1 bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100"
-                                                        >
-                                                            <Cpu className="h-3 w-3 mr-1" /> MCP
-                                                        </Badge>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        <p>Model Context Protocol 支持</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
-                                        )}
-                                        <Badge variant={employee.status === "active" ? "default" : "secondary"} className="ml-auto">
-                                            {employee.status === "active" ? "活跃" : "非活跃"}
+                                        {/*{employee.mcpEnabled && (*/}
+                                        {/*    <TooltipProvider>*/}
+                                        {/*        <Tooltip>*/}
+                                        {/*            <TooltipTrigger asChild>*/}
+                                        {/*                <Badge*/}
+                                        {/*                    variant="outline"*/}
+                                        {/*                    className="ml-1 bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100"*/}
+                                        {/*                >*/}
+                                        {/*                    <Cpu className="h-3 w-3 mr-1" /> MCP*/}
+                                        {/*                </Badge>*/}
+                                        {/*            </TooltipTrigger>*/}
+                                        {/*            <TooltipContent>*/}
+                                        {/*                <p>Model Context Protocol 支持</p>*/}
+                                        {/*            </TooltipContent>*/}
+                                        {/*        </Tooltip>*/}
+                                        {/*    </TooltipProvider>*/}
+                                        {/*)}*/}
+                                        <Badge variant={employee.status === EmployeeStatus.Active ? "secondary" : "outline"} className="ml-auto">
+                                            {EmployeeStatusEnum[employee.status]}
                                         </Badge>
                                     </div>
                                     <p className="text-muted-foreground">{employee.role}</p>
@@ -132,18 +134,18 @@ export default function AIEmployeesList({ employees, onEdit, onDelete }: AIEmplo
                         </CardHeader>
                         <CardContent className="pb-2 flex-1">
                             <div className="space-y-4">
-                                <div>
-                                    <h4 className="text-sm font-medium flex items-center mb-2">
-                                        <Activity className="h-4 w-4 mr-1" /> MCP 能力
-                                    </h4>
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {employee.capabilities.map((capability, index) => (
-                                            <Badge key={index} variant="outline" className="bg-purple-50 border-purple-200 text-purple-700">
-                                                {capability}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </div>
+                                {/*<div>*/}
+                                {/*    <h4 className="text-sm font-medium flex items-center mb-2">*/}
+                                {/*        <Activity className="h-4 w-4 mr-1" /> MCP 能力*/}
+                                {/*    </h4>*/}
+                                {/*    <div className="flex flex-wrap gap-1.5">*/}
+                                {/*        {employee.capabilities.map((capability, index) => (*/}
+                                {/*            <Badge key={index} variant="outline" className="bg-purple-50 border-purple-200 text-purple-700">*/}
+                                {/*                {capability}*/}
+                                {/*            </Badge>*/}
+                                {/*        ))}*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
 
                                 <Collapsible
                                     open={expandedPrompts[employee.id]}

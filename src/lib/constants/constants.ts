@@ -44,6 +44,19 @@ export const RouteEnum = {
     [AppType.Note]: 'note',
 }
 
+export enum EmployeeStatus {
+    Unknown = 0,
+    Active = 1,
+    Blocked = 2,
+}
+
+export const EmployeeStatusEnum = {
+    [EmployeeStatus.Unknown]: 'Unknown',
+    [EmployeeStatus.Active]: 'Active',
+    [EmployeeStatus.Blocked]: 'Blocked',
+}
+
+
 export enum UserStatus {
     Unknown = 0,
     Active = 1,

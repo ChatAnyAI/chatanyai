@@ -1,5 +1,13 @@
 import { get, post, del, put } from "@/lib/request";
-import { AppSubType, AppType, AppVisibility, PermissionType, ProductType, UserRole } from "@/lib/constants/constants";
+import {
+    AppSubType,
+    AppType,
+    AppVisibility,
+    EmployeeStatus,
+    PermissionType,
+    ProductType,
+    UserRole
+} from "@/lib/constants/constants";
 import { Pagination } from "@/components/ui/pagination";
 
 // Common Types
@@ -326,9 +334,24 @@ export type Collaborator = {
   avatar: string;
 }
 
-
 export const ApiHomeRecent = () => {
   return get<ApiHomeRecentRes>('/api/home/recent');
+}
+
+export type ApiEmployeeListResp = {
+    id: string
+    name: string
+    role: string
+    // capabilities: string[]
+    status: EmployeeStatus
+    createdAt: string
+    avatar: string
+    prompt: string
+}
+
+
+export const ApiEmployeeList = () => {
+    return get<ApiEmployeeListResp[]>('/api/my/employee/-/list');
 }
 
 // Dataset APIs
