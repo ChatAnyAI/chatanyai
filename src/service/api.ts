@@ -344,7 +344,7 @@ export type ApiEmployeeListResp = {
     role: string
     // capabilities: string[]
     status: EmployeeStatus
-    createdAt: string
+    createdAt: number
     avatar: string
     prompt: string
 }
