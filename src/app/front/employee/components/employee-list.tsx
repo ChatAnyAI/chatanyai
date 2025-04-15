@@ -19,12 +19,12 @@ import { useState } from "react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import {AIEmployee} from "./employee-form";
-import {ApiEmployeeListResp} from "@/service/api";
+import {ApiEmployeeItemResp} from "@/service/api";
 import {EmployeeStatus, EmployeeStatusEnum} from "@/lib/constants/constants";
 
 interface AIEmployeesListProps {
-    employeeList: ApiEmployeeListResp[]
-    onEdit: (employee: ApiEmployeeListResp) => void
+    employeeList: ApiEmployeeItemResp[]
+    onEdit: (employee: ApiEmployeeItemResp) => void
     onDelete: (id: string) => void
 }
 

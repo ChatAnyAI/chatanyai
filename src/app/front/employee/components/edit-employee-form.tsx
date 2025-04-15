@@ -7,21 +7,25 @@ import {Textarea} from "@/components/ui/textarea"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Wand2} from "lucide-react"
-import {ApiEmployeeCreateRequest, ApiEmployeeItemResp} from "@/service/api";
+import {ApiEmployeeCreateRequest, ApiEmployeeItemResp, ApiEmployeeUpdateRequest} from "@/service/api";
 import { EmployeeStatus, EmployeeStatusEnum} from "@/lib/constants/constants";
 
 interface AIEmployeeFormProps {
     employee: ApiEmployeeItemResp | null
-    onSubmit: (employee: ApiEmployeeCreateRequest) => void
+    onSubmit: (employeeId: number,employee: ApiEmployeeUpdateRequest) => void
     onCancel: () => void
 }
 
-export default function CreateEmployeeForm({ onSubmit, onCancel }: AIEmployeeFormProps) {
-    const [name, setName] = useState("")
-    const [role, setRole] = useState("")
-    const [status, setStatus] = useState<EmployeeStatus>(EmployeeStatus.Active)
-    const [avatarUrl, setAvatarUrl] = useState("")
-    const [prompt, setPrompt] = useState("")
+export default function EditEmployeeForm({ employee, onSubmit, onCancel }: AIEmployeeFormProps) {
+    if (!employee) {
+        return  null
+    }
+
+    const [name, setName] = useState(employee.name)
+    const [role, setRole] = useState(employee.role)
+    const [status, setStatus] = useState<EmployeeStatus>(employee.status)
+    const [avatarUrl, setAvatarUrl] = useState(employee.avatar)
+    const [prompt, setPrompt] = useState(employee.prompt)
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -31,7 +35,7 @@ export default function CreateEmployeeForm({ onSubmit, onCancel }: AIEmployeeFor
             return
         }
 
-        const updatedEmployee: ApiEmployeeCreateRequest = {
+        const updatedEmployee: ApiEmployeeUpdateRequest = {
             name: name.trim(),
             role: role.trim(),
             status: status,
@@ -39,7 +43,7 @@ export default function CreateEmployeeForm({ onSubmit, onCancel }: AIEmployeeFor
             prompt: prompt.trim(),
         }
 
-        onSubmit(updatedEmployee)
+        onSubmit(employee.id,updatedEmployee)
     }
 
     // Get initials from name for avatar fallback
@@ -135,16 +139,6 @@ Limitations:
                         <Label htmlFor="prompt" className="text-base font-medium text-gray-700">
                             Prompt
                         </Label>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={generatePromptTemplate}
-                            className="flex items-center gap-1 border-slate-200 text-slate-600 hover:bg-slate-50"
-                        >
-                            <Wand2 className="h-3.5 w-3.5"/>
-                            Generate Template
-                        </Button>
                     </div>
                     <Textarea
                         id="prompt"
@@ -182,7 +176,7 @@ Limitations:
                         disabled={!name.trim() || !role.trim() || !prompt.trim()}
                         className="bg-slate-700 hover:bg-slate-800 text-white"
                     >
-                        {"Create"}
+                        {"Update"}
                     </Button>
                 </div>
             </form>

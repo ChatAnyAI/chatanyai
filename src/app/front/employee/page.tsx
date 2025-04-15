@@ -3,13 +3,12 @@
 import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {ChevronDown, ChevronUp, Edit2, MessageSquare, PlusCircle, Trash2} from "lucide-react"
-import { AIEmployee } from "./components/employee-form"
 import useSWR from "swr";
 import {
     ApiEmployeeCreate,
     ApiEmployeeCreateRequest,
     ApiEmployeeList,
-    ApiEmployeeListResp,
+    ApiEmployeeItemResp, ApiEmployeeUpdateRequest, ApiEmployeeUpdate, ApiEmployeeDelete,
 } from "@/service/api";
 import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
@@ -31,11 +30,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
+import EditEmployeeForm from "@/app/front/employee/components/edit-employee-form";
 
 export default function AIEmployeesDashboard() {
-    const [employees, setEmployees] = useState<AIEmployee[]>([])
     const [isCreating, setIsCreating] = useState(false)
-    const [editingEmployee, setEditingEmployee] = useState<AIEmployee | null>(null)
     const { t } = useTranslation();
     const user = useGlobalStore(state => state.user);
     const [expandedPrompts, setExpandedPrompts] = useState<Record<string, boolean>>({})
@@ -48,24 +46,14 @@ export default function AIEmployeesDashboard() {
     const [isLoading, setIsLoading] = useState(false)
     const [hoveredCard, setHoveredCard] = useState<number | null>(null)
     const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null)
+    const [employeeToEdit, setEmployeeToEdit] = useState<ApiEmployeeItemResp | null>(null)
 
-    const confirmDelete = () => {
-        if (employeeToDelete) {
-            // onDelete(employeeToDelete)
-            setEmployeeToDelete(null)
-        }
+
+    const handleEditClick = (employee: ApiEmployeeItemResp) => {
+        setEmployeeToEdit(employee)
     }
 
-
-    const handleDeleteClick = (id: number) => {
-        setEmployeeToDelete(id)
-    }
-
-    const handleEditClick = (employee: AIEmployee) => {
-        // setEmployeeToEdit(employee)
-    }
-
-    const { data: employeeList, error,mutate } = useSWR<ApiEmployeeListResp[]>('ApiEmployeeList', ApiEmployeeList);
+    const { data: employeeList, error,mutate } = useSWR<ApiEmployeeItemResp[]>('ApiEmployeeList', ApiEmployeeList);
     if (error) return <div>{t('home-page.failed-to-load')}</div>;
     if (!employeeList) return (
         <div className="w-full flex items-center justify-center h-[50vh]">
@@ -97,9 +85,54 @@ export default function AIEmployeesDashboard() {
     }
 
 
-    const handleUpdateEmployee = (updatedEmployee: AIEmployee) => {
-        setEmployees(employees.map((emp) => (emp.id === updatedEmployee.id ? updatedEmployee : emp)))
-        setEditingEmployee(null)
+    const handleUpdateEmployee = async (employeeId: number,data: ApiEmployeeUpdateRequest) => {
+        setIsLoading(true)
+        try {
+            await ApiEmployeeUpdate(employeeId, data)
+            toast({
+                title: t('admin-teamMember-page.User created successfully'),
+                description: t('admin-teamMember-page.Update user'),
+            })
+            await mutate()
+            setEmployeeToEdit(null)
+            // Here you would typically update the users list or refetch data
+        } catch (error) {
+            // setIsCreateUserModalOpen(false)
+            toast({
+                title: t('admin-teamMember-page.Error'),
+                description:  String(error),
+                variant: "destructive",
+            })
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const handleDeleteEmployee = async () => {
+        if (!employeeToDelete) {
+           return
+        }
+
+        setIsLoading(true)
+        try {
+            await ApiEmployeeDelete(employeeToDelete)
+            toast({
+                title: t('admin-teamMember-page.User created successfully'),
+                description: t('admin-teamMember-page.Update user'),
+            })
+            await mutate()
+            setEmployeeToDelete(null)
+            // Here you would typically update the users list or refetch data
+        } catch (error) {
+            // setIsCreateUserModalOpen(false)
+            toast({
+                title: t('admin-teamMember-page.Error'),
+                description:  String(error),
+                variant: "destructive",
+            })
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -238,7 +271,9 @@ export default function AIEmployeesDashboard() {
                                                         <Button
                                                             variant="outline"
                                                             size="icon"
-                                                            onClick={() => handleDeleteClick(employee.id)}
+                                                            onClick={() => {
+                                                                setEmployeeToDelete(employee.id)
+                                                            }}
                                                             className="h-8 w-8 bg-white border-slate-200 text-gray-600 hover:text-gray-700 hover:bg-gray-100"
                                                         >
                                                             <Trash2 className="h-4 w-4" />
@@ -289,12 +324,31 @@ export default function AIEmployeesDashboard() {
                         <AlertDialogCancel className="border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
                             Cancel
                         </AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmDelete} className="bg-gray-800 text-white hover:bg-gray-700">
+                        <AlertDialogAction onClick={handleDeleteEmployee} className="bg-gray-800 text-white hover:bg-gray-700">
                             Delete
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            {/* Edit Dialog */}
+            <Dialog open={!!employeeToEdit} onOpenChange={(open) => !open && setEmployeeToEdit(null)}>
+                <DialogContent className="sm:max-w-[800px] p-0 bg-white">
+                    <DialogHeader className="px-6 pt-6 pb-2">
+                        <DialogTitle>Edit AI Employee</DialogTitle>
+                        <DialogDescription>Make changes to the AI employee's information and capabilities</DialogDescription>
+                    </DialogHeader>
+                    {employeeToEdit && (
+                        <div className="px-6 pb-6">
+                            <EditEmployeeForm
+                                employee={employeeToEdit}
+                                onSubmit={handleUpdateEmployee}
+                                onCancel={() => setEmployeeToEdit(null)}
+                            />
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
 
         </div>
     )

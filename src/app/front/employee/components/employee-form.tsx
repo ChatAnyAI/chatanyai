@@ -14,11 +14,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { X, Cpu, Wand2 } from "lucide-react"
-import {ApiEmployeeListResp} from "@/service/api";
+import {ApiEmployeeItemResp} from "@/service/api";
 
 interface AIEmployeeFormProps {
-    employee: ApiEmployeeListResp | null
-    onSubmit: (employee: ApiEmployeeListResp) => void
+    employee: ApiEmployeeItemResp | null
+    onSubmit: (employee: ApiEmployeeItemResp) => void
     onCancel: () => void
     isDialog?: boolean
 }
@@ -53,7 +53,7 @@ export default function AIEmployeeForm({ employee, onSubmit, onCancel, isDialog 
             return
         }
 
-        const updatedEmployee: ApiEmployeeListResp = {
+        const updatedEmployee: ApiEmployeeItemResp = {
             id: employee?.id || crypto.randomUUID(),
             name: name.trim(),
             role: role.trim(),
