@@ -339,7 +339,7 @@ export const ApiHomeRecent = () => {
 }
 
 export type ApiEmployeeListResp = {
-    id: string
+    id: number
     name: string
     role: string
     // capabilities: string[]
@@ -352,6 +352,19 @@ export type ApiEmployeeListResp = {
 
 export const ApiEmployeeList = () => {
     return get<ApiEmployeeListResp[]>('/api/my/employee/-/list');
+}
+
+
+export interface ApiEmployeeCreateRequest {
+    name: string
+    role: string
+    status: EmployeeStatus
+    avatar: string
+    prompt: string
+}
+
+export const ApiEmployeeCreate = (req: ApiEmployeeCreateRequest) => {
+    return post<void>(`/api/my/employee`,req);
 }
 
 // Dataset APIs

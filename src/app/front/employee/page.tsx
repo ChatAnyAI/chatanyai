@@ -2,30 +2,35 @@
 
 import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import {ChevronDown, ChevronUp, MessageSquare, PlusCircle} from "lucide-react"
-import AIEmployeesList from "./components/employee-list"
-// import AIEmployeeForm from "./employee-form"
-import AIEmployeeForm, { AIEmployee } from "./components/employee-form"
-// import SampleEmployees from "./sample-employees"
+import {ChevronDown, ChevronUp, Edit2, MessageSquare, PlusCircle, Trash2} from "lucide-react"
+import { AIEmployee } from "./components/employee-form"
 import useSWR from "swr";
-import {ApiEmployeeList, ApiEmployeeListResp, ApiHomeRecent, ApiHomeRecentRes} from "@/service/api";
+import {
+    ApiEmployeeCreate,
+    ApiEmployeeCreateRequest,
+    ApiEmployeeList,
+    ApiEmployeeListResp,
+} from "@/service/api";
 import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {useGlobalStore} from "@/store/globalStore";
-import {Link} from "react-router-dom";
 import {
-    AppLabelEnum,
-    AppVisibility,
-    AppVisibilityEnum,
     EmployeeStatus,
     EmployeeStatusEnum,
-    RouteEnum
 } from "@/lib/constants/constants";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
-import {Icon} from "@/components/workspace-group";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
+import CreateEmployeeForm from "@/app/front/employee/components/create-employee-form";
+import {toast} from "@/hooks/use-toast";
+import {
+    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription, AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle
+} from "@/components/ui/alert-dialog";
 
 export default function AIEmployeesDashboard() {
     const [employees, setEmployees] = useState<AIEmployee[]>([])
@@ -34,15 +39,33 @@ export default function AIEmployeesDashboard() {
     const { t } = useTranslation();
     const user = useGlobalStore(state => state.user);
     const [expandedPrompts, setExpandedPrompts] = useState<Record<string, boolean>>({})
-    const togglePrompt = (id: string) => {
+    const togglePrompt = (id: number) => {
         setExpandedPrompts((prev) => ({
             ...prev,
             [id]: !prev[id],
         }))
     }
+    const [isLoading, setIsLoading] = useState(false)
+    const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+    const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null)
+
+    const confirmDelete = () => {
+        if (employeeToDelete) {
+            // onDelete(employeeToDelete)
+            setEmployeeToDelete(null)
+        }
+    }
 
 
-    const { data: employeeList, error } = useSWR<ApiEmployeeListResp[]>('ApiEmployeeList', ApiEmployeeList);
+    const handleDeleteClick = (id: number) => {
+        setEmployeeToDelete(id)
+    }
+
+    const handleEditClick = (employee: AIEmployee) => {
+        // setEmployeeToEdit(employee)
+    }
+
+    const { data: employeeList, error,mutate } = useSWR<ApiEmployeeListResp[]>('ApiEmployeeList', ApiEmployeeList);
     if (error) return <div>{t('home-page.failed-to-load')}</div>;
     if (!employeeList) return (
         <div className="w-full flex items-center justify-center h-[50vh]">
@@ -50,18 +73,33 @@ export default function AIEmployeesDashboard() {
         </div>
     );
 
-    const handleCreateEmployee = (employee: AIEmployee) => {
-        setEmployees([...employees, employee])
-        setIsCreating(false)
+    const handleCreateEmployee = async (data: ApiEmployeeCreateRequest) => {
+        setIsLoading(true)
+        try {
+            await ApiEmployeeCreate(data)
+            toast({
+                title: t('admin-teamMember-page.User created successfully'),
+                description: `${t('admin-teamMember-page.Created user')} ${data.name} ${t('admin-teamMember-page.with role')} ${data.role}`,
+            })
+            await mutate()
+            setIsCreating(false)
+            // Here you would typically update the users list or refetch data
+        } catch (error) {
+            // setIsCreateUserModalOpen(false)
+            toast({
+                title: t('admin-teamMember-page.Error'),
+                description:  String(error),
+                variant: "destructive",
+            })
+        } finally {
+            setIsLoading(false)
+        }
     }
+
 
     const handleUpdateEmployee = (updatedEmployee: AIEmployee) => {
         setEmployees(employees.map((emp) => (emp.id === updatedEmployee.id ? updatedEmployee : emp)))
         setEditingEmployee(null)
-    }
-
-    const handleDeleteEmployee = (id: string) => {
-        setEmployees(employees.filter((emp) => emp.id !== id))
     }
 
     return (
@@ -123,6 +161,8 @@ export default function AIEmployeesDashboard() {
                                         transition={{ duration: 0.3, delay: 0.1 * index }}
                                         whileHover={{ scale: 1.02 }}
                                         key={index}
+                                        onMouseEnter={() => setHoveredCard(employee.id)}
+                                        onMouseLeave={() => setHoveredCard(null)}
                                     >
                                         <div
                                               className={`block border rounded-lg p-4 shadow-xs transition-all duration-300 ${color}`}
@@ -140,6 +180,7 @@ export default function AIEmployeesDashboard() {
                                                            {employee.role}
                                                         </span>
                                                     </div>
+
                                                     <h3 className="font-medium truncate">My name is {employee.name}</h3>
                                                     <Collapsible
                                                         open={expandedPrompts[employee.id]}
@@ -182,6 +223,27 @@ export default function AIEmployeesDashboard() {
                                                             </span>
                                                         </div>
                                                     </div>
+                                                    {/* Action buttons only visible on hover */}
+                                                    <div
+                                                        className={`absolute top-2 right-2 flex gap-1 transition-opacity duration-200 ${hoveredCard === employee.id ? "opacity-100" : "opacity-0"}`}
+                                                    >
+                                                        <Button
+                                                            variant="outline"
+                                                            size="icon"
+                                                            onClick={() => handleEditClick(employee)}
+                                                            className="h-8 w-8 bg-white border-slate-200 text-slate-600 hover:text-slate-700 hover:bg-slate-100"
+                                                        >
+                                                            <Edit2 className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="icon"
+                                                            onClick={() => handleDeleteClick(employee.id)}
+                                                            className="h-8 w-8 bg-white border-slate-200 text-gray-600 hover:text-gray-700 hover:bg-gray-100"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -205,15 +267,34 @@ export default function AIEmployeesDashboard() {
                         <DialogDescription>Add a new AI employee to your team</DialogDescription>
                     </DialogHeader>
                     <div className="px-6 pb-6">
-                        <AIEmployeeForm
+                        <CreateEmployeeForm
                             employee={null}
                             onSubmit={handleCreateEmployee}
                             onCancel={() => setIsCreating(false)}
-                            isDialog={true}
                         />
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={!!employeeToDelete} onOpenChange={(open) => !open && setEmployeeToDelete(null)}>
+                <AlertDialogContent className="bg-white border border-gray-200">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete this AI employee? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="border-gray-200 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDelete} className="bg-gray-800 text-white hover:bg-gray-700">
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
         </div>
     )
