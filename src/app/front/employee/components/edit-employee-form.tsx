@@ -6,8 +6,7 @@ import {Label} from "@/components/ui/label"
 import {Textarea} from "@/components/ui/textarea"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
-import {Wand2} from "lucide-react"
-import {ApiEmployeeCreateRequest, ApiEmployeeItemResp, ApiEmployeeUpdateRequest} from "@/service/api";
+import {ApiEmployeeItemResp, ApiEmployeeUpdateRequest} from "@/service/api";
 import { EmployeeStatus, EmployeeStatusEnum} from "@/lib/constants/constants";
 
 interface AIEmployeeFormProps {
@@ -17,15 +16,11 @@ interface AIEmployeeFormProps {
 }
 
 export default function EditEmployeeForm({ employee, onSubmit, onCancel }: AIEmployeeFormProps) {
-    if (!employee) {
-        return  null
-    }
-
-    const [name, setName] = useState(employee.name)
-    const [role, setRole] = useState(employee.role)
-    const [status, setStatus] = useState<EmployeeStatus>(employee.status)
-    const [avatarUrl, setAvatarUrl] = useState(employee.avatar)
-    const [prompt, setPrompt] = useState(employee.prompt)
+    const [name, setName] = useState(employee?.name || "")
+    const [role, setRole] = useState(employee?.role || "")
+    const [status, setStatus] = useState<EmployeeStatus>(employee?.status || EmployeeStatus.Active)
+    const [avatarUrl, setAvatarUrl] = useState(employee?.avatar || "")
+    const [prompt, setPrompt] = useState(employee?.prompt || "")
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -43,7 +38,7 @@ export default function EditEmployeeForm({ employee, onSubmit, onCancel }: AIEmp
             prompt: prompt.trim(),
         }
 
-        onSubmit(employee.id,updatedEmployee)
+        onSubmit(employee?.id || 0,updatedEmployee)
     }
 
     // Get initials from name for avatar fallback
