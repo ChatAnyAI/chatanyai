@@ -31,6 +31,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ModelSelector } from './model-selector';
 import {Settings2} from "lucide-react";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
+import MentionList from "@/components/chat/mention-list";
 
 function PureMultimodalInput({
   channelId,
@@ -69,6 +70,23 @@ function PureMultimodalInput({
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+  const [showMentions, setShowMentions] = useState(false)
+  const mentionRef = useRef<HTMLDivElement>(null)
+  const [mentions, setMentions] = useState<{ name: string; start: number; end: number }[]>([])
+  const [currentAtPos, setCurrentAtPos] = useState(-1)
+  const [message, setMessage] = useState("")
+  const [cursorPosition, setCursorPosition] = useState(0)
+  const overlayRef = useRef<HTMLDivElement>(null)
+// Team members data
+    const teamMembers = [
+        { id: 1, name: "Mike", role: "Team Leader", avatar: "/avatars/mike.png", color: "bg-orange-200" },
+        { id: 2, name: "Emma", role: "Product Manager", avatar: "/avatars/emma.png", color: "bg-pink-200" },
+        { id: 3, name: "Bob", role: "Architect", avatar: "/avatars/bob.png", color: "bg-gray-200" },
+        { id: 4, name: "Alex", role: "Engineer", avatar: "/avatars/alex.png", color: "bg-blue-200" },
+        { id: 5, name: "David", role: "Data Analyst", avatar: "/avatars/david.png", color: "bg-green-200" },
+    ]
+  // Add a new state to track the currently selected index in the mention list
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -89,6 +107,25 @@ function PureMultimodalInput({
       textareaRef.current.style.height = '98px';
     }
   };
+
+    // Close mention list when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                mentionRef.current &&
+                !mentionRef.current.contains(event.target as Node) &&
+                textareaRef.current &&
+                !textareaRef.current.contains(event.target as Node)
+            ) {
+                setShowMentions(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
 
   const [localStorageInput, setLocalStorageInput] = useLocalStorage(
     'input',
@@ -114,6 +151,22 @@ function PureMultimodalInput({
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
     adjustHeight();
+
+      // const content = event.target.value
+      // setMessage(content)
+      // setCursorPosition(event.target.selectionStart || 0)
+      //
+      // // Check if @ was just typed
+      // const atIndex = findLastUnprocessedAtSymbol(content)
+      // if (atIndex !== -1) {
+      //     setShowMentions(true)
+      //     setCurrentAtPos(atIndex)
+      // } else {
+      //     setShowMentions(false)
+      // }
+      //
+      // // Update the overlay to show highlighted mentions
+      // updateOverlay()
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -201,7 +254,187 @@ function PureMultimodalInput({
     [setAttachments],
   );
 
-  return (
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (showMentions) {
+            // Prevent default behavior for navigation keys
+            if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Tab" || e.key === "Enter") {
+                e.preventDefault()
+            }
+
+            switch (e.key) {
+                case "ArrowUp":
+                    // Move selection up
+                    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : teamMembers.length - 1))
+                    break
+                case "ArrowDown":
+                    // Move selection down
+                    setSelectedIndex((prev) => (prev < teamMembers.length - 1 ? prev + 1 : 0))
+                    break
+                case "Tab":
+                case "Enter":
+                    // Select the currently highlighted member
+                    if (teamMembers[selectedIndex]) {
+                        handleSelectMember(teamMembers[selectedIndex].name)
+                    }
+                    break
+                case "Escape":
+                    // Close the mention list
+                    setShowMentions(false)
+                    break
+            }
+        }else {
+            const content = e.currentTarget.textContent || ""
+            setMessage(content)
+            // show mentions employee list
+            if ( e.key === '@') {
+                const cursorPosition = textareaRef.current?.selectionStart || 0;
+                console.log(`The '@' character is at position: ${cursorPosition}`);
+                setCurrentAtPos(cursorPosition); // 保存当前位置
+                setShowMentions(true);
+            }
+
+            // Only process Enter key when not in IME composition
+            if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                e.preventDefault();
+                if (isLoading) {
+                    toast.error('Please wait for the model to finish its response!');
+                } else {
+                    submitForm();
+                }
+            }
+        }
+    }
+
+
+    // Handle member selection
+    const handleSelectMember = (name: string) => {
+        setShowMentions(false)
+
+        if (!textareaRef.current || currentAtPos === -1) return
+
+        // Create the new mention
+        const newMention = {
+            name,
+            start: currentAtPos,
+            end: currentAtPos + name.length + 1, // +1 for the @ symbol
+        }
+
+        // Create new content by replacing the @ with @name
+        const beforeAt = message.substring(0, currentAtPos)
+        const afterAt = message.substring(currentAtPos + 1) // Skip the @ symbol
+        const newContent = beforeAt + "@" + name + " " + afterAt
+
+        // Update the mentions array with adjusted positions for existing mentions
+        // that come after the new mention
+        const updatedMentions = mentions.map((mention) => {
+            if (mention.start > currentAtPos) {
+                // Adjust positions for mentions that come after the new one
+                const offset = name.length + 1 // +1 for the space after the name
+                return {
+                    ...mention,
+                    start: mention.start + offset,
+                    end: mention.end + offset,
+                }
+            }
+            return mention
+        })
+
+        // Add the new mention
+        const newMentions = [...updatedMentions, newMention]
+
+        // Update state
+        setMentions(newMentions)
+        setMessage(newContent)
+
+        // Update the textarea value
+        if (textareaRef.current) {
+            textareaRef.current.value = newContent
+
+            // Set cursor position after the mention
+            const newCursorPos = currentAtPos + name.length + 2 // +2 for @ and space
+            textareaRef.current.setSelectionRange(newCursorPos, newCursorPos)
+            textareaRef.current.focus()
+            setCursorPosition(newCursorPos)
+        }
+
+        // Reset current @ position
+        setCurrentAtPos(-1)
+
+        // Update the overlay
+        setTimeout(updateOverlay, 0)
+    }
+    // Find the last @ symbol that isn't part of an existing mention
+    const findLastUnprocessedAtSymbol = (content: string): number => {
+        const lastAtIndex = content.lastIndexOf("@")
+        if (lastAtIndex === -1) return -1
+
+        // Check if this @ is part of an existing mention
+        for (const mention of mentions) {
+            if (lastAtIndex >= mention.start && lastAtIndex < mention.end) {
+                return -1 // This @ is part of an existing mention
+            }
+        }
+
+        // Check if the @ is preceded by a space or is at the start of the text
+        if (lastAtIndex === 0 || content[lastAtIndex - 1] === " ") {
+            return lastAtIndex
+        }
+
+        return -1
+    }
+
+
+    // Update the overlay to show highlighted mentions
+    const updateOverlay = () => {
+        if (!overlayRef.current || !textareaRef.current) return
+
+        // Create HTML content for the overlay
+        let html = ""
+        let lastIndex = 0
+
+        // Sort mentions by start position
+        const sortedMentions = [...mentions].sort((a, b) => a.start - b.start)
+
+        // Process each mention
+        for (const mention of sortedMentions) {
+            // Add text before the mention
+            if (mention.start > lastIndex) {
+                const textBefore = message.substring(lastIndex, mention.start)
+                html += textBefore.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;")
+            }
+
+            // Add the highlighted mention
+            const mentionText = message.substring(mention.start, mention.end)
+            html += `<span class="bg-blue-500 text-white rounded px-1">${mentionText}</span>`
+
+            // Update the last index
+            lastIndex = mention.end
+        }
+
+        // Add any remaining text
+        if (lastIndex < message.length) {
+            const textAfter = message.substring(lastIndex)
+            html += textAfter.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;")
+        }
+
+        // Set the HTML content of the overlay
+        overlayRef.current.innerHTML = html || "&nbsp;" // Use non-breaking space if empty
+
+        // Match the overlay's scroll position to the textarea
+        overlayRef.current.scrollTop = textareaRef.current.scrollTop
+    }
+
+    // Reset selectedIndex when showing/hiding mentions
+    // Add this effect after the other useEffect hooks
+    useEffect(() => {
+        if (showMentions) {
+            setSelectedIndex(0)
+        }
+    }, [showMentions])
+
+
+    return (
       <div className="relative w-full flex flex-col gap-4">
           {messages.length === 0 &&
               attachments.length === 0 &&
@@ -238,6 +471,12 @@ function PureMultimodalInput({
                   ))}
               </div>
           )}
+          {/* Overlay for highlighted mentions */}
+          <div
+              ref={overlayRef}
+              className="absolute inset-0 text-transparent pointer-events-none p-2 whitespace-pre-wrap font-sans text-base overflow-hidden"
+              style={{ fontFamily: "inherit" }}
+          ></div>
 
           <Textarea
               ref={textareaRef}
@@ -250,19 +489,24 @@ function PureMultimodalInput({
               )}
               rows={3}
               autoFocus
-              onKeyDown={(event) => {
-                  // Only process Enter key when not in IME composition
-                  if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
-                      event.preventDefault();
-
-                      if (isLoading) {
-                          toast.error('Please wait for the model to finish its response!');
-                      } else {
-                          submitForm();
-                      }
-                  }
-              }}
+              onKeyDown={handleKeyDown}
           />
+
+          {showMentions && (
+              <div
+                  ref={mentionRef}
+                  className={"absolute bottom-34"}
+                  style={{
+                      // position: "fixed", // Change to fixed positioning
+                      // top: `${mentionPosition.top}px`,
+                      // left: `${mentionPosition.left}px`,
+                      // top: `10px`,
+                      zIndex: 50,
+                  }}
+              >
+                  <MentionList members={teamMembers} onSelectMember={handleSelectMember} selectedIndex={selectedIndex}  />
+              </div>
+          )}
 
           <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start gap-0.5">
               {/* <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} /> */}
