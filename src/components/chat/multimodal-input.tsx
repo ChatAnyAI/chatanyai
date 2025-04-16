@@ -32,6 +32,8 @@ import { ModelSelector } from './model-selector';
 import {Settings2} from "lucide-react";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import MentionList from "@/components/chat/mention-list";
+import useSWR from "swr";
+import {ApiEmployeeItemResp, ApiEmployeeList} from "@/service/api";
 
 // Define the mention type
 type Mention = {
@@ -85,20 +87,21 @@ function PureMultimodalInput({
   const [showMentions, setShowMentions] = useState(false)
   const mentionRef = useRef<HTMLDivElement>(null)
   const [currentAtPos, setCurrentAtPos] = useState(-1)
-  const [message, setMessage] = useState("")
+  // const [message, setMessage] = useState("")
   const [mention, setMention] = useState<Mention>(null)
   // Add a new state to track the currently selected index in the mention list
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const overlayRef = useRef<HTMLDivElement>(null)
 // Team members data
-    const teamMembers = [
-        { id: 1, name: "Mike", role: "Team Leader", avatar: "/avatars/mike.png", color: "bg-orange-200" },
-        { id: 2, name: "Emma", role: "Product Manager", avatar: "/avatars/emma.png", color: "bg-pink-200" },
-        { id: 3, name: "Bob", role: "Architect", avatar: "/avatars/bob.png", color: "bg-gray-200" },
-        { id: 4, name: "Alex", role: "Engineer", avatar: "/avatars/alex.png", color: "bg-blue-200" },
-        { id: 5, name: "David", role: "Data Analyst", avatar: "/avatars/david.png", color: "bg-green-200" },
-    ]
+//     const teamMembers = [
+//         { id: 1, name: "Mike", role: "Team Leader", avatar: "/avatars/mike.png", color: "bg-orange-200" },
+//         { id: 2, name: "Emma", role: "Product Manager", avatar: "/avatars/emma.png", color: "bg-pink-200" },
+//         { id: 3, name: "Bob", role: "Architect", avatar: "/avatars/bob.png", color: "bg-gray-200" },
+//         { id: 4, name: "Alex", role: "Engineer", avatar: "/avatars/alex.png", color: "bg-blue-200" },
+//         { id: 5, name: "David", role: "Data Analyst", avatar: "/avatars/david.png", color: "bg-green-200" },
+//     ]
+    const { data: employeeList, error,mutate } = useSWR<ApiEmployeeItemResp[]>('ApiEmployeeList', ApiEmployeeList);
 
 
   useEffect(() => {
@@ -324,6 +327,7 @@ function PureMultimodalInput({
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (showMentions) {
+            if (!employeeList) return
             // Prevent default behavior for navigation keys
             if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Tab" || e.key === "Enter") {
                 e.preventDefault()
@@ -332,17 +336,17 @@ function PureMultimodalInput({
             switch (e.key) {
                 case "ArrowUp":
                     // Move selection up
-                    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : teamMembers.length - 1))
+                    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : employeeList.length - 1))
                     break
                 case "ArrowDown":
                     // Move selection down
-                    setSelectedIndex((prev) => (prev < teamMembers.length - 1 ? prev + 1 : 0))
+                    setSelectedIndex((prev) => (prev < employeeList.length - 1 ? prev + 1 : 0))
                     break
                 case "Tab":
                 case "Enter":
                     // Select the currently highlighted member
-                    if (teamMembers[selectedIndex]) {
-                        handleSelectMember(teamMembers[selectedIndex].id,teamMembers[selectedIndex].name)
+                    if (employeeList[selectedIndex]) {
+                        handleSelectMember(employeeList[selectedIndex].id,employeeList[selectedIndex].name)
                     }
                     break
                 case "Escape":
@@ -614,7 +618,7 @@ function PureMultimodalInput({
               onFocus={handleFocus}
           />
 
-          {showMentions && (
+          {showMentions && employeeList &&  (
               <div
                   ref={mentionRef}
                   className={"absolute bottom-34"}
@@ -626,7 +630,7 @@ function PureMultimodalInput({
                       zIndex: 50,
                   }}
               >
-                  <MentionList members={teamMembers} onSelectMember={handleSelectMember} selectedIndex={selectedIndex}  />
+                  <MentionList members={employeeList} onSelectMember={handleSelectMember} selectedIndex={selectedIndex}  />
               </div>
           )}
 

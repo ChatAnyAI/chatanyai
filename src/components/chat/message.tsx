@@ -63,6 +63,8 @@ const PurePreviewMessage = ({
   }, [message.annotations, message.id]);
 
 
+  console.log("message",message)
+
   return (
     <AnimatePresence>
       <motion.div
@@ -83,7 +85,7 @@ const PurePreviewMessage = ({
             },
           )}
         >
-          <MessageAssistantAvatar role={message.role} name={avatarInfo?.name} />
+          <MessageAssistantAvatar role={message.role} employee={message.employee} name={avatarInfo?.name} />
           <div className="flex flex-col gap-2 w-full">
             {message.experimental_attachments && (
               <div className="flex flex-row justify-end gap-2">
