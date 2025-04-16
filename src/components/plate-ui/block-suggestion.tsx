@@ -50,7 +50,7 @@ import {
 } from '@udecode/plate/react';
 import { CheckIcon, XIcon } from 'lucide-react';
 
-import { suggestionPlugin } from '@/components/editor/plugins/suggestion-plugin';
+import { suggestionPlugin } from '@/components/#editor/plugins/suggestion-plugin';
 
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import {

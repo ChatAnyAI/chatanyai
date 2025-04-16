@@ -35,7 +35,7 @@ import {
 import { useReadOnly, useSelected } from '@udecode/plate/react';
 import { GripVertical } from 'lucide-react';
 
-import { STRUCTURAL_TYPES } from '@/components/editor/transforms';
+import { STRUCTURAL_TYPES } from '@/components/#editor/transforms';
 
 import { TooltipButton } from './tooltip';
 

@@ -46,7 +46,7 @@ export default function Page() {
         <RightSettingProvider>
             <div className="flex flex-1  overflow-hidden" >
                 {/* Sidebar */}
-                <DocList />
+                {/* <DocList /> */}
                 {/* Main content */}
                 <div className="h-screen flex-col flex flex-1 overflow-hidden" >
                     {/*<ChatHeader*/}

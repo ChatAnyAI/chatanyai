@@ -34,8 +34,8 @@ import {
 import {
   type CommentsConfig,
   commentsPlugin,
-} from '@/components/editor/plugins/comments-plugin';
-import { suggestionPlugin } from '@/components/editor/plugins/suggestion-plugin';
+} from '@/components/#editor/plugins/comments-plugin';
+import { suggestionPlugin } from '@/components/#editor/plugins/suggestion-plugin';
 import { Button } from '@/components/plate-ui/button';
 import {
   Popover,

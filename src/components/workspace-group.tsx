@@ -1,5 +1,5 @@
-import { MoreHorizontal, type LucideIcon } from "lucide-react"
-import { Collapsible } from "@/components/ui/collapsible"
+import { MoreHorizontal, ChevronDown, ChevronRight, type LucideIcon } from "lucide-react"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import {
   SidebarGroup,
@@ -36,7 +36,8 @@ export function WorkspaceGroup({
   className,
   draggable = false,
   onDragEnd = () => { },
-  maked = false
+  maked = false,
+  defaultOpen = true
 }: {
   maked?: boolean;
   onDragEnd?: (curSpaceId: string, targetSpaceId: string, positon: 'before' | 'after') => void;
@@ -45,12 +46,14 @@ export function WorkspaceGroup({
   showAdd?: boolean,
   className?: string,
   groupName?: string,
-  items: NavMenuItem[]
+  items: NavMenuItem[],
+  defaultOpen?: boolean
 }) {
   const location = useLocation();
   const navigator = useNavigate();
   const appSideBarContext = useAppSideBarHistoryListContext();
   const { toggleMenu: onClickMenu } = appSideBarContext;
+  const [isOpen, setIsOpen] = React.useState(defaultOpen);
 
   // State to track drag operation
   const [draggedItem, setDraggedItem] = React.useState<string | null>(null);
@@ -120,104 +123,186 @@ export function WorkspaceGroup({
   return (
     <SidebarGroup className={className}>
       {
-        groupName ?
-          <div data-name={groupName} className={cn("flex items-center justify-between pr-2 group", groupRoute ? "hover:bg-accent/50 hover:shadow-xs rounded-md cursor-pointer" : "")} onClick={() => {
-            if (!groupRoute) return;
-            onClickMenu(null);
-            navigator(groupRoute);
-          }}
-          >
-            <SidebarGroupLabel>{groupName}</SidebarGroupLabel>
-            {
-              showAdd ?
-                <CreateSpace />
-                : null
-            }
-          </div>
-          : null
-      }
-
-      <SidebarMenu data-name={groupName + '-sub'}>
-        {items.map((item) => {
-          const isDragging = draggedItem === item.id;
-          const isDragOver = dragOverItem?.id === item.id;
-          const dragPosition = dragOverItem?.position;
-
-          return (
-            <Collapsible
-              key={item.name}
-              asChild
-              defaultOpen={item.isActive}
-            >
-              <SidebarMenuItem
-                data-name={item.name}
-                data-marked={maked ? 'true' : 'false'}
-                draggable={draggable && Boolean(item.id)}
-                onDragStart={(e) => item.id && handleDragStart(e, item.id)}
-                onDragOver={(e) => item.id && handleDragOver(e, item.id)}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => item.id && handleDrop(e, item.id)}
-                onDragEnd={handleDragEnd}
-                className={cn(
-                  "relative",
-                  draggable && "cursor-grab active:cursor-grabbing",
-                  isDragging && "opacity-50"
-                )}
+        groupName ? (
+          <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+            <div className="flex items-center justify-between pr-2">
+              <div 
+                data-name={groupName} 
+                className={cn("flex items-center justify-between w-full group", 
+                  groupRoute ? "hover:bg-accent/50 hover:shadow-xs rounded-md cursor-pointer" : "")} 
+                onClick={() => {
+                  if (!groupRoute) return;
+                  onClickMenu(null);
+                  navigator(groupRoute);
+                }}
               >
-                {isDragOver && dragPosition === 'before' && (
-                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-blue-500 -translate-y-0.5 z-10" />
-                )}
-                <SidebarMenuButton
-                  isActive={new RegExp(item.url).test(location.pathname)}
-                  asChild
-                  tooltip={item.name}
-                  onClick={(e) => {
-                    if (item.id && item.type !== AppType.Copilot && item.type !== AppType.Note) { 
-                      e.stopPropagation();
-                      onClickMenu({
-                        appId: item.id,
-                        name: item.name!,
-                        type: item.type
-                      });
-                      return;
-                    }
-                    onClickMenu(null);
-                  }}
-                >
-                  <Link to={item.url}>
-                    <Icon type={item.type!} icon={item.icon} />
-                    <span>{item.name}</span>
-                  </Link>
-                </SidebarMenuButton>
+                <div className="flex items-center">
+                  <CollapsibleTrigger className="cursor-pointer mr-1 p-1 rounded-sm hover:bg-accent" onClick={(e) => e.stopPropagation()}>
+                    {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                  </CollapsibleTrigger>
+                  <SidebarGroupLabel>{groupName}</SidebarGroupLabel>
+                </div>
                 {
-                  item.id ? (
-                    <div className="flex items-center">
-                      {/* <SidebarMenuAction 
-                        showOnHover 
-                        className="opacity-0 hover:opacity-100 transition-opacity data-[active=true]:opacity-100 mr-1" 
-                        onClick={() => onItemAddClick(item)}
-                      >
-                        <Plus size={18} />
-                      </SidebarMenuAction> */}
-                      <NavMore appInfo={item as AppResp}>
-                        <SidebarMenuAction
-                          showOnHover
-                          className="opacity-0 hover:opacity-100 transition-opacity data-[active=true]:opacity-100 cursor-pointer"
-                        >
-                          <MoreHorizontal size={18} />
-                        </SidebarMenuAction>
-                      </NavMore>
-                    </div>
-                  ) : null
+                  showAdd ?
+                    <CreateSpace />
+                    : null
                 }
-                {isDragOver && dragPosition === 'after' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 translate-y-0.5 z-10" />
-                )}
-              </SidebarMenuItem>
-            </Collapsible>
-          );
-        })}
-      </SidebarMenu>
+              </div>
+            </div>
+            <CollapsibleContent>
+              <SidebarMenu data-name={groupName + '-sub'}>
+                {items.map((item) => {
+                  const isDragging = draggedItem === item.id;
+                  const isDragOver = dragOverItem?.id === item.id;
+                  const dragPosition = dragOverItem?.position;
+
+                  return (
+                    <Collapsible
+                      key={item.name}
+                      asChild
+                      defaultOpen={item.isActive}
+                    >
+                      <SidebarMenuItem
+                        data-name={item.name}
+                        data-marked={maked ? 'true' : 'false'}
+                        draggable={draggable && Boolean(item.id)}
+                        onDragStart={(e) => item.id && handleDragStart(e, item.id)}
+                        onDragOver={(e) => item.id && handleDragOver(e, item.id)}
+                        onDragLeave={handleDragLeave}
+                        onDrop={(e) => item.id && handleDrop(e, item.id)}
+                        onDragEnd={handleDragEnd}
+                        className={cn(
+                          "relative",
+                          draggable && "cursor-grab active:cursor-grabbing",
+                          isDragging && "opacity-50"
+                        )}
+                      >
+                        {isDragOver && dragPosition === 'before' && (
+                          <div className="absolute top-0 left-0 right-0 h-0.5 bg-blue-500 -translate-y-0.5 z-10" />
+                        )}
+                        <SidebarMenuButton
+                          isActive={new RegExp(item.url).test(location.pathname)}
+                          asChild
+                          tooltip={item.name}
+                          onClick={(e) => {
+                            if (item.id && item.type !== AppType.Copilot && item.type !== AppType.Note) { 
+                              e.stopPropagation();
+                              onClickMenu({
+                                appId: item.id,
+                                name: item.name!,
+                                type: item.type
+                              });
+                              return;
+                            }
+                            onClickMenu(null);
+                          }}
+                        >
+                          <Link to={item.url}>
+                            <Icon type={item.type!} icon={item.icon} />
+                            <span>{item.name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                        {
+                          item.id ? (
+                            <div className="flex items-center">
+                              <NavMore appInfo={item as AppResp}>
+                                <SidebarMenuAction
+                                  showOnHover
+                                  className="opacity-0 hover:opacity-100 transition-opacity data-[active=true]:opacity-100 cursor-pointer"
+                                >
+                                  <MoreHorizontal size={18} />
+                                </SidebarMenuAction>
+                              </NavMore>
+                            </div>
+                          ) : null
+                        }
+                        {isDragOver && dragPosition === 'after' && (
+                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 translate-y-0.5 z-10" />
+                        )}
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                })}
+              </SidebarMenu>
+            </CollapsibleContent>
+          </Collapsible>
+        ) : (
+          <SidebarMenu data-name={groupName + '-sub'}>
+            {items.map((item) => {
+              const isDragging = draggedItem === item.id;
+              const isDragOver = dragOverItem?.id === item.id;
+              const dragPosition = dragOverItem?.position;
+
+              return (
+                <Collapsible
+                  key={item.name}
+                  asChild
+                  defaultOpen={item.isActive}
+                >
+                  <SidebarMenuItem
+                    data-name={item.name}
+                    data-marked={maked ? 'true' : 'false'}
+                    draggable={draggable && Boolean(item.id)}
+                    onDragStart={(e) => item.id && handleDragStart(e, item.id)}
+                    onDragOver={(e) => item.id && handleDragOver(e, item.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => item.id && handleDrop(e, item.id)}
+                    onDragEnd={handleDragEnd}
+                    className={cn(
+                      "relative",
+                      draggable && "cursor-grab active:cursor-grabbing",
+                      isDragging && "opacity-50"
+                    )}
+                  >
+                    {isDragOver && dragPosition === 'before' && (
+                      <div className="absolute top-0 left-0 right-0 h-0.5 bg-blue-500 -translate-y-0.5 z-10" />
+                    )}
+                    <SidebarMenuButton
+                      isActive={new RegExp(item.url).test(location.pathname)}
+                      asChild
+                      tooltip={item.name}
+                      onClick={(e) => {
+                        if (item.id && item.type !== AppType.Copilot && item.type !== AppType.Note) { 
+                          e.stopPropagation();
+                          onClickMenu({
+                            appId: item.id,
+                            name: item.name!,
+                            type: item.type
+                          });
+                          return;
+                        }
+                        onClickMenu(null);
+                      }}
+                    >
+                      <Link to={item.url}>
+                        <Icon type={item.type!} icon={item.icon} />
+                        <span>{item.name}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    {
+                      item.id ? (
+                        <div className="flex items-center">
+                          <NavMore appInfo={item as AppResp}>
+                            <SidebarMenuAction
+                              showOnHover
+                              className="opacity-0 hover:opacity-100 transition-opacity data-[active=true]:opacity-100 cursor-pointer"
+                            >
+                              <MoreHorizontal size={18} />
+                            </SidebarMenuAction>
+                          </NavMore>
+                        </div>
+                      ) : null
+                    }
+                    {isDragOver && dragPosition === 'after' && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 translate-y-0.5 z-10" />
+                    )}
+                  </SidebarMenuItem>
+                </Collapsible>
+              );
+            })}
+          </SidebarMenu>
+        )
+      }
     </SidebarGroup>
   )
 }

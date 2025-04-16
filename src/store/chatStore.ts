@@ -1,8 +1,8 @@
-import { ApiAppInfo, ApiSpaceList, AppResp } from "@/service/api";
+import { ApiAppInfo, ApiSpaceList, SpaceResp, ApiAiModelList, RespModel, AppResp } from "@/service/api";
 import { create } from 'zustand';
-import { ApiAppFavoriteList, ApiAiModelList, RespModel } from "@/service/api";
+import {  } from "@/service/api";
 import { NavMenuItem } from "@/components/workspace-group";
-import { RouteEnum } from "@/lib/constants/constants";
+import { AppType, RouteEnum } from "@/lib/constants/constants";
 import Cookies from "js-cookie";
 import {toast} from "@/hooks/use-toast";
 
@@ -13,6 +13,7 @@ type NonFunctionProperties<T> = {
 export type ChatStoreState = {
     favoriteAppList: NavMenuItem[];
     appList: NavMenuItem[];
+    notespaceList: NavMenuItem[];
     modelSelectedId: string;
     models: RespModel[];
     fetchAppList: () => void;
@@ -27,6 +28,7 @@ export type ChatStoreState = {
 const initialState: NonFunctionProperties<ChatStoreState> = {
     favoriteAppList: [],
     appList: [],
+    notespaceList: [],
     modelSelectedId: Cookies.get('model-id') || '',
     models: [],
     currentAppInfo: null,
@@ -36,8 +38,25 @@ export const useChatStore = create<ChatStoreState>((set) => ({
     ...initialState,
     fetchAppList: async () => {
         const data = await ApiSpaceList();
+        const noteTypeApps: SpaceResp[] = [];
+        const restTypeApps: SpaceResp[] = [];
+        data.forEach(d => {
+            if (d.app.type === AppType.Note) {
+                noteTypeApps.push(d);
+            } else {
+                restTypeApps.push(d);
+            }
+        });
         set({
-            appList: data.map(d => {
+            appList: restTypeApps.map(d => {
+                return {
+                    ...d.app,
+                    isFullAccess: d.isFullAccess,
+                    spaceId: d.id,
+                    url: `/${RouteEnum[d.app.type]}/${d.app.id}`,
+                } as NavMenuItem
+            }),
+            notespaceList: noteTypeApps.map(d => {
                 return {
                     ...d.app,
                     isFullAccess: d.isFullAccess,

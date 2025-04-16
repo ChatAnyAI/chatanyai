@@ -1,12 +1,12 @@
 import { get, post, del, put } from "@/lib/request";
 import {
-    AppSubType,
-    AppType,
-    AppVisibility,
-    EmployeeStatus,
-    PermissionType,
-    ProductType,
-    UserRole
+  AppSubType,
+  AppType,
+  AppVisibility,
+  EmployeeStatus,
+  PermissionType,
+  ProductType,
+  UserRole
 } from "@/lib/constants/constants";
 import { Pagination } from "@/components/ui/pagination";
 
@@ -97,11 +97,11 @@ export interface User {
 }
 
 export interface ShareUser {
-    id: number;
-    name: string;
-    avatar: string;
-    email: string;
-    permission: PermissionType;
+  id: number;
+  name: string;
+  avatar: string;
+  email: string;
+  permission: PermissionType;
 }
 
 export interface AvatarUser {
@@ -162,11 +162,12 @@ export type Space = {
   createdAt: number;
   isFullAccess: boolean;
 }
+export type SpaceResp = Space & {
+  isFullAccess: boolean;
+  app: AppResp;
+}
 export const ApiSpaceList = () => {
-  return get<Array<Space & {
-    isFullAccess: boolean;
-    app: AppResp;
-  }>>('/api/space/list');
+  return get<Array<SpaceResp>>('/api/space/list');
 }
 
 export interface SpaceChangeSortReq {
@@ -182,7 +183,7 @@ export const ApiSpaceDrag = (data: SpaceChangeSortReq) => {
 // App APIs
 export interface AppResp {
   id: string;
-  guid: string;
+  // guid: string;
   name: string;
   description: string;
   icon: string;
@@ -260,15 +261,15 @@ export const ApiAppShareDelete = (appId: string, uid: number) => {
 }
 
 export const ApiAppShareUpdatePermission = (appId: string, uid: number, permission: PermissionType) => {
-    return put<void>(`/api/app/${appId}/share/${uid}/permission`,{
-        permission
-    });
+  return put<void>(`/api/app/${appId}/share/${uid}/permission`, {
+    permission
+  });
 }
 
-export const ApiAppUpdatePermission = (appId: string,  permission: PermissionType) => {
-    return put<void>(`/api/app/${appId}/permission`,{
-        permission
-    });
+export const ApiAppUpdatePermission = (appId: string, permission: PermissionType) => {
+  return put<void>(`/api/app/${appId}/permission`, {
+    permission
+  });
 }
 
 export const ApiAppShareUserList = (appId: string) => {
@@ -339,52 +340,52 @@ export const ApiHomeRecent = () => {
 }
 
 export type ApiEmployeeItemResp = {
-    id: number
-    name: string
-    role: string
-    // capabilities: string[]
-    status: EmployeeStatus
-    createdAt: number
-    avatar: string
-    prompt: string
+  id: number
+  name: string
+  role: string
+  // capabilities: string[]
+  status: EmployeeStatus
+  createdAt: number
+  avatar: string
+  prompt: string
 }
 
 
 export const ApiEmployeeList = () => {
-    return get<ApiEmployeeItemResp[]>('/api/my/employee/-/list');
+  return get<ApiEmployeeItemResp[]>('/api/my/employee/-/list');
 }
 
 
 export interface ApiEmployeeCreateRequest {
-    name: string
-    role: string
-    status: EmployeeStatus
-    avatar: string
-    prompt: string
+  name: string
+  role: string
+  status: EmployeeStatus
+  avatar: string
+  prompt: string
 }
 
 export const ApiEmployeeCreate = (req: ApiEmployeeCreateRequest) => {
-    return post<void>(`/api/my/employee`,req);
+  return post<void>(`/api/my/employee`, req);
 }
 
 
 
 
 export interface ApiEmployeeUpdateRequest {
-    name: string
-    role: string
-    status: EmployeeStatus
-    avatar: string
-    prompt: string
+  name: string
+  role: string
+  status: EmployeeStatus
+  avatar: string
+  prompt: string
 }
 
-export const ApiEmployeeUpdate = (employeeId: number,req: ApiEmployeeUpdateRequest) => {
-    return put<void>(`/api/my/employee/${employeeId}`,req);
+export const ApiEmployeeUpdate = (employeeId: number, req: ApiEmployeeUpdateRequest) => {
+  return put<void>(`/api/my/employee/${employeeId}`, req);
 }
 
 
 export const ApiEmployeeDelete = (employeeId: number) => {
-    return del<void>(`/api/my/employee/${employeeId}`);
+  return del<void>(`/api/my/employee/${employeeId}`);
 }
 
 // Dataset APIs
@@ -507,13 +508,13 @@ export interface PostChatMessageAttachment {
 // }
 
 export interface RespChannelUser {
-    id: number;
-    name: string;
-    avatar: string;
+  id: number;
+  name: string;
+  avatar: string;
 }
 
 export interface MyPermission {
-    permissionType: PermissionType;
+  permissionType: PermissionType;
 }
 
 export interface RespChannel {
@@ -559,12 +560,12 @@ export const ApiUpdateChatInfo = (channelId: string, data: UpdateChatInfoRequest
   return put<void>(`/api/channel/${channelId}/info`, data);
 }
 
-export const ApiChatCreate = (appId: string, data: { fileId?: number}) => { 
+export const ApiChatCreate = (appId: string, data: { fileId?: number }) => {
   return post<{ guid: string }>(`/api/app/${appId}/channel`, data);
 }
 
 export const ApiUpdateChatVisibility = (channelId: string, visibility: AppVisibility) => {
-    return put<void>(`/api/channel/${channelId}/visibility`, { visibility });
+  return put<void>(`/api/channel/${channelId}/visibility`, { visibility });
 }
 
 export const ApiChannelListByAppId = (appId: string) => {
@@ -589,15 +590,15 @@ export const ApiChatShareDelete = (channelId: string, uid: number) => {
 }
 
 export const ApiChatShareUpdatePermission = (channelId: string, uid: number, permission: PermissionType) => {
-    return put<void>(`/api/channel/${channelId}/share/${uid}/permission`,{
-        permission
-    });
+  return put<void>(`/api/channel/${channelId}/share/${uid}/permission`, {
+    permission
+  });
 }
 
-export const ApiChatUpdatePermission = (channelId: string,  permission: PermissionType) => {
-    return put<void>(`/api/channel/${channelId}/permission`,{
-        permission
-    });
+export const ApiChatUpdatePermission = (channelId: string, permission: PermissionType) => {
+  return put<void>(`/api/channel/${channelId}/permission`, {
+    permission
+  });
 }
 
 
@@ -694,7 +695,7 @@ export interface Template {
 // templates
 export const ApiTemplateList = (group: string, pageToLoad: number) => {
   // TODO: Implement pagination
-  return get <ResponseWithPagination<Template[]>>('/api/template/-/list', {
+  return get<ResponseWithPagination<Template[]>>('/api/template/-/list', {
     params: {
       group,
       pagination: JSON.stringify({
@@ -706,51 +707,52 @@ export const ApiTemplateList = (group: string, pageToLoad: number) => {
 }
 
 export interface ApiCreateDocResp {
-    guid: string;
+  guid: string;
 }
 
 export const ApiCreateDoc = (appId: string) => {
-    return post<ApiCreateDocResp>(`/api/app/${appId}/doc`);
+  return post<ApiCreateDocResp>(`/api/app/${appId}/doc`);
 }
 
-export const ApiDocContent = (appId: string,channelId: string,req:{content: string}) => {
-    return put<void>(`/api/app/${appId}/doc/${channelId}/content`,req);
+export const ApiDocContent = (appId: string, channelId: string, req: { content: string }) => {
+  return put<void>(`/api/app/${appId}/doc/${channelId}/content`, req);
 }
 
 export interface ApiDocAppendContentReq {
-    referContent: string;
-    referChannelId: string;
-    referAnchorId: string;
+  referContent: string;
+  referChannelId: string;
+  referAnchorId: string;
 }
 
-export const ApiDocAppendContent = (appId: string,channelId: string,req: ApiDocAppendContentReq) => {
-    return put<void>(`/api/app/${appId}/doc/${channelId}/appendContent`,req);
+export const ApiDocAppendContent = (appId: string, channelId: string, req: ApiDocAppendContentReq) => {
+  return put<void>(`/api/app/${appId}/doc/${channelId}/appendContent`, req);
 }
 
 
 export const ApiDocRecent = () => {
-    return get<DocInfo[]>(`/api/doc/-/recent`);
+  return get<DocInfo[]>(`/api/doc/-/recent`);
 }
 
 
 export interface DocInfo {
-    appId: string;
-    channelId: string;
-    name: string;
-    updatedAt: number;
+  appId: string;
+  channelId: string;
+  name: string;
+  updatedAt: number;
+  icon: string
 }
 
 // /api/app/:appId/doc/-/list
 export const ApiDocList = (appId: string) => {
-    return get<DocInfo[]>(`/api/app/${appId}/doc/-/list`);
+  return get<DocInfo[]>(`/api/app/${appId}/doc/-/list`);
 }
 
 export interface ApiCreateDocResp {
-    content: string;
+  content: string;
 }
 
 export const ApiGetDoc = (channelId: string) => {
-    return get<ApiCreateDocResp>(`/api/doc/${channelId}`);
+  return get<ApiCreateDocResp>(`/api/doc/${channelId}`);
 }
 
 
@@ -773,7 +775,7 @@ export const ApiUserProfile = () => {
 }
 
 export const ApiOauthSupport = () => {
-    return get<string[]>('/api/oauth/support');
+  return get<string[]>('/api/oauth/support');
 }
 
 

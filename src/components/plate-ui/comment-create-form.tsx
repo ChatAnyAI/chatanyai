@@ -26,7 +26,7 @@ import { Plate, useEditorRef, useStoreSelect } from '@udecode/plate/react';
 import { type CreatePlateEditorOptions, PlateLeaf } from '@udecode/plate/react';
 import { ArrowUpIcon } from 'lucide-react';
 
-import { useCreateEditor } from '@/components/editor/use-create-editor';
+import { useCreateEditor } from '@/components/#editor/use-create-editor';
 import {
   Avatar,
   AvatarFallback,

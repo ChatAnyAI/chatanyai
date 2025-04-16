@@ -65,16 +65,16 @@ export function CoreEditor(props: EditorProps) {
     };
 
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-          <Plate editor={editor} readOnly={readOnly}
-              onValueChange={handleChange}>
-        <TocSidebar className="top-[130px]" topOffset={30} />
+    return (
+        <DndProvider backend={HTML5Backend}>
+            <Plate editor={editor} readOnly={readOnly}
+                onValueChange={handleChange}>
+                <TocSidebar className="top-[130px]" topOffset={30} />
 
-        <EditorContainer>
-          <Editor variant="demo" placeholder="Type..." />
-        </EditorContainer>
-      </Plate>
-    </DndProvider>
-  );
+                <EditorContainer>
+                    <Editor variant="demo" placeholder="Type..." />
+                </EditorContainer>
+            </Plate>
+        </DndProvider>
+    );
 }

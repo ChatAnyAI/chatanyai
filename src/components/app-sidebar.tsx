@@ -20,6 +20,7 @@ import { useSpaceDrag } from "@/hooks/use-space-api"
 import { AppType, UserRole } from "@/lib/constants/constants";
 import { i18n } from "i18next"
 import { useTranslation } from "react-i18next"
+import { Notespace } from "./sidebar/note-space"
 
 const data = (t: i18n['t']) => ({
   navSupport: [
@@ -84,7 +85,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <SidebarContent>
           <NavHeader />
           {/*<NavGroup items={favoriteAppList} groupName="Favorite" maked />*/}
-          <WorkspaceGroup items={appList} groupName={"Workspace"} draggable onDragEnd={onDragEnd} showAdd maked />
+          <WorkspaceGroup items={appList} groupName={"Chatspace"} draggable onDragEnd={onDragEnd} showAdd maked />
+          <Notespace />
           {user.roleId === UserRole.Admin && <WorkspaceGroup items={data(t).navSupport} className="mt-auto" />}
         </SidebarContent>
         <SidebarFooter>

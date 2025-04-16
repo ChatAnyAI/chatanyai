@@ -13,7 +13,7 @@ import {
   AlignRightIcon,
 } from 'lucide-react';
 
-import { STRUCTURAL_TYPES } from '@/components/editor/transforms';
+import { STRUCTURAL_TYPES } from '@/components/#editor/transforms';
 
 import {
   DropdownMenu,
