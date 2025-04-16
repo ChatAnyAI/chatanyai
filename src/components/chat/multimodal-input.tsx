@@ -68,7 +68,10 @@ function PureMultimodalInput({
   ) => void;
   className?: string;
 }) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const autoFocus = true
+  const placeholder = "Type a message here... (Use @ to mention your AI team members)"
+  const [isEmpty, setIsEmpty] = useState(true)
+  const textareaRef = useRef<HTMLDivElement>(null);
   const { width } = useWindowSize();
   const [showMentions, setShowMentions] = useState(false)
   const mentionRef = useRef<HTMLDivElement>(null)
@@ -144,13 +147,50 @@ function PureMultimodalInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+    // Add a useEffect to initialize the input field with the initial content
+    useEffect(() => {
+        if (autoFocus) {
+            setTimeout(focusInputAtEnd, 0)
+        }
+    }, [autoFocus])
+
+    // Function to focus the input and place cursor at the end
+    const focusInputAtEnd = () => {
+        if (!textareaRef.current) return
+
+        // Focus the element
+        textareaRef.current.focus()
+
+        // Place cursor at the end
+        const selection = window.getSelection()
+        const range = document.createRange()
+
+        // If the input is empty, just collapse at the beginning
+        if (!textareaRef.current.childNodes.length) {
+            range.setStart(textareaRef.current, 0)
+            range.collapse(true)
+        } else {
+            // Otherwise, place cursor at the end of the content
+            const lastChild = textareaRef.current.childNodes[textareaRef.current.childNodes.length - 1]
+            if (lastChild.nodeType === Node.TEXT_NODE) {
+                range.setStart(lastChild, lastChild.textContent?.length || 0)
+            } else {
+                range.setStartAfter(lastChild)
+            }
+            range.collapse(true)
+        }
+
+        selection?.removeAllRanges()
+        selection?.addRange(range)
+    }
+
   useEffect(() => {
     setLocalStorageInput(input);
   }, [input, setLocalStorageInput]);
 
-  const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
+  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
       const content = e.currentTarget.textContent || ""
-
+      setIsEmpty(content === "")
     console.log("handleInput",content)
     setInput(content);
     adjustHeight();
@@ -291,7 +331,9 @@ function PureMultimodalInput({
             setMessage(content)
             // show mentions employee list
             if ( e.key === '@') {
-                const cursorPosition = textareaRef.current?.selectionStart || 0;
+                // 获取当前key的位置
+                const selection = window.getSelection();
+                const cursorPosition = selection?.getRangeAt(0).startOffset || 0;
                 console.log(`The '@' character is at position: ${cursorPosition}`);
                 setCurrentAtPos(cursorPosition); // 保存当前位置
                 setShowMentions(true);
@@ -313,13 +355,12 @@ function PureMultimodalInput({
         }
     }
 
-
-    // Handle member selection
+    // Handle member selection - completely rewritten to fix the bug
     const handleSelectMember = (name: string) => {
         setShowMentions(false)
-
         if (!textareaRef.current || currentAtPos === -1) return
-
+        // Get the plain text content
+        const plainText = textareaRef.current.textContent || ""
         // Create the new mention
         const newMention = {
             name,
@@ -328,8 +369,8 @@ function PureMultimodalInput({
         }
 
         // Create new content by replacing the @ with @name
-        const beforeAt = message.substring(0, currentAtPos)
-        const afterAt = message.substring(currentAtPos + 1) // Skip the @ symbol
+        const beforeAt = plainText.substring(0, currentAtPos)
+        const afterAt = plainText.substring(currentAtPos + 1) // Skip the @ symbol
         const newContent = beforeAt + "@" + name + " " + afterAt
 
         // Update the mentions array with adjusted positions for existing mentions
@@ -353,94 +394,92 @@ function PureMultimodalInput({
         // Update state
         setMentions(newMentions)
         setMessage(newContent)
+        setIsEmpty(false)
 
-        // Update the textarea value
+        // Update the input content and apply highlighting
         if (textareaRef.current) {
-            textareaRef.current.value = newContent
-
-            // Set cursor position after the mention
-            const newCursorPos = currentAtPos + name.length + 2 // +2 for @ and space
-            textareaRef.current.setSelectionRange(newCursorPos, newCursorPos)
-            textareaRef.current.focus()
-            setCursorPosition(newCursorPos)
+            textareaRef.current.textContent = newContent
+            highlightMentions(newContent, newMentions)
         }
 
         // Reset current @ position
         setCurrentAtPos(-1)
-
-        // Update the overlay
-        setTimeout(updateOverlay, 0)
-    }
-    // Find the last @ symbol that isn't part of an existing mention
-    const findLastUnprocessedAtSymbol = (content: string): number => {
-        const lastAtIndex = content.lastIndexOf("@")
-        if (lastAtIndex === -1) return -1
-
-        // Check if this @ is part of an existing mention
-        for (const mention of mentions) {
-            if (lastAtIndex >= mention.start && lastAtIndex < mention.end) {
-                return -1 // This @ is part of an existing mention
-            }
-        }
-
-        // Check if the @ is preceded by a space or is at the start of the text
-        if (lastAtIndex === 0 || content[lastAtIndex - 1] === " ") {
-            return lastAtIndex
-        }
-
-        return -1
     }
 
+    // Completely rewritten highlight mentions function
+    const highlightMentions = (content = "", mentionsToHighlight = mentions) => {
+        if (!textareaRef.current) return
 
-    // Update the overlay to show highlighted mentions
-    const updateOverlay = () => {
-        if (!overlayRef.current || !textareaRef.current) return
+        // Save current selection
+        const selection = window.getSelection()
+        const savedSelection = {
+            node: selection?.anchorNode,
+            offset: selection?.anchorOffset || 0,
+        }
 
-        // Create HTML content for the overlay
-        let html = ""
-        let lastIndex = 0
+        // Clear the input
+        textareaRef.current.innerHTML = ""
+
+        // If no content provided, use the current message
+        const textContent = content || message
 
         // Sort mentions by start position
-        const sortedMentions = [...mentions].sort((a, b) => a.start - b.start)
+        const sortedMentions = [...mentionsToHighlight].sort((a, b) => a.start - b.start)
+
+        let lastIndex = 0
 
         // Process each mention
         for (const mention of sortedMentions) {
             // Add text before the mention
             if (mention.start > lastIndex) {
-                const textBefore = message.substring(lastIndex, mention.start)
-                html += textBefore.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;")
+                const textBefore = document.createTextNode(textContent.substring(lastIndex, mention.start))
+                textareaRef.current.appendChild(textBefore)
             }
 
             // Add the highlighted mention
-            const mentionText = message.substring(mention.start, mention.end)
-            html += `<span class="bg-blue-500 text-white rounded px-1">${mentionText}</span>`
+            const mentionText = "@" + mention.name
+            const mentionSpan = document.createElement("span")
+            mentionSpan.textContent = mentionText
+            mentionSpan.className = "bg-blue-500 text-white rounded px-1"
+            textareaRef.current.appendChild(mentionSpan)
 
-            // Update the last index
-            lastIndex = mention.end
+            // Update the last index to after the mention
+            lastIndex = mention.start + mentionText.length
         }
 
         // Add any remaining text
-        if (lastIndex < message.length) {
-            const textAfter = message.substring(lastIndex)
-            html += textAfter.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;")
+        if (lastIndex < textContent.length) {
+            const textAfter = document.createTextNode(textContent.substring(lastIndex))
+            textareaRef.current.appendChild(textAfter)
         }
 
-        // Set the HTML content of the overlay
-        overlayRef.current.innerHTML = html || "&nbsp;" // Use non-breaking space if empty
-
-        // Match the overlay's scroll position to the textarea
-        overlayRef.current.scrollTop = textareaRef.current.scrollTop
+        // Try to restore cursor position
+        if (savedSelection.node) {
+            try {
+                // Place cursor at the end as a fallback
+                const range = document.createRange()
+                range.selectNodeContents(textareaRef.current)
+                range.collapse(false)
+                selection?.removeAllRanges()
+                selection?.addRange(range)
+            } catch (e) {
+                console.error("Failed to restore selection", e)
+            }
+        }
     }
 
-    // Reset selectedIndex when showing/hiding mentions
-    // Add this effect after the other useEffect hooks
-    useEffect(() => {
-        if (showMentions) {
-            setSelectedIndex(0)
+    // Handle focus to clear placeholder
+    const handleFocus = () => {
+        if (isEmpty && textareaRef.current) {
+            // Make sure we don't accidentally select the placeholder text
+            const selection = window.getSelection()
+            const range = document.createRange()
+            range.selectNodeContents(textareaRef.current)
+            range.collapse(true)
+            selection?.removeAllRanges()
+            selection?.addRange(range)
         }
-    }, [showMentions])
-
-
+    }
     return (
       <div className="relative w-full flex flex-col gap-4">
           {messages.length === 0 &&
@@ -484,21 +523,18 @@ function PureMultimodalInput({
               className="absolute inset-0 text-transparent pointer-events-none p-2 whitespace-pre-wrap font-sans text-base overflow-hidden"
               style={{ fontFamily: "inherit" }}
           ></div>
-
+          {isEmpty && <div className="absolute top-2 left-2 text-gray-400 pointer-events-none">{placeholder}</div>}
           <div
               ref={textareaRef}
               contentEditable
-              placeholder="Send a message..."
-              value={input}
+              // placeholder="Send a message..."
+              // value={input}
               onInput={handleInput}
-              className={cx(
-                  'min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-2xl text-base! bg-muted pb-10 dark:border-zinc-700',
-                  "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              )}
-              rows={3}
+              className={"min-h-[144px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-2xl text-base! bg-muted pb-10 dark:border-zinc-700 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"}
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
               autoFocus
               onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
           />
 
           {showMentions && (
@@ -625,6 +661,7 @@ function PureSendButton({
       onClick={(event) => {
         event.preventDefault();
         submitForm();
+        // todo
       }}
       disabled={input.length === 0 || uploadQueue.length > 0}
     >
