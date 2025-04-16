@@ -33,12 +33,7 @@ export function CreateSpace() {
     const { t } = useTranslation();
 
     const handleItemClick = (type: AppType) => {
-        if (+type !== AppType.Copilot) {
-            createSpace(type)
-            return
-        }
-        setSelectedType(type)
-        setIsOpen(true)
+        createSpace(type)
     }
 
     const renderCreationComponent = () => {
