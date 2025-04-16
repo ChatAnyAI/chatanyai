@@ -148,8 +148,11 @@ function PureMultimodalInput({
     setLocalStorageInput(input);
   }, [input, setLocalStorageInput]);
 
-  const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(event.target.value);
+  const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
+      const content = e.currentTarget.textContent || ""
+
+    console.log("handleInput",content)
+    setInput(content);
     adjustHeight();
 
       // const content = event.target.value
@@ -301,6 +304,10 @@ function PureMultimodalInput({
                     toast.error('Please wait for the model to finish its response!');
                 } else {
                     submitForm();
+                    setInput("")
+                    if (textareaRef.current) {
+                        textareaRef.current.textContent = ""
+                    }
                 }
             }
         }
@@ -478,16 +485,18 @@ function PureMultimodalInput({
               style={{ fontFamily: "inherit" }}
           ></div>
 
-          <Textarea
+          <div
               ref={textareaRef}
+              contentEditable
               placeholder="Send a message..."
               value={input}
-              onChange={handleInput}
+              onInput={handleInput}
               className={cx(
                   'min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-2xl text-base! bg-muted pb-10 dark:border-zinc-700',
-                  className,
+                  "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
               )}
               rows={3}
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
               autoFocus
               onKeyDown={handleKeyDown}
           />
@@ -606,6 +615,10 @@ function PureSendButton({
   input: string;
   uploadQueue: Array<string>;
 }) {
+
+  console.log("input",input)
+
+
   return (
     <Button
       className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
