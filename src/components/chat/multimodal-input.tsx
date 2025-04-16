@@ -33,6 +33,13 @@ import {Settings2} from "lucide-react";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import MentionList from "@/components/chat/mention-list";
 
+// Define the mention type
+type Mention = {
+    name: string
+    start: number
+    end: number
+} | null
+
 function PureMultimodalInput({
   channelId,
   input,
@@ -46,6 +53,7 @@ function PureMultimodalInput({
   append,
   handleSubmit,
   className,
+  setEmployeeId,
 }: {
   channelId: string;
   input: string;
@@ -67,6 +75,7 @@ function PureMultimodalInput({
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
   className?: string;
+  setEmployeeId: (value: number) => void;
 }) {
   const autoFocus = true
   const placeholder = "Type a message here... (Use @ to mention your AI team members)"
@@ -75,10 +84,12 @@ function PureMultimodalInput({
   const { width } = useWindowSize();
   const [showMentions, setShowMentions] = useState(false)
   const mentionRef = useRef<HTMLDivElement>(null)
-  const [mentions, setMentions] = useState<{ name: string; start: number; end: number }[]>([])
   const [currentAtPos, setCurrentAtPos] = useState(-1)
   const [message, setMessage] = useState("")
-  const [cursorPosition, setCursorPosition] = useState(0)
+  const [mention, setMention] = useState<Mention>(null)
+  // Add a new state to track the currently selected index in the mention list
+  const [selectedIndex, setSelectedIndex] = useState(0)
+
   const overlayRef = useRef<HTMLDivElement>(null)
 // Team members data
     const teamMembers = [
@@ -88,8 +99,7 @@ function PureMultimodalInput({
         { id: 4, name: "Alex", role: "Engineer", avatar: "/avatars/alex.png", color: "bg-blue-200" },
         { id: 5, name: "David", role: "Data Analyst", avatar: "/avatars/david.png", color: "bg-green-200" },
     ]
-  // Add a new state to track the currently selected index in the mention list
-  const [selectedIndex, setSelectedIndex] = useState(0)
+
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -212,6 +222,20 @@ function PureMultimodalInput({
       // updateOverlay()
   };
 
+    // Get cursor position in plain text
+    const getCursorPosition = (): number => {
+        if (!textareaRef.current) return 0
+
+        const selection = window.getSelection()
+        if (!selection || selection.rangeCount === 0) return 0
+
+        const range = document.createRange()
+        range.setStart(textareaRef.current, 0)
+        range.setEnd(selection.anchorNode!, selection.anchorOffset)
+
+        return range.toString().length
+    }
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
   const navigate = useNavigate();
@@ -318,7 +342,7 @@ function PureMultimodalInput({
                 case "Enter":
                     // Select the currently highlighted member
                     if (teamMembers[selectedIndex]) {
-                        handleSelectMember(teamMembers[selectedIndex].name)
+                        handleSelectMember(teamMembers[selectedIndex].id,teamMembers[selectedIndex].name)
                     }
                     break
                 case "Escape":
@@ -326,9 +350,21 @@ function PureMultimodalInput({
                     setShowMentions(false)
                     break
             }
-        }else {
-            const content = e.currentTarget.textContent || ""
-            setMessage(content)
+        } else if (e.key === "Backspace" || e.key === "Delete") {
+            // // Handle deletion of mentions
+            // const { mentionIndex, position } = findMentionAtCursor()
+            //
+            // if (mentionIndex !== -1) {
+            //     // If Backspace is pressed and cursor is after the mention, or
+            //     // if Delete is pressed and cursor is before the mention
+            //     if ((e.key === "Backspace" && position === "after") || (e.key === "Delete" && position === "before")) {
+            //         e.preventDefault()
+            //         deleteMention(mentionIndex)
+            //     }
+            // }
+        } else {
+            // const content = e.currentTarget.textContent || ""
+            // setMessage(content)
             // show mentions employee list
             if ( e.key === '@') {
                 // 获取当前key的位置
@@ -355,8 +391,48 @@ function PureMultimodalInput({
         }
     }
 
-    // Handle member selection - completely rewritten to fix the bug
-    const handleSelectMember = (name: string) => {
+    // Find if cursor is at the edge of a mention
+    // const findMentionAtCursor = (): { mentionIndex: number; position: "before" | "after" | null } => {
+    //     if (!textareaRef.current) return { mentionIndex: -1, position: null }
+    //
+    //     const selection = window.getSelection()
+    //     if (!selection || selection.rangeCount === 0) return { mentionIndex: -1, position: null }
+    //
+    //     const range = selection.getRangeAt(0)
+    //     const cursorNode = range.startContainer
+    //     const cursorOffset = range.startOffset
+    //
+    //     // Check if cursor is right before a mention span
+    //     if (cursorNode.nodeType === Node.TEXT_NODE && cursorOffset === cursorNode.textContent?.length) {
+    //         const nextNode = cursorNode.nextSibling
+    //         if (nextNode && nextNode.nodeType === Node.ELEMENT_NODE && nextNode.getAttribute("data-mention") === "true") {
+    //             // Find which mention this is
+    //             const mentionText = nextNode.textContent || ""
+    //             const mentionName = mentionText.substring(1) // Remove the @ symbol
+    //             const mentionIndex = mentions.findIndex((m) => m.name === mentionName)
+    //             if (mentionIndex !== -1) {
+    //                 return { mentionIndex, position: "before" }
+    //             }
+    //         }
+    //     }
+    //
+    //     // Check if cursor is right after a mention span
+    //     if (cursorNode.nodeType === Node.TEXT_NODE && cursorOffset === 0) {
+    //         const prevNode = cursorNode.previousSibling
+    //         if (prevNode && prevNode.nodeType === Node.ELEMENT_NODE && prevNode.getAttribute("data-mention") === "true") {
+    //             // Find which mention this is
+    //             const mentionText = prevNode.textContent || ""
+    //             const mentionName = mentionText.substring(1) // Remove the @ symbol
+    //             const mentionIndex = mentions.findIndex((m) => m.name === mentionName)
+    //             if (mentionIndex !== -1) {
+    //                 return { mentionIndex, position: "after" }
+    //             }
+    //         }
+    //     }
+
+
+        // Handle member selection - completely rewritten to fix the bug
+    const handleSelectMember = (employeeId: number,name: string) => {
         setShowMentions(false)
         if (!textareaRef.current || currentAtPos === -1) return
         // Get the plain text content
@@ -375,31 +451,32 @@ function PureMultimodalInput({
 
         // Update the mentions array with adjusted positions for existing mentions
         // that come after the new mention
-        const updatedMentions = mentions.map((mention) => {
-            if (mention.start > currentAtPos) {
-                // Adjust positions for mentions that come after the new one
-                const offset = name.length + 1 // +1 for the space after the name
-                return {
-                    ...mention,
-                    start: mention.start + offset,
-                    end: mention.end + offset,
-                }
-            }
-            return mention
-        })
+        // const updatedMentions = mentions.map((mention) => {
+        //     if (mention.start > currentAtPos) {
+        //         // Adjust positions for mentions that come after the new one
+        //         const offset = name.length + 1 // +1 for the space after the name
+        //         return {
+        //             ...mention,
+        //             start: mention.start + offset,
+        //             end: mention.end + offset,
+        //         }
+        //     }
+        //     return mention
+        // })
 
         // Add the new mention
-        const newMentions = [...updatedMentions, newMention]
+        // const newMentions = [...updatedMentions, newMention]
 
         // Update state
-        setMentions(newMentions)
-        setMessage(newContent)
+        setMention(newMention)
+        // setMessage(newContent)
         setIsEmpty(false)
+        setEmployeeId(employeeId)
 
         // Update the input content and apply highlighting
         if (textareaRef.current) {
             textareaRef.current.textContent = newContent
-            highlightMentions(newContent, newMentions)
+            highlightMentions(newContent, newMention)
         }
 
         // Reset current @ position
@@ -407,9 +484,9 @@ function PureMultimodalInput({
     }
 
     // Completely rewritten highlight mentions function
-    const highlightMentions = (content = "", mentionsToHighlight = mentions) => {
+    const highlightMentions = (content = "", newMention = mention) => {
         if (!textareaRef.current) return
-
+        if (!newMention) return;
         // Save current selection
         const selection = window.getSelection()
         const savedSelection = {
@@ -421,31 +498,31 @@ function PureMultimodalInput({
         textareaRef.current.innerHTML = ""
 
         // If no content provided, use the current message
-        const textContent = content || message
+        const textContent = content
 
         // Sort mentions by start position
-        const sortedMentions = [...mentionsToHighlight].sort((a, b) => a.start - b.start)
+        // const sortedMentions = [...mentionsToHighlight].sort((a, b) => a.start - b.start)
 
         let lastIndex = 0
 
         // Process each mention
-        for (const mention of sortedMentions) {
+        // for (const mention of sortedMentions) {
             // Add text before the mention
-            if (mention.start > lastIndex) {
-                const textBefore = document.createTextNode(textContent.substring(lastIndex, mention.start))
+            if (newMention.start > lastIndex) {
+                const textBefore = document.createTextNode(textContent.substring(lastIndex, newMention.start))
                 textareaRef.current.appendChild(textBefore)
             }
 
             // Add the highlighted mention
-            const mentionText = "@" + mention.name
+            const mentionText = "@" + newMention.name
             const mentionSpan = document.createElement("span")
             mentionSpan.textContent = mentionText
             mentionSpan.className = "bg-blue-500 text-white rounded px-1"
             textareaRef.current.appendChild(mentionSpan)
 
             // Update the last index to after the mention
-            lastIndex = mention.start + mentionText.length
-        }
+            lastIndex = newMention.start + mentionText.length
+        // }
 
         // Add any remaining text
         if (lastIndex < textContent.length) {

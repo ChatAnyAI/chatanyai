@@ -44,6 +44,7 @@ function Chat({
   const { mutate } = useSWRConfig();
   const [channelId, setChannelId] = useState<string | undefined>(id);
   const navgate = useNavigate();
+  const [employeeId, setEmployeeId] = useState<number>(0);
 
   // Create a dynamic API endpoint that updates when channelId changes
   const apiEndpoint = `/api/app/${appId}/channel/${channelId}`;
@@ -63,6 +64,7 @@ function Chat({
     id: channelId, // Use channelId instead of id to ensure consistency
     body: {
       id: channelId, // Use channelId instead of id
+      employeeId,
       modelId: selectedModelId,
       options: {
         frequency_penalty: settingData.frequencyPenalty,
@@ -122,7 +124,6 @@ function Chat({
   }, [channelId, id, setMessages]);
 
   console.log('chatInfo messages', isLoading, messages);
-
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
 
@@ -196,6 +197,7 @@ function Chat({
                   channelId={channelId!}
                   input={input}
                   setInput={setInput}
+                  setEmployeeId={setEmployeeId}
                   handleSubmit={handleMsgSubmit}
                   isLoading={isLoading}
                   stop={stop}
