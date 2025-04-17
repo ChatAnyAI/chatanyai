@@ -28,7 +28,7 @@ export const MessageAssistantAvatar = ({ employee, role, name }: MessageAvatarPr
         {/*      <Logo />*/}
         {/*  </div>*/}
         {/*)}*/}
-        { employee ? (
+        { employee?.avatar ? (
             <Avatar className="translate-y-px">
                 <AvatarImage src={employee.avatar} alt={employee.name} />
             </Avatar>
