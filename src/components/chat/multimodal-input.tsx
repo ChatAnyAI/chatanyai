@@ -87,6 +87,8 @@ function PureMultimodalInput({
   const [showMentions, setShowMentions] = useState(false)
   const mentionRef = useRef<HTMLDivElement>(null)
   const [currentAtPos, setCurrentAtPos] = useState(-1)
+  // Add state for cursor position
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
   // const [message, setMessage] = useState("")
   const [mention, setMention] = useState<Mention>(null)
   // Add a new state to track the currently selected index in the mention list
@@ -324,6 +326,12 @@ function PureMultimodalInput({
     [setAttachments],
   );
 
+    // Add function to check if textarea contains a mention span
+    const hasMentionSpan = (): boolean => {
+        if (!textareaRef.current) return false
+        // Check if there's any span with bg-blue-500 class (mention highlight)
+        return !!textareaRef.current.querySelector('span.bg-blue-500')
+    }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (showMentions) {
@@ -374,13 +382,35 @@ function PureMultimodalInput({
             // const content = e.currentTarget.textContent || ""
             // setMessage(content)
             // show mentions employee list
-            if ( e.key === '@') {
-                // 获取当前key的位置
+          if (e.key === '@' && !hasMentionSpan()) {
+                // Get current cursor position coordinates
                 const selection = window.getSelection();
-                const cursorPosition = selection?.getRangeAt(0).startOffset || 0;
-                console.log(`The '@' character is at position: ${cursorPosition}`);
-                setCurrentAtPos(cursorPosition); // 保存当前位置
-                setShowMentions(true);
+                if (selection && selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    
+                    // Create a temporary span element to get accurate coordinates
+                    const tempSpan = document.createElement('span');
+                    tempSpan.textContent = '|'; // Invisible marker
+                    
+                    // Insert at cursor position temporarily
+                    range.insertNode(tempSpan);
+                    
+                    // Get the position of the span
+                    const rect = tempSpan.getBoundingClientRect();
+                    setCursorPosition({ 
+                        x: rect.left, 
+                        y: rect.top 
+                    });
+                    
+                    // Save current text position for mention insertion
+                    setCurrentAtPos(getCursorPosition());
+                    
+                    // Clean up - remove the temporary span
+                    tempSpan.parentNode?.removeChild(tempSpan);
+                    
+                    // Show the mentions dropdown
+                    setShowMentions(true);
+                }
             }
 
             // Only process Enter key when not in IME composition
@@ -398,46 +428,6 @@ function PureMultimodalInput({
             }
         }
     }
-
-    // Find if cursor is at the edge of a mention
-    // const findMentionAtCursor = (): { mentionIndex: number; position: "before" | "after" | null } => {
-    //     if (!textareaRef.current) return { mentionIndex: -1, position: null }
-    //
-    //     const selection = window.getSelection()
-    //     if (!selection || selection.rangeCount === 0) return { mentionIndex: -1, position: null }
-    //
-    //     const range = selection.getRangeAt(0)
-    //     const cursorNode = range.startContainer
-    //     const cursorOffset = range.startOffset
-    //
-    //     // Check if cursor is right before a mention span
-    //     if (cursorNode.nodeType === Node.TEXT_NODE && cursorOffset === cursorNode.textContent?.length) {
-    //         const nextNode = cursorNode.nextSibling
-    //         if (nextNode && nextNode.nodeType === Node.ELEMENT_NODE && nextNode.getAttribute("data-mention") === "true") {
-    //             // Find which mention this is
-    //             const mentionText = nextNode.textContent || ""
-    //             const mentionName = mentionText.substring(1) // Remove the @ symbol
-    //             const mentionIndex = mentions.findIndex((m) => m.name === mentionName)
-    //             if (mentionIndex !== -1) {
-    //                 return { mentionIndex, position: "before" }
-    //             }
-    //         }
-    //     }
-    //
-    //     // Check if cursor is right after a mention span
-    //     if (cursorNode.nodeType === Node.TEXT_NODE && cursorOffset === 0) {
-    //         const prevNode = cursorNode.previousSibling
-    //         if (prevNode && prevNode.nodeType === Node.ELEMENT_NODE && prevNode.getAttribute("data-mention") === "true") {
-    //             // Find which mention this is
-    //             const mentionText = prevNode.textContent || ""
-    //             const mentionName = mentionText.substring(1) // Remove the @ symbol
-    //             const mentionIndex = mentions.findIndex((m) => m.name === mentionName)
-    //             if (mentionIndex !== -1) {
-    //                 return { mentionIndex, position: "after" }
-    //             }
-    //         }
-    //     }
-
 
         // Handle member selection - completely rewritten to fix the bug
     const handleSelectMember = (employee: Employee) => {
@@ -608,12 +598,10 @@ function PureMultimodalInput({
               className="absolute inset-0 text-transparent pointer-events-none p-2 whitespace-pre-wrap font-sans text-base overflow-hidden"
               style={{ fontFamily: "inherit" }}
           ></div>
-          {isEmpty && <div className="absolute top-2 left-2 text-gray-400 pointer-events-none">{placeholder}</div>}
+          {isEmpty && <div className="absolute top-6 left-2 text-gray-400 pointer-events-none">{placeholder}</div>}
           <div
               ref={textareaRef}
               contentEditable
-              // placeholder="Send a message..."
-              // value={input}
               onInput={handleInput}
               className={"min-h-[144px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-2xl text-base! bg-muted pb-10 dark:border-zinc-700 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"}
               style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
@@ -622,16 +610,15 @@ function PureMultimodalInput({
               onFocus={handleFocus}
           />
 
-          {showMentions && employeeList &&  (
+          {/* Only show mentions when no existing mention span, showMentions is true, and employeeList exists */}
+          {showMentions && employeeList && !hasMentionSpan() && (
               <div
                   ref={mentionRef}
-                  className={"absolute bottom-34"}
+                  className="fixed"
                   style={{
-                      // position: "fixed", // Change to fixed positioning
-                      // top: `${mentionPosition.top}px`,
-                      // left: `${mentionPosition.left}px`,
-                      // top: `10px`,
                       zIndex: 50,
+                      left: `${cursorPosition.x}px`,
+                      bottom: `calc(100vh - ${cursorPosition.y}px + 5px)`, // Position above cursor with small offset
                   }}
               >
                   <MentionList members={employeeList} onSelectMember={handleSelectMember} selectedIndex={selectedIndex}  />

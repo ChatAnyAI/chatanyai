@@ -25,7 +25,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden flex flex-col mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl mt-20">
+      <div className="flex-1 overflow-hidden flex flex-col mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl mt-40">
         <RightSettingProvider>
           <Chat
             hiddenHeader
