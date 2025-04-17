@@ -342,7 +342,7 @@ export default function SpaceSettings() {
                                 <SelectContent>
                                   <SelectItem value="1" className="flex items-center gap-2">
                                     <MessageSquare className="h-4 w-4 text-orange-500" />
-                                    <span>{t("space-page.Copilot")}</span>
+                                    <span>{t("space-page.Chat")}</span>
                                   </SelectItem>
                                   <SelectItem value="2" className="flex items-center gap-2">
                                     <FileText className="h-4 w-4 text-blue-500" />
@@ -352,10 +352,10 @@ export default function SpaceSettings() {
                                     <Brain className="h-4 w-4 text-purple-500" />
                                     <span>{t("space-page.Brainstorm")}</span>
                                   </SelectItem>
-                                    <SelectItem value="4" className="flex items-center gap-2">
-                                        <Database className="h-4 w-4 text-emerald-500" />
-                                        <span>{t("space-page.KnowledgeBase")}</span>
-                                    </SelectItem>
+                                    {/*<SelectItem value="4" className="flex items-center gap-2">*/}
+                                    {/*    <Database className="h-4 w-4 text-emerald-500" />*/}
+                                    {/*    <span>{t("space-page.KnowledgeBase")}</span>*/}
+                                    {/*</SelectItem>*/}
                                 </SelectContent>
                               </Select>
                               <FormMessage />

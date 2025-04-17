@@ -17,7 +17,7 @@ import { useCreateSpace } from "@/hooks/use-create-space";
 import { useTranslation } from "react-i18next";
 import { i18n } from "i18next";
 
-export const documentTypes = (t: i18n["t"]) => [1, 2, 3, 5].map((k) => {
+export const documentTypes = (t: i18n["t"]) => [1, 2, 3].map((k) => {
     return {
         name: t("constant." + AppLabelEnum[k as unknown as AppType]),
         icon: AppIcons[k as unknown as AppType].icon,
