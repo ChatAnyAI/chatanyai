@@ -65,9 +65,9 @@ export function NavHeader({
         url: "#",
         icon: Share2,
     }, {
-        id: "employees",
-        name: t("sidebar.MyEmployee"),
-        url: "/employee",
+        id: "assistants",
+        name: t("sidebar.MyAssistant"),
+        url: "/assistant",
         icon: UserRoundPlus,
     }]
     return (

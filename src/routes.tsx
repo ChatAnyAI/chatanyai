@@ -76,7 +76,7 @@ const router = createBrowserRouter(
           }>
         </Route>
         <Route
-          path="/employee"
+          path="/assistant"
           element={
             <Suspense fallback={<Loading />}>
               <EmployeePage />

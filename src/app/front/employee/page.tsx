@@ -155,7 +155,7 @@ export default function AIEmployeesDashboard() {
                     className="mb-8 cursor-pointer"
                 >
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xl font-bold">Your employees</h2>
+                        <h2 className="text-xl font-bold">Your assistants</h2>
                         <Button variant="ghost" size="sm" className="gap-1" onClick={() => setIsCreating(true)}>
                             <PlusCircle className="mr-2 h-4 w-4" />
                             <span className="hidden sm:inline">Create</span>
