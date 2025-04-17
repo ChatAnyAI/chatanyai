@@ -1,7 +1,7 @@
 'use client';
 
 import type { Attachment, Message } from 'ai';
-import { useChat } from 'ai/react';
+import { useChat } from '@/lib/ai-sdk/react';
 import { memo, useCallback, useState, useEffect } from 'react';
 import { useSWRConfig } from 'swr';
 
