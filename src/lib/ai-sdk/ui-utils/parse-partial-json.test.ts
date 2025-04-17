@@ -1,9 +1,9 @@
-import { safeParseJSON } from '@ai-sdk/provider-utils';
+import { safeParseJSON } from '@/lib/ai-sdk/provider-utils';
 import { fixJson } from './fix-json';
 import { parsePartialJson } from './parse-partial-json';
-import { JSONParseError } from '@ai-sdk/provider';
+import { JSONParseError } from '@/lib/ai-sdk/provider';
 
-vi.mock('@ai-sdk/provider-utils');
+vi.mock('@/lib/ai-sdk/provider-utils');
 vi.mock('./fix-json');
 
 it('should handle nullish input', () => {

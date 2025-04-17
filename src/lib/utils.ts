@@ -1,10 +1,10 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import type {
-    CoreToolMessage,
+    // CoreToolMessage,
     Message,
     ToolInvocation,
-} from 'ai';
+} from '@/lib/ai-sdk/ui-utils';
 
 import { RespChatHistoryMessage } from "@/service/api";
 
@@ -50,13 +50,12 @@ export function getAnnotations(message: RespChatHistoryMessage) {
     return [];
 }
 
-export function convertToUIMessages(
-    messages: Array<RespChatHistoryMessage>,
-): Array<Message> {
-    return messages.reduce((chatMessages: Array<Message>, message) => {
-        if (message.role === 'tool') {
+export function convertToUIMessages(messages: Array<RespChatHistoryMessage>): Array<Message> {
+    return messages.reduce((chatMessages: Array<Message>, historyMessage) => {
+        if (historyMessage.role === 'tool') {
             return addToolMessageToChat({
-                toolMessage: message as unknown as CoreToolMessage,
+                // toolMessage: historyMessage as unknown as CoreToolMessage,
+                toolMessage: historyMessage,
                 messages: chatMessages,
             });
         }
@@ -64,11 +63,11 @@ export function convertToUIMessages(
         let textContent = '';
         const toolInvocations: Array<ToolInvocation> = [];
 
-        if (typeof message.content === 'string') {
-            textContent = message.content;
-        } else if (Array.isArray(message.content)) {
+        if (typeof historyMessage.content === 'string') {
+            textContent = historyMessage.content;
+        } else if (Array.isArray(historyMessage.content)) {
             // @ts-ignore
-            for (const content of message.content) {
+            for (const content of historyMessage.content) {
                 if (content.type === 'text') {
                     textContent += content.text;
                 } else if (content.type === 'tool-call') {
@@ -83,11 +82,13 @@ export function convertToUIMessages(
         }
 
         chatMessages.push({
-            id: message.id,
-            role: message.role as Message['role'],
+            id: historyMessage.id,
+            role: historyMessage.role as Message['role'],
             content: textContent,
             toolInvocations,
-            annotations: getAnnotations(message),
+            annotations: getAnnotations(historyMessage),
+            user: historyMessage.user,
+            employee: historyMessage.employee,
         });
 
         return chatMessages;
@@ -133,7 +134,8 @@ function addToolMessageToChat({
     toolMessage,
     messages,
 }: {
-    toolMessage: CoreToolMessage;
+    toolMessage: any;
+    // toolMessage: CoreToolMessage;
     messages: Array<Message>;
 }): Array<Message> {
     return messages.map((message) => {

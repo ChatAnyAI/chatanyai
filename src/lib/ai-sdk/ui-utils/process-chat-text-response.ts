@@ -1,5 +1,5 @@
-import { JSONValue } from '@ai-sdk/provider';
-import { generateId as generateIdFunction } from '@ai-sdk/provider-utils';
+import { JSONValue } from '@/lib/ai-sdk/provider';
+import { generateId as generateIdFunction } from '@/lib/ai-sdk/provider-utils';
 import { processTextStream } from './process-text-stream';
 import { TextUIPart, UIMessage, UseChatOptions } from './types';
 

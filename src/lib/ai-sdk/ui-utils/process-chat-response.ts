@@ -1,5 +1,5 @@
-import { LanguageModelV1FinishReason } from '@ai-sdk/provider';
-import { generateId as generateIdFunction } from '@ai-sdk/provider-utils';
+import { LanguageModelV1FinishReason } from '@/lib/ai-sdk/provider';
+import { generateId as generateIdFunction } from '@/lib/ai-sdk/provider-utils';
 import {
   calculateLanguageModelUsage,
   LanguageModelUsage,

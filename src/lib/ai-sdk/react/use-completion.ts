@@ -114,6 +114,7 @@ export function useCompletion({
     credentials,
     headers,
     body,
+    api,
   });
 
   useEffect(() => {
@@ -121,13 +122,14 @@ export function useCompletion({
       credentials,
       headers,
       body,
+      api
     };
-  }, [credentials, headers, body]);
+  }, [credentials, headers, body, api]);
 
   const triggerRequest = useCallback(
     async (prompt: string, options?: RequestOptions) =>
       callCompletionApi({
-        api,
+        api: extraMetadataRef.current.api || api,
         prompt,
         credentials: extraMetadataRef.current.credentials,
         headers: { ...extraMetadataRef.current.headers, ...options?.headers },

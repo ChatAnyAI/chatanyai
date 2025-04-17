@@ -225,6 +225,7 @@ By default, it's set to 1, which means that only a single LLM call is made.
     credentials,
     headers,
     body,
+    api,
   });
 
   useEffect(() => {
@@ -232,8 +233,9 @@ By default, it's set to 1, which means that only a single LLM call is made.
       credentials,
       headers,
       body,
+      api,
     };
-  }, [credentials, headers, body]);
+  }, [credentials, headers, body, api]);
 
   const triggerRequest = useCallback(
     async (chatRequest: ChatRequest) => {
@@ -288,7 +290,7 @@ By default, it's set to 1, which means that only a single LLM call is made.
         const existingData = streamDataRef.current;
 
         await callChatApi({
-          api,
+          api: extraMetadataRef.current.api || api,
           body: experimental_prepareRequestBody?.({
             id: chatId,
             messages: chatMessages,

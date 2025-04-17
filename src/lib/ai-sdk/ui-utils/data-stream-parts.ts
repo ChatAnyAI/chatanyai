@@ -1,8 +1,8 @@
 import {
   LanguageModelV1FinishReason,
   LanguageModelV1Source,
-} from '@ai-sdk/provider';
-import { ToolCall, ToolResult } from '@ai-sdk/provider-utils';
+} from '@/lib/ai-sdk/provider';
+import { ToolCall, ToolResult } from '@/lib/ai-sdk/provider-utils';
 import { JSONValue } from './types';
 
 export type DataStreamString =
@@ -45,10 +45,11 @@ const errorStreamPart: DataStreamPart<'3', 'error', string> = {
   code: '3',
   name: 'error',
   parse: (value: JSONValue) => {
-    if (typeof value !== 'string') {
-      throw new Error('"error" parts expect a string value.');
-    }
-    return { type: 'error', value };
+    // if (typeof value !== 'string') {
+    //   throw new Error('"error" parts expect a string value.');
+    // }
+    // return { type: 'error', value };
+    return { type: "error", value: typeof value !== "string" ? JSON.stringify(value) : value };
   },
 };
 
@@ -530,7 +531,7 @@ export const parseDataStreamPart = (line: string): DataStreamPartType => {
   const prefix = line.slice(0, firstSeparatorIndex);
 
   if (!validCodes.includes(prefix as keyof typeof dataStreamPartsByCode)) {
-    throw new Error(`Failed to parse stream string. Invalid code ${prefix}.`);
+    throw new Error(line || `Failed to parse stream string. Invalid code ${prefix}.`);
   }
 
   const code = prefix as keyof typeof dataStreamPartsByCode;

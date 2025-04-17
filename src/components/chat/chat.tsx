@@ -1,6 +1,6 @@
 'use client';
 
-import type { Attachment, Message } from 'ai';
+import type { Attachment, Message } from '@/lib/ai-sdk/ui-utils';
 import { useChat } from '@/lib/ai-sdk/react';
 import { memo, useCallback, useState, useEffect } from 'react';
 import { useSWRConfig } from 'swr';
@@ -123,7 +123,6 @@ function Chat({
     }
   }, [channelId, id, setMessages]);
 
-  console.log('chatInfo messages', isLoading, messages);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
 

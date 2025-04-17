@@ -1,4 +1,4 @@
-import { convertArrayToReadableStream } from '@ai-sdk/provider-utils/test';
+import { convertArrayToReadableStream } from '@/lib/ai-sdk/provider-utils/test';
 import { processTextStream } from './process-text-stream';
 
 describe('processTextStream', () => {

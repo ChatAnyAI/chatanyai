@@ -1,9 +1,10 @@
 import {
   LanguageModelV1FinishReason,
   LanguageModelV1Source,
-} from '@ai-sdk/provider';
-import { FetchFunction, ToolCall, ToolResult } from '@ai-sdk/provider-utils';
+} from '@/lib/ai-sdk/provider';
+import { FetchFunction, ToolCall, ToolResult } from '@/lib/ai-sdk/provider-utils';
 import { LanguageModelUsage } from './duplicated/usage';
+import {Employee, User} from "@/service/api";
 
 export * from './use-assistant-types';
 
@@ -115,6 +116,8 @@ that the assistant made as part of this message.
     | FileUIPart
     | StepStartUIPart
   >;
+  user: User,
+  employee?: Employee,
 }
 
 export type UIMessage = Message & {

@@ -1,5 +1,5 @@
-import { JSONValue } from '@ai-sdk/provider';
-import { safeParseJSON } from '@ai-sdk/provider-utils';
+import { JSONValue } from '@/lib/ai-sdk/provider';
+import { safeParseJSON } from '@/lib/ai-sdk/provider-utils';
 import { fixJson } from './fix-json';
 
 export function parsePartialJson(jsonText: string | undefined): {

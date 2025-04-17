@@ -1,4 +1,4 @@
-import type { Message } from 'ai';
+import type { Message } from '@/lib/ai-sdk/ui-utils';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { CopyIcon, ThumbUpIcon } from './icons';
 import { Button } from '@/components/ui/button';

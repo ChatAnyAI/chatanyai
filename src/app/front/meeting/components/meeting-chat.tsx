@@ -1,7 +1,7 @@
 'use client';
 
-import type { Attachment, Message } from 'ai';
-import { useChat } from 'ai/react';
+import type { Attachment, Message } from '@/lib/ai-sdk/ui-utils';
+import { useChat } from '@/lib/ai-sdk/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Messages } from '@/components/chat/messages';
 import { useBlockSelector } from '@/hooks/use-block';

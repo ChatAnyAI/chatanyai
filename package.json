@@ -6,7 +6,6 @@
     "pnpm": ">=10.2.1"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^1.1.4",
     "@ariakit/react": "^0.4.15",
     "@babel/core": "^7.16.0",
     "@codemirror/lang-python": "^6.1.7",
@@ -46,6 +45,7 @@
     "@radix-ui/react-toolbar": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@svgr/webpack": "^5.5.0",
+    "@testing-library/react": "^16.3.0",
     "@udecode/cmdk": "^0.2.0",
     "@udecode/cn": "^46.0.9",
     "@udecode/plate": "^46.0.10",
@@ -96,7 +96,6 @@
     "@udecode/plate-toggle": "^45.0.6",
     "@udecode/plate-trailing-block": "^44.0.0",
     "@uploadthing/react": "^7.3.0",
-    "ai": "^4.1.6",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
     "babel-plugin-named-asset-import": "^0.3.8",
@@ -261,8 +260,6 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@ai-sdk/ui-utils": "patches/@ai-sdk__ui-utils.patch",
-      "@ai-sdk/react": "patches/@ai-sdk__react.patch",
       "@udecode/utils": "patches/@udecode__utils.patch"
     }
   }

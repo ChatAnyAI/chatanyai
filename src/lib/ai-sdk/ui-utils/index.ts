@@ -1,6 +1,6 @@
 export * from './types';
 
-export { generateId } from '@ai-sdk/provider-utils';
+export { generateId } from '@/lib/ai-sdk/provider-utils';
 
 // Export stream data utilities for custom stream implementations,
 // both on the client and server side.

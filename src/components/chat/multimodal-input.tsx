@@ -3,7 +3,7 @@ import type {
   ChatRequestOptions,
   CreateMessage,
   Message,
-} from 'ai';
+} from '@/lib/ai-sdk/ui-utils';
 import cx from 'classnames';
 import type React from 'react';
 import {

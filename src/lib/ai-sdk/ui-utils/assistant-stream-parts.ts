@@ -28,10 +28,11 @@ const errorStreamPart: AssistantStreamPart<'3', 'error', string> = {
   code: '3',
   name: 'error',
   parse: (value: JSONValue) => {
-    if (typeof value !== 'string') {
-      throw new Error('"error" parts expect a string value.');
-    }
-    return { type: 'error', value };
+    // if (typeof value !== 'string') {
+    //   throw new Error('"error" parts expect a string value.');
+    // }
+    // return { type: 'error', value };
+    return { type: "error", value: typeof value !== "string" ? JSON.stringify(value) : value };
   },
 };
 
@@ -196,7 +197,7 @@ export const parseAssistantStreamPart = (
   const prefix = line.slice(0, firstSeparatorIndex);
 
   if (!validCodes.includes(prefix as keyof typeof assistantStreamPartsByCode)) {
-    throw new Error(`Failed to parse stream string. Invalid code ${prefix}.`);
+    throw new Error(line || `Failed to parse stream string. Invalid code ${prefix}.`);
   }
 
   const code = prefix as keyof typeof assistantStreamPartsByCode;

@@ -2,7 +2,7 @@
 
 import { useChatStore } from '@/store/chatStore';
 import { faker } from '@faker-js/faker';
-import { useChat as useBaseChat } from 'ai/react';
+import { useChat as useBaseChat } from '@/lib/ai-sdk/react';
 import { useParams } from 'react-router-dom';
 import {toast} from "@/hooks/use-toast";
 

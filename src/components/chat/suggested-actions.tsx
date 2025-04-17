@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ChatRequestOptions, CreateMessage, Message } from 'ai';
+import { ChatRequestOptions, CreateMessage, Message } from '@/lib/ai-sdk/ui-utils';
 import { memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

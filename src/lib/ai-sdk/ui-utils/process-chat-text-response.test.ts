@@ -1,4 +1,4 @@
-import { convertArrayToReadableStream } from '@ai-sdk/provider-utils/test';
+import { convertArrayToReadableStream } from '@/lib/ai-sdk/provider-utils/test';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { processChatTextResponse } from './process-chat-text-response';
 import { Message } from './types';

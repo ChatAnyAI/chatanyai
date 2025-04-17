@@ -1,4 +1,4 @@
-import { convertArrayToReadableStream } from '@ai-sdk/provider-utils/test';
+import { convertArrayToReadableStream } from '@/lib/ai-sdk/provider-utils/test';
 import { DataStreamString } from '../data-stream-parts';
 
 export function createDataProtocolStream(

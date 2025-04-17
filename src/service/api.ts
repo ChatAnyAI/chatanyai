@@ -96,6 +96,12 @@ export interface User {
   updatedAt: number;
 }
 
+export interface Employee {
+    id: number;
+    avatar: string;
+    name: string;
+}
+
 export interface ShareUser {
   id: number;
   name: string;
@@ -542,6 +548,7 @@ export interface RespChatHistoryMessage {
   attachments: PostChatMessageAttachment[]; // Reuse existing PostChatMessageAttachment interface
   createdAt: number;
   user: User;
+  employee: Employee;
 }
 
 export const ApiChatHistory = (channelId: string, data?: Pagination) => {

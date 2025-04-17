@@ -1,4 +1,4 @@
-import { LanguageModelV1FinishReason } from '@ai-sdk/provider';
+import { LanguageModelV1FinishReason } from '@/lib/ai-sdk/provider';
 import { describe, expect, it, vi } from 'vitest';
 import { formatDataStreamPart } from './data-stream-parts';
 import { LanguageModelUsage } from './duplicated/usage';

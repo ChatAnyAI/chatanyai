@@ -1,4 +1,4 @@
-import { ChatRequestOptions, Message } from 'ai';
+import { ChatRequestOptions, Message } from '@/lib/ai-sdk/ui-utils';
 import { PreviewMessage, ThinkingMessage } from './message';
 import { useScrollToBottom } from './use-scroll-to-bottom';
 import { memo } from 'react';
