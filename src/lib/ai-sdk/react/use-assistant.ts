@@ -1,4 +1,4 @@
-import { isAbortError } from '@ai-sdk/provider-utils';
+import { isAbortError } from '@/lib/ai-sdk/provider-utils';
 import {
   AssistantStatus,
   CreateMessage,

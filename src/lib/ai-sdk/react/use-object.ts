@@ -2,7 +2,7 @@ import {
   FetchFunction,
   isAbortError,
   safeValidateTypes,
-} from '@ai-sdk/provider-utils';
+} from '@/lib/ai-sdk/provider-utils';
 import {
   asSchema,
   DeepPartial,

@@ -2,7 +2,7 @@
 import {
   createTestServer,
   TestResponseController,
-} from '@ai-sdk/provider-utils/test';
+} from '@/lib/ai-sdk/provider-utils/test';
 import {
   formatDataStreamPart,
   generateId,
