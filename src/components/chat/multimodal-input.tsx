@@ -33,7 +33,7 @@ import {Settings2} from "lucide-react";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import MentionList from "@/components/chat/mention-list";
 import useSWR from "swr";
-import {ApiEmployeeItemResp, ApiEmployeeList} from "@/service/api";
+import {ApiEmployeeItemResp, ApiEmployeeList, Employee} from "@/service/api";
 
 // Define the mention type
 type Mention = {
@@ -55,7 +55,7 @@ function PureMultimodalInput({
   append,
   handleSubmit,
   className,
-  setEmployeeId,
+  setEmployee,
 }: {
   channelId: string;
   input: string;
@@ -77,7 +77,7 @@ function PureMultimodalInput({
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
   className?: string;
-  setEmployeeId: (value: number) => void;
+  setEmployee: (value: Employee) => void;
 }) {
   const autoFocus = true
   const placeholder = "Type a message here... (Use @ to mention your AI team members)"
@@ -346,7 +346,11 @@ function PureMultimodalInput({
                 case "Enter":
                     // Select the currently highlighted member
                     if (employeeList[selectedIndex]) {
-                        handleSelectMember(employeeList[selectedIndex].id,employeeList[selectedIndex].name)
+                        handleSelectMember({
+                            id: employeeList[selectedIndex].id,
+                            name: employeeList[selectedIndex].name,
+                            avatar: employeeList[selectedIndex].avatar,
+                        })
                     }
                     break
                 case "Escape":
@@ -436,22 +440,22 @@ function PureMultimodalInput({
 
 
         // Handle member selection - completely rewritten to fix the bug
-    const handleSelectMember = (employeeId: number,name: string) => {
+    const handleSelectMember = (employee: Employee) => {
         setShowMentions(false)
         if (!textareaRef.current || currentAtPos === -1) return
         // Get the plain text content
         const plainText = textareaRef.current.textContent || ""
         // Create the new mention
         const newMention = {
-            name,
+            name: employee.name,
             start: currentAtPos,
-            end: currentAtPos + name.length + 1, // +1 for the @ symbol
+            end: currentAtPos + employee.name.length + 1, // +1 for the @ symbol
         }
 
         // Create new content by replacing the @ with @name
         const beforeAt = plainText.substring(0, currentAtPos)
         const afterAt = plainText.substring(currentAtPos + 1) // Skip the @ symbol
-        const newContent = beforeAt + "@" + name + " " + afterAt
+        const newContent = beforeAt + "@" + employee.name + " " + afterAt
 
         // Update the mentions array with adjusted positions for existing mentions
         // that come after the new mention
@@ -475,7 +479,7 @@ function PureMultimodalInput({
         setMention(newMention)
         // setMessage(newContent)
         setIsEmpty(false)
-        setEmployeeId(employeeId)
+        setEmployee(employee)
 
         // Update the input content and apply highlighting
         if (textareaRef.current) {

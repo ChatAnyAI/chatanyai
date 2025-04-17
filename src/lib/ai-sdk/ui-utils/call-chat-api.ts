@@ -1,6 +1,7 @@
 import { processChatResponse } from './process-chat-response';
 import { processChatTextResponse } from './process-chat-text-response';
 import { IdGenerator, JSONValue, UIMessage, UseChatOptions } from './types';
+import {Employee} from "@/service/api";
 
 // use function to allow for mocking in tests:
 const getOriginalFetch = () => fetch;
@@ -20,8 +21,10 @@ export async function callChatApi({
   generateId,
   fetch = getOriginalFetch(),
   lastMessage,
+  employee,
 }: {
   api: string;
+  employee: Employee;
   body: Record<string, any>;
   streamProtocol: 'data' | 'text' | undefined;
   credentials: RequestCredentials | undefined;
@@ -73,6 +76,9 @@ export async function callChatApi({
     throw new Error('The response body is empty.');
   }
 
+    console.log("streamProtocol",streamProtocol)
+    console.log("streamProtocol",response.body)
+  // data 模式
   switch (streamProtocol) {
     case 'text': {
       await processChatTextResponse({
@@ -87,6 +93,7 @@ export async function callChatApi({
     case 'data': {
       await processChatResponse({
         stream: response.body,
+        employee,
         update: onUpdate,
         lastMessage,
         onToolCall,

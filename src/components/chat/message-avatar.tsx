@@ -2,20 +2,16 @@
 
 import { SparklesIcon } from './icons';
 import { MyUserAvatar, UserAvatar as UAvatar } from "@/components/user-avatar";
-import {AvatarUser, UserProfile} from '@/service/api';
+import {AvatarUser, Employee, UserProfile} from '@/service/api';
 import { Logo } from '../team-switcher';
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import React from "react";
-interface employee {
-    id: number;
-    avatar: string;
-    name: string;
-}
+
 
 export interface MessageAvatarProps {
   role: string;
   name?: string;
-  employee: employee;
+  employee: Employee | undefined;
 }
 
 export const MessageAssistantAvatar = ({ employee, role, name }: MessageAvatarProps) => {

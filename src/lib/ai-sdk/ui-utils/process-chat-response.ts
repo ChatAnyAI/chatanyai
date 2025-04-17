@@ -15,6 +15,7 @@ import type {
   UIMessage,
   UseChatOptions,
 } from './types';
+import {Employee} from "@/service/api";
 
 export async function processChatResponse({
   stream,
@@ -24,6 +25,7 @@ export async function processChatResponse({
   generateId = generateIdFunction,
   getCurrentDate = () => new Date(),
   lastMessage,
+  employee,
 }: {
   stream: ReadableStream<Uint8Array>;
   update: (options: {
@@ -40,6 +42,7 @@ export async function processChatResponse({
   generateId?: () => string;
   getCurrentDate?: () => Date;
   lastMessage: UIMessage | undefined;
+  employee: Employee;
 }) {
   const replaceLastMessage = lastMessage?.role === 'assistant';
   let step = replaceLastMessage
@@ -50,6 +53,8 @@ export async function processChatResponse({
       }, 0) ?? 0)
     : 0;
 
+  console.log("lastMessage",lastMessage)
+
   const message: UIMessage = replaceLastMessage
     ? structuredClone(lastMessage)
     : {
@@ -57,6 +62,7 @@ export async function processChatResponse({
         createdAt: getCurrentDate(),
         role: 'assistant',
         content: '',
+        employee,
         parts: [],
       };
 
@@ -126,6 +132,7 @@ export async function processChatResponse({
       // is updated with SWR (without it, the changes get stuck in SWR and are not
       // forwarded to rendering):
       revisionId: generateId(),
+      employee,
     } as UIMessage;
 
     update({

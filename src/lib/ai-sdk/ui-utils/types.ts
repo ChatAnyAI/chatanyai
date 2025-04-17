@@ -287,6 +287,7 @@ Keeps the last message when an error happens. Defaults to `true`.
    */
   api?: string;
 
+  employee?: Employee;
   /**
    * A unique identifier for the chat. If not provided, a random one will be
    * generated. When provided, the `useChat` hook with the same `id` will
@@ -391,6 +392,7 @@ Custom fetch implementation. You can use it as a middleware to intercept request
 or to provide a custom fetch implementation for e.g. testing.
     */
   fetch?: FetchFunction;
+
 };
 
 export type UseCompletionOptions = {

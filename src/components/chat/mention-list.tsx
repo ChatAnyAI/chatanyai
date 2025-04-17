@@ -1,7 +1,7 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {ApiEmployeeItemResp} from "@/service/api";
+import {ApiEmployeeItemResp, Employee} from "@/service/api";
 
 type Member = {
     id: number
@@ -14,7 +14,7 @@ type Member = {
 // Update the MentionList component to accept and use the selectedIndex prop
 type MentionListProps = {
     members: ApiEmployeeItemResp[]
-    onSelectMember: (id: number,name: string) => void
+    onSelectMember: (employee: Employee) => void
     selectedIndex: number
 }
 
@@ -36,7 +36,11 @@ export default function MentionList({ members, onSelectMember, selectedIndex }: 
                         className={`flex items-center justify-between p-4 cursor-pointer ${
                             index === selectedIndex ? "bg-blue-100" : "hover:bg-gray-100"
                         }`}
-                        onClick={() => onSelectMember(member.id, member.name)}
+                        onClick={() => onSelectMember({
+                            id: member.id,
+                            name: member.name,
+                            avatar: member.avatar,
+                        })}
                     >
                         <div className="flex items-center">
                             <Avatar className={`mr-3`}>

@@ -22,6 +22,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { throttle } from './throttle';
 import { useStableValue } from './util/use-stable-value';
+import {Employee} from "@/service/api";
 
 export type { CreateMessage, Message, UseChatOptions };
 
@@ -111,6 +112,7 @@ export type UseChatHelpers = {
 
 export function useChat({
   api = '/api/chat',
+  employee,
   id,
   initialMessages,
   initialInput = '',
@@ -291,6 +293,7 @@ By default, it's set to 1, which means that only a single LLM call is made.
 
         await callChatApi({
           api: extraMetadataRef.current.api || api,
+          employee: employee,
           body: experimental_prepareRequestBody?.({
             id: chatId,
             messages: chatMessages,
@@ -415,6 +418,8 @@ By default, it's set to 1, which means that only a single LLM call is made.
       const attachmentsForRequest = await prepareAttachmentsForRequest(
         experimental_attachments,
       );
+
+      console.log("useCallback message",message)
 
       const messages = messagesRef.current.concat({
         ...message,

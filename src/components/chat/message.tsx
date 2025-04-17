@@ -3,7 +3,7 @@
 import type { ChatRequestOptions, Message } from '@/lib/ai-sdk/ui-utils';
 import cx from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
-import { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { MessageAssistantAvatar, UserAvatar } from './message-avatar';
 import { Markdown } from './markdown';
 import { MessageActions } from './message-actions';
@@ -13,6 +13,9 @@ import { cn } from '@/lib/utils';
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { SparklesIcon } from 'lucide-react';
 import { ErrorMessage } from './error-message';
+import {Employee} from "@/service/api";
+import {Avatar, AvatarImage} from "@/components/ui/avatar";
+import {Logo} from "@/components/team-switcher";
 
 const PurePreviewMessage = ({
   channelId,
@@ -167,7 +170,7 @@ export const PreviewMessage = memo(
   },
 );
 
-export const ThinkingMessage = () => {
+export const ThinkingMessage = ({employee}:{employee: Employee}) => {
   const role = 'assistant';
 
   return (
@@ -186,7 +189,17 @@ export const ThinkingMessage = () => {
         )}
       >
         <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
-          <SparklesIcon size={14} />
+            { employee.avatar ? (
+                <Avatar className="translate-y-px">
+                    <AvatarImage src={employee.avatar} alt={employee.name} />
+                </Avatar>
+            ) : (
+                <div className="translate-y-px">
+                    {/* <SparklesIcon size={14} /> */}
+                    <Logo />
+                </div>
+            )}
+            {/*<SparklesIcon size={14} />*/}
         </div>
 
         <div className="flex flex-col gap-2 w-full">

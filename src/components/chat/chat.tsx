@@ -11,7 +11,7 @@ import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
 import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
-import { ApiChatCreate, RespChannel } from "@/service/api";
+import {ApiChatCreate, Employee, RespChannel} from "@/service/api";
 import { toast } from '@/hooks/use-toast';
 import { data, useNavigate } from 'react-router-dom';
 
@@ -44,7 +44,12 @@ function Chat({
   const { mutate } = useSWRConfig();
   const [channelId, setChannelId] = useState<string | undefined>(id);
   const navgate = useNavigate();
-  const [employeeId, setEmployeeId] = useState<number>(0);
+  const [employee, setEmployee] = useState<Employee>({
+    id: 0,
+    name: '',
+    avatar: '',
+  });
+
 
   // Create a dynamic API endpoint that updates when channelId changes
   const apiEndpoint = `/api/app/${appId}/channel/${channelId}`;
@@ -62,9 +67,10 @@ function Chat({
   } = useChat({
     api: apiEndpoint,
     id: channelId, // Use channelId instead of id to ensure consistency
+    employee: employee,
     body: {
       id: channelId, // Use channelId instead of id
-      employeeId,
+      employeeId: employee.id,
       modelId: selectedModelId,
       options: {
         frequency_penalty: settingData.frequencyPenalty,
@@ -180,6 +186,7 @@ function Chat({
             {
               hiddenMessage ? null :
                 <Messages
+                  employee={employee}
                   channelId={channelId!}
                   isLoading={isLoading}
                   messages={messages}
@@ -196,7 +203,7 @@ function Chat({
                   channelId={channelId!}
                   input={input}
                   setInput={setInput}
-                  setEmployeeId={setEmployeeId}
+                  setEmployee={setEmployee}
                   handleSubmit={handleMsgSubmit}
                   isLoading={isLoading}
                   stop={stop}
