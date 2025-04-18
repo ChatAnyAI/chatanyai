@@ -152,7 +152,7 @@ function PureMultimodalInput({
 
   useEffect(() => {
     if (textareaRef.current) {
-      const domValue = textareaRef.current.value;
+      const domValue = textareaRef.current.textContent || '';
       // Prefer DOM value over localStorage to handle hydration
       const finalValue = domValue || localStorageInput || '';
       setInput(finalValue);

@@ -17,7 +17,7 @@ interface MessagesProps {
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
   isBlockVisible: boolean;
-  employee: Employee;
+  employee?: Employee;
 }
 
 function PureMessages({
@@ -55,7 +55,7 @@ function PureMessages({
 
       {isLoading &&
         messages.length > 0 &&
-        messages[messages.length - 1].role === 'user' && <ThinkingMessage employee={employee} />}
+        messages[messages.length - 1].role === 'user' && <ThinkingMessage employee={employee!} />}
 
       <div
         ref={messagesEndRef}

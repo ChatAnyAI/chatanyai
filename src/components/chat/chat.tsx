@@ -95,7 +95,11 @@ function Chat({
             id: `error-${Date.now()}`,
             content: "An error occurred",
             role: "assistant",
-            employee:{},
+            employee: {
+              id: 0,
+              name: '',
+              avatar: ''
+            },
             annotations: [{
               type: 3,
               data
@@ -108,7 +112,11 @@ function Chat({
             id: `error-${Date.now()}`,
             content: "An error occurred",
             role: "assistant",
-            employee:{},
+            employee: {
+              id: 0,
+              name: '',
+              avatar: ''
+            },
             annotations: [{
               type: 3,
               data: { msg: err.message}

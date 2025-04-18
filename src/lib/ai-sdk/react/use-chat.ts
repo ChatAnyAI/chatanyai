@@ -293,7 +293,7 @@ By default, it's set to 1, which means that only a single LLM call is made.
 
         await callChatApi({
           api: extraMetadataRef.current.api || api,
-          employee: employee,
+          employee: employee!,
           body: experimental_prepareRequestBody?.({
             id: chatId,
             messages: chatMessages,

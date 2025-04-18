@@ -144,7 +144,7 @@ function addToolMessageToChat({
                 ...message,
                 toolInvocations: message.toolInvocations.map((toolInvocation) => {
                     const toolResult = toolMessage.content.find(
-                        (tool) => tool.toolCallId === toolInvocation.toolCallId,
+                        (tool: { toolCallId: string; }) => tool.toolCallId === toolInvocation.toolCallId,
                     );
 
                     if (toolResult) {

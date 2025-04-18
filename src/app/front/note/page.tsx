@@ -1,6 +1,4 @@
-import {PlateEditor} from "@/components/#editor/plate-editor";
 import {RightSettingProvider} from "@/app/front/aichat/component/rightSetting";
-import {CoreEditor} from "@/components/#editor/core-editor";
 import {InfoIcon, PinIcon, PlusIcon, StarIcon} from "lucide-react";
 import {generateUUID} from "@/lib/utils";
 import {useNavigate, useParams} from "react-router-dom";

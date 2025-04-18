@@ -202,7 +202,7 @@ export default function Chat({
             reload={reload}
             isReadonly={isReadonly}
             isBlockVisible={isBlockVisible}
-          />
+            employee={undefined} />
         </div>
       </div>
     </>
