@@ -3,6 +3,11 @@ import { useRef, useState } from 'react';
 import { RightSettingProvider } from '@/app/front/aichat/component/rightSetting';
 import MeetingSetting, { MeetingData } from './components/meeting-setting';
 import { ChatHeader } from '@/components/chat/chat-header';
+import {ChatList} from "@/app/front/aichat/component/chat-list";
+import {EmptyState} from "@/app/front/aichat/component/empty-state";
+import useSWR from "swr";
+import {ApiChannelListByAppId} from "@/service/api";
+import {useParams} from "react-router-dom";
 // import { generateUUID } from '@/lib/utils';
 // import { DataStreamHandler } from '@/components/chat/data-stream-handler';
 // import { useParams } from "react-router-dom";
@@ -14,7 +19,10 @@ export default function Page() {
   // const { t } = useTranslation();
   // const selectedModelId = useChatStore(state => state.modelSelectedId)
   // const { appId } = useParams();
-  const [meetingData, setMeetingData] = useState<MeetingData | null>(null);
+    const { appId } = useParams();
+
+    const [meetingData, setMeetingData] = useState<MeetingData | null>(null);
+    const { data: chats } = useSWR([`ApiChannelListByAppId`, appId], () => ApiChannelListByAppId(appId!));
 
 
   return (
@@ -28,9 +36,9 @@ export default function Page() {
               isNew={true}
             />
         }
-        <div className="flex justify-center px-4 flex-1 overflow-hidden">
-          <MeetingSetting onStart={setMeetingData} data={meetingData!} channelId={'0'} />
-          {/* {!meetingData ? (
+          <div className="container mx-auto px-4 sm:px-6 py-6 max-w-7xl">
+              <MeetingSetting onStart={setMeetingData} data={meetingData!} channelId={'0'}/>
+              {/* {!meetingData ? (
             null
           ) : (
             <>
@@ -49,8 +57,9 @@ export default function Page() {
               </div>
             </>
           )} */}
+              {chats?.length! > 0 ? <ChatList channelList={chats!} /> : <EmptyState />}
+          </div>
 
-        </div>
       </div>
     </RightSettingProvider>
   );

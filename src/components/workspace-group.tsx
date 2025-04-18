@@ -185,15 +185,15 @@ export function WorkspaceGroup({
                           asChild
                           tooltip={item.name}
                           onClick={(e) => {
-                            if (item.id && item.type !== AppType.Copilot && item.type !== AppType.Note) { 
-                              e.stopPropagation();
-                              onClickMenu({
-                                appId: item.id,
-                                name: item.name!,
-                                type: item.type
-                              });
-                              return;
-                            }
+                            // if (item.id && item.type !== AppType.Copilot && item.type !== AppType.Note) {
+                            //   e.stopPropagation();
+                            //   onClickMenu({
+                            //     appId: item.id,
+                            //     name: item.name!,
+                            //     type: item.type
+                            //   });
+                            //   return;
+                            // }
                             onClickMenu(null);
                           }}
                         >
