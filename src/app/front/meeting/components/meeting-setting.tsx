@@ -302,24 +302,7 @@ export default function DiscussionSetup({
                                                         </span>
                                                       </div>
 
-                                                      <h3 className="font-medium truncate">My name
-                                                          is {employee.name}</h3>
-                                                      <div
-                                                          className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-3 gap-2">
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {new Date(employee.createdAt * 1000).toLocaleString()}
-                                                        </span>
-                                                          <div className="flex gap-2">
-                                                            <span
-                                                                className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${employee.status === EmployeeStatus.Active
-                                                                    ? "bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20"
-                                                                    : "bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20"
-                                                                }`}
-                                                            >
-                                                                {EmployeeStatusEnum[employee.status]}
-                                                            </span>
-                                                          </div>
-                                                      </div>
+                                                      <h3 className="font-medium truncate">My name is {employee.name}</h3>
                                                   </div>
                                               </div>
                                           </div>
