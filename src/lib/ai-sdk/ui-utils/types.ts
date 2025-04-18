@@ -116,7 +116,7 @@ that the assistant made as part of this message.
     | FileUIPart
     | StepStartUIPart
   >;
-  user: User,
+  user?: User,
   employee?: Employee,
 }
 
