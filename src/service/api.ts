@@ -725,6 +725,21 @@ export const ApiDocContent = (appId: string, channelId: string, req: { content: 
   return put<void>(`/api/app/${appId}/doc/${channelId}/content`, req);
 }
 
+// 定义 ChangeSortReq 接口，对应 Go 结构体
+interface ApiDocChangeSortReq {
+  // 拖动方向，只能是 'before' 或者 'after'
+  dropPosition: 'before' | 'after';
+  // 当前被拖动的元素的唯一标识
+  guid: string;
+  // 目标元素的唯一标识，可能不存在
+  targetGuid?: string;
+  // 父级元素的唯一标识，可能不存在
+  parentGuid?: string;
+}
+export const ApiDocChangeSort = (appId: string, data: ApiDocChangeSortReq) => { 
+  return put<void>(`/api/app/${appId}/doc/-/changeSort`, data);
+}
+
 export interface ApiDocAppendContentReq {
   referContent: string;
   referChannelId: string;
@@ -784,5 +799,6 @@ export const ApiUserProfile = () => {
 export const ApiOauthSupport = () => {
   return get<string[]>('/api/oauth/support');
 }
+
 
 

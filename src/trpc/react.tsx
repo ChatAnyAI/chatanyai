@@ -4,11 +4,9 @@ import React from 'react';
 
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { unstable_httpBatchStreamLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import { SuperJSON } from 'superjson';
-
 import { getQueryClient } from '@/trpc/query-client';
 
 export const api = createTRPCReact();
@@ -30,13 +28,13 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
         // }),
         unstable_httpBatchStreamLink({
           transformer: SuperJSON,
-          url: '/api/trpc',
-          headers() {
-            const headers = new Headers();
-            headers.set('x-trpc-source', 'nextjs-react');
+          url: '/api',
+          // headers() {
+          //   const headers = new Headers();
+          //   headers.set('x-trpc-source', 'nextjs-react');
 
-            return headers;
-          },
+          //   return headers;
+          // },
         }),
       ],
     })
@@ -46,14 +44,6 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <api.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
-
-        <div className="print:hidden">
-          <ReactQueryDevtools
-            buttonPosition="bottom-left"
-            initialIsOpen={false}
-            position="bottom"
-          />
-        </div>
       </api.Provider>
     </QueryClientProvider>
   );

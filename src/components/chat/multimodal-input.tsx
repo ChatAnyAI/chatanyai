@@ -556,7 +556,7 @@ function PureMultimodalInput({
         }
     }
     return (
-      <div className="relative w-full flex flex-col gap-4">
+      <div className="relative w-full flex flex-col ">
           {messages.length === 0 &&
               attachments.length === 0 &&
               uploadQueue.length === 0 && (
@@ -598,7 +598,7 @@ function PureMultimodalInput({
               className="absolute inset-0 text-transparent pointer-events-none p-2 whitespace-pre-wrap font-sans text-base overflow-hidden"
               style={{ fontFamily: "inherit" }}
           ></div>
-          {isEmpty && <div className="absolute top-6 left-2 text-gray-400 pointer-events-none">{placeholder}</div>}
+          {isEmpty && <div className="absolute top-2 left-4 text-gray-400 pointer-events-none">{placeholder}</div>}
           <div
               ref={textareaRef}
               contentEditable

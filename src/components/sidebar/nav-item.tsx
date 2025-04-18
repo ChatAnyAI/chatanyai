@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom';
 // import { useRouter } from 'next/navigation';
 // import { toast } from 'sonner';
 
-// import { useCurrentUser } from '@/components/auth/useCurrentUser';
 import { useMounted } from '@/components/editor-pro/hooks/use-mounted';
 import { Button } from '@/components/editor-pro/potion-ui/button';
 import {

@@ -8,7 +8,7 @@ import { formatDistance } from 'date-fns';
 import { createAtomStore } from 'jotai-x';
 import { cloneDeep } from 'lodash';
 
-import { useCurrentUser } from '@/components/auth/useCurrentUser';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { useDebouncedValueVersion } from '@/components/editor-pro/utils';
 import { DiffPlate } from '@/components/editor-pro/version-history';
 import { pushModal } from '@/components/modals';
