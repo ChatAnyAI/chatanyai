@@ -19,6 +19,15 @@ import {DataStreamHandler} from "@/components/chat/data-stream-handler";
 import {useChatStore} from "@/store/chatStore";
 // import { Chat } from "@/components/chat/chat";
 
+
+import { Main } from '../component/main';
+import { DocumentPlate } from '@/components/editor-pro/providers/document-plate';
+import { PublicPlate } from '@/components/editor-pro/providers/public-plate';
+import { Panels } from '../component/panels';
+import { RightPanelType } from '@/hooks/useResizablePanel';
+import { getCookie } from "@/lib/cookie";
+
+
 export default function Page() {
     const { t } = useTranslation();
     const { appId, channelId } = useParams();
@@ -42,18 +51,41 @@ export default function Page() {
         () => ApiGetDoc(channelId!),
     );
 
+    const session = 1; //await isAuth();
+
+    const PlateProvider = session ? DocumentPlate : PublicPlate;
+
+    const navCookie = getCookie('nav');
+    const rightPanelTypeCookie = getCookie('right-panel-type');
+
+    const initialLayout = navCookie
+        ? JSON.parse(navCookie)
+        : { leftSize: 300, rightSize: 240 };
+
+    const initialRightPanelType = rightPanelTypeCookie
+        ? JSON.parse(rightPanelTypeCookie)
+        : RightPanelType.comment;
+
     return (
         <RightSettingProvider>
-            <div className="flex flex-1  overflow-hidden" >
-                {/* Sidebar */}
-                {/* <DocList /> */}
-                {/* Main content */}
+            <div className="flex h-full min-h-dvh dark:bg-[#1F1F1F]">
+                <PlateProvider>
+                        <Panels
+                            initialLayout={initialLayout}
+                            initialRightPanelType={initialRightPanelType}
+                        >
+                        <Main>
+                            <CoreEditor
+                                initialValue={docResp?.content}
+                                appId={appId!}
+                                channelId={channelId!}
+                            />
+                            </Main>
+                        </Panels>
+                </PlateProvider>
+            </div>
+            {/* <div className="flex flex-1  overflow-hidden" >
                 <div className="h-screen flex-col flex flex-1 overflow-hidden" >
-                    {/*<ChatHeader*/}
-                    {/*    chatInfo={chatResp!}*/}
-                    {/*    channelId={chatResp?.guid!}*/}
-                    {/*    isReadonly={user.id !== chatResp?.uid}*/}
-                    {/*/>*/}
 
                     <div className="flex flex-1 overflow-hidden">
                         <div className="flex-1">
@@ -65,7 +97,7 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </RightSettingProvider>
     );
 }

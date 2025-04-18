@@ -7,7 +7,6 @@ import {Link} from 'react-router-dom';
 // import { toast } from 'sonner';
 
 // import { useCurrentUser } from '@/components/auth/useCurrentUser';
-// import { routes } from '@/lib/navigation/routes';
 import { useMounted } from '@/components/editor-pro/hooks/use-mounted';
 import { Button } from '@/components/editor-pro/potion-ui/button';
 import {
@@ -25,7 +24,7 @@ import { useNavigation } from 'react-router-dom';
 
 import type { IconFC } from '../ui/icon';
 
-// import { useAuthGuard } from '../auth/useAuthGuard';
+// import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { Icons } from '../ui/icons';
 import { Skeleton } from '../ui/skeleton';
 import { useGlobalStore } from '@/store/globalStore';

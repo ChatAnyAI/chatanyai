@@ -18,7 +18,7 @@ import { useEditorPlugin } from '@udecode/plate/react';
 import { useFilePicker } from 'use-file-picker';
 
 // Potion-only
-// import { useDocumentId } from '@/lib/navigation/routes';
+// import { useDocumentId } from '@/hooks/use-document-id';
 import { useUploadFile } from '@/components/editor-pro/lib/uploadthing';
 
 import { Button } from './button';
