@@ -5,7 +5,7 @@ import './index.css';
 import App from './routes';
 import reportWebVitals from './reportWebVitals';
 import { SWRConfig } from 'swr';
-import { HydrateClient, trpc } from '@/trpc/server';
+import { TRPCReactProvider } from './trpc/react';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,9 +13,9 @@ const root = ReactDOM.createRoot(
 root.render(
   // <React.StrictMode>
   <SWRConfig value={{ shouldRetryOnError: false, revalidateOnFocus: false }}>
-    <HydrateClient>
+    <TRPCReactProvider>
       <App />
-    </HydrateClient>
+    </TRPCReactProvider>
   </SWRConfig>
   // </React.StrictMode>
 );

@@ -2,7 +2,7 @@ import { cache } from 'react';
 
 import { createHydrationHelpers } from '@trpc/react-query/rsc';
 import { createQueryClient } from '@/trpc/query-client';
-import { AppRouter } from '@/server/api/root'; // Adjust this import path as needed
+// import { AppRouter } from '@/server/api/root'; // Adjust this import path as needed
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context
@@ -25,7 +25,7 @@ import { AppRouter } from '@/server/api/root'; // Adjust this import path as nee
 
 const getQueryClient = cache(createQueryClient);
 // const caller = createCaller(createContext);
-export const { HydrateClient, trpc } = createHydrationHelpers<AppRouter>(
+export const { HydrateClient, trpc } = createHydrationHelpers(
   cache(() => {
     return {
       queryClient: getQueryClient(),

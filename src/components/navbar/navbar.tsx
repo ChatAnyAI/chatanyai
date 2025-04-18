@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext } from 'react';
+import React, { use, useContext } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
@@ -24,6 +24,7 @@ import { useDocumentQueryOptions } from '@/trpc/hooks/query-options';
 import { useAuthGuard } from '@/hooks/use-auth-guard';
 import { PanelsContext } from '../ui/resizable-panel';
 import { DocumentSuggesting } from './document-suggesting';
+import { useDocumentId } from '@/hooks/use-document-id';
 
 const DocumentHistory = () => {
   const toggleRight = useToggleRightPanel();
@@ -87,12 +88,13 @@ export const HomeNavBar = () => {
 export const Navbar = () => {
   const isCollapsed = useLeftPanelSize() === 0;
   const toggle = useToggleLeftPanel();
-  const { data: id, isLoading } = useQuery({
-    ...useDocumentQueryOptions(),
-    select: (data) => data.document?.id,
-  });
+  // const { data: id, isLoading } = useQuery({
+  //   ...useDocumentQueryOptions(),
+  //   select: (data) => data.document?.id,
+  // });
+  const id = useDocumentId();
   const template = useTemplateDocument();
-  const found = !!template || !!id;
+  const found = !!id;
   const shouldRedirect = !!template && !!id;
 
   return (
@@ -108,7 +110,7 @@ export const Navbar = () => {
         </Button>
       )}
 
-      {id && (isLoading || shouldRedirect) ? (
+      {id && (shouldRedirect) ? (
         <>
           <NavTitleSkeleton />
           <div className="flex items-center gap-x-2">

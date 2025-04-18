@@ -68,7 +68,7 @@ export default function Page() {
 
     return (
         <RightSettingProvider>
-            <div className="flex h-full min-h-dvh dark:bg-[#1F1F1F]">
+            <div className="flex-1 flex h-full min-h-dvh dark:bg-[#1F1F1F]">
                 <PlateProvider>
                         <Panels
                             initialLayout={initialLayout}

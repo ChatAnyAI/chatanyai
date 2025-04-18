@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-// import type { AppRouter } from '@/server/api/root';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -31,7 +30,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
         // }),
         unstable_httpBatchStreamLink({
           transformer: SuperJSON,
-          url: '' + '/api/trpc',
+          url: '/api/trpc',
           headers() {
             const headers = new Headers();
             headers.set('x-trpc-source', 'nextjs-react');
