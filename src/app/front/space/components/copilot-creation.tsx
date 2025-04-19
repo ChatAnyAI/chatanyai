@@ -158,7 +158,7 @@ export default function TemplateDialog({
             >
                 {/* Top title bar - more concise */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-                    <h1 className="text-xl font-medium">New Copilot</h1>
+                    <h1 className="text-xl font-medium">New Assistant</h1>
 
                     <div className="relative w-80">
                         <Search

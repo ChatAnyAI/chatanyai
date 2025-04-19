@@ -62,7 +62,7 @@ export const useCreateSpace = () => {
    const res = await ApiTemplateChoose(templateId);
     fetchAppList();
     toast({
-      title: 'Space created successfully',
+      title: 'Assistant created successfully',
     });
     navigator(`/assistant`);
   }
