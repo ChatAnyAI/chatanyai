@@ -686,30 +686,38 @@ export const ApiCopilotCreate = (data: CreateCopilotRequest) => {
 
 export interface Template {
   id: number;
-  type: AppType; // Assuming AppType is already defined in your constants
   name: string;
-  description: string;
-  icon: string;
-  fromAppId: string;
+  role: string;
+  avatar: string;
   createdAt: number;
   updatedAt: number;
   deletedAt: number;
-  createdBy: number;
+  uid: number;
   teamId: number;
-  copilotPrompt: string;
+  prompt: string;
   group: string;
 }
+
+
 // templates
-export const ApiTemplateList = (group: string, pageToLoad: number) => {
+export const ApiTemplateList = (group: string, keyword:string, pageToLoad: number) => {
   // TODO: Implement pagination
   return get<ResponseWithPagination<Template[]>>('/api/template/-/list', {
     params: {
       group,
+      keyword,
       pagination: JSON.stringify({
         currentPage: pageToLoad,
         pageSize: 10
       })
     }
+  });
+}
+
+// templateGroups
+export const ApiTemplateGroupList = () => {
+  // TODO: Implement pagination
+  return get<string[]>('/api/template/-/category', {
   });
 }
 

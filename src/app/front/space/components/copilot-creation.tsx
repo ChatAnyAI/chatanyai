@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { Search, X, Plus, ChevronRight, ChevronLeft } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ApiTemplateList, Template } from '@/service/api'
+import {ApiTemplateGroupList, ApiTemplateList, Template} from '@/service/api'
 import { cn } from "@/lib/utils"
 import { useCreateSpace } from "@/hooks/use-create-space"
 import { AppType } from "@/lib/constants/constants"
@@ -22,37 +22,10 @@ interface TemplateDialogProps {
     onClose: () => void
 }
 
-// Sidebar categories
-const categories = [
-    "Occupation",
-    "Tools",
-    "Education",
-    "Business",
-    "Writing",
-    "Emotion",
-    "Entertainment",
-    "Copywriting",
-    "Academic",
-    "Code",
-    "Live",
-    "Art",
-    "Creativity",
-    "Game",
-    "design",
-    "Medical",
-    "Translation",
-    "Office",
-    "Music",
-    "Language",
-    "Remark",
-    "Travel",
-    "Health",
-    "Selection",
-]
-
 export default function TemplateDialog({ onClose = () => { } }: TemplateDialogProps) {
     const [searchQuery, setSearchQuery] = useState("")
-    const [selectedCategory, setSelectedCategory] = useState(categories[0])
+    const [categories, setCategories] = useState<string[]>([])
+    const [selectedCategory, setSelectedCategory] = useState<string>("")
     const [templates, setTemplates] = useState<Template[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [page, setPage] = useState(1)
@@ -63,7 +36,18 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
     const [isLoadingMore, setIsLoadingMore] = useState(false)
     const throttleTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-    // 加载模板数据
+    const loadCategories = async () => {
+        try {
+            const result = await ApiTemplateGroupList()
+            setCategories(result)
+            if (selectedCategory === "") {
+                setSelectedCategory(result[0])
+            }
+        } catch (error) {
+            console.error("Error loading categories:", error)
+        }
+    }
+
     const loadTemplates = async (reset = false, newPage: number | null = null) => {
         if (reset) {
             setIsLoading(true)
@@ -74,7 +58,7 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
         setIsLoadingMore(true)
         try {
             const pageToLoad = newPage || (reset ? 1 : page)
-            const result = await ApiTemplateList(selectedCategory, pageToLoad)
+            const result = await ApiTemplateList(selectedCategory, searchQuery, pageToLoad)
 
             let tps = result.list
             if (reset || newPage) {
@@ -99,11 +83,19 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
 
     // Load initially and reload when category changes
     useEffect(() => {
+        if (categories.length === 0) {
+            loadCategories()
+        }
         loadTemplates(true)
     }, [selectedCategory])
 
     // Search handler
     const handleSearch = (value: string) => {
+        if (value === "") {
+            setSelectedCategory(categories[0])
+        } else {
+            setSelectedCategory("")
+        }
         setSearchQuery(value)
         // In a real application, API should be called for searching
         // For demonstration, we simply reset and reload
@@ -166,6 +158,30 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
                 {/* Top title bar - more concise */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border">
                     <h1 className="text-xl font-medium">New Copilot</h1>
+
+                    <div className="relative w-80">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search templates"
+                            className="pl-10 pr-10 h-10"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch(searchQuery);
+                                }
+                            }}
+                        />
+                        {searchQuery && (
+                            <button
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                                onClick={() => handleSearch("")}
+                            >
+                                <X className="h-4 w-4 text-muted-foreground" />
+                            </button>
+                        )}
+                    </div>
+
                     <button onClick={onClose} className="p-2 rounded-full hover:bg-muted/50">
                         <X className="h-5 w-5" />
                     </button>
@@ -197,37 +213,12 @@ export default function TemplateDialog({ onClose = () => { } }: TemplateDialogPr
 
                     {/* Main content area */}
                     <div className="flex-1 flex flex-col h-full overflow-hidden">
-                        {/* Category title and search bar */}
-                        <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-                            <div className="flex items-center">
-                                <span className="text-muted-foreground mr-2">📄</span>
-                                <h2 className="text-lg font-medium">{selectedCategory}</h2>
-                            </div>
-
-                            <div className="relative w-80">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search templates"
-                                    className="pl-10 pr-10 h-10"
-                                    value={searchQuery}
-                                    onChange={(e) => handleSearch(e.target.value)}
-                                />
-                                {searchQuery && (
-                                    <button
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                                        onClick={() => handleSearch("")}
-                                    >
-                                        <X className="h-4 w-4 text-muted-foreground" />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
 
                         {/* Template grid */}
                         <div className="flex-1 p-6 overflow-y-auto" ref={modalContentRef} onScroll={handleScroll}>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {/* Blank template always displayed first */}
-                                <TemplateCard template={BLANK_TEMPLATE} chooseCopilotTemplate={() => onCreateSpace(null)} />
+                                {/*<TemplateCard template={BLANK_TEMPLATE} chooseCopilotTemplate={() => onCreateSpace(null)} />*/}
 
                                 {/* API returned templates */}
                                 {templates?.map((template) => (
@@ -280,7 +271,8 @@ function TemplateCard({ template,chooseCopilotTemplate }: { template: Template |
             <div className="p-5 border-b border-border bg-muted/10">
                 <div className="flex items-center space-x-4">
                     <div className="shrink-0 h-14 w-14 flex items-center justify-center rounded-full bg-background border border-border shadow-xs">
-                        <span className="text-2xl">{template.icon}</span>
+                        <span className="text-2xl">{}</span>
+                        <img src={template.avatar} alt={"Avatar"}/>
                     </div>
                     <h3 className="font-medium line-clamp-2">{template.name}</h3>
                 </div>
@@ -288,8 +280,8 @@ function TemplateCard({ template,chooseCopilotTemplate }: { template: Template |
 
             {/* Card content */}
             <div className="flex-1 p-5 overflow-y-auto">
-                {template.description ? (
-                    <p className="text-sm text-muted-foreground">{template.description}</p>
+                {template.prompt ? (
+                    <p className="text-sm text-muted-foreground">{template.prompt}</p>
                 ) : isBlank ? (
                     <div className="flex items-center justify-center h-full">
                         <Plus className="h-10 w-10 text-muted-foreground/50" />

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import {ChevronDown, ChevronUp, Edit2, MessageSquare, PlusCircle, Trash2} from "lucide-react"
+import {ChevronDown, ChevronUp, Edit2, PlusCircle, Trash2, Wand2} from "lucide-react"
 import useSWR from "swr";
 import {
     ApiEmployeeCreate,
@@ -14,6 +14,7 @@ import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import {useGlobalStore} from "@/store/globalStore";
 import {
+    AppType,
     EmployeeStatus,
     EmployeeStatusEnum,
 } from "@/lib/constants/constants";
@@ -31,9 +32,11 @@ import {
     AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 import EditEmployeeForm from "@/app/front/employee/components/edit-employee-form";
+import CopilotCreation from "@/app/front/space/components/copilot-creation";
 
 export default function AIEmployeesDashboard() {
     const [isCreating, setIsCreating] = useState(false)
+    const [showTpl, setShowTpl] = useState(false)
     const { t } = useTranslation();
     const user = useGlobalStore(state => state.user);
     const [expandedPrompts, setExpandedPrompts] = useState<Record<string, boolean>>({})
@@ -60,6 +63,14 @@ export default function AIEmployeesDashboard() {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
+
+    const renderCreationComponent = () => {
+        return <CopilotCreation
+            onClose={() => {
+                setShowTpl(false)
+            }}
+        />
+    }
 
     const handleCreateEmployee = async (data: ApiEmployeeCreateRequest) => {
         setIsLoading(true)
@@ -156,10 +167,16 @@ export default function AIEmployeesDashboard() {
                 >
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold">Your assistants</h2>
-                        <Button variant="ghost" size="sm" className="gap-1" onClick={() => setIsCreating(true)}>
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            <span className="hidden sm:inline">Create</span>
-                        </Button>
+                        <div className="flex space-x-2">
+                            <Button variant="ghost" size="sm" className="gap-1" onClick={() => setShowTpl(true)}>
+                                <Wand2 className="mr-2 h-4 w-4" />
+                                <span className="hidden sm:inline">Use</span>
+                            </Button>
+                            <Button variant="ghost" size="sm" className="gap-1" onClick={() => setIsCreating(true)}>
+                                <PlusCircle className="mr-2 h-4 w-4" />
+                                <span className="hidden sm:inline">Create</span>
+                            </Button>
+                        </div>
                     </div>
 
                     {employeeList.length > 0 ? (
@@ -350,6 +367,14 @@ export default function AIEmployeesDashboard() {
                 </DialogContent>
             </Dialog>
 
+            {/* tpl */}
+            <Dialog open={showTpl} onOpenChange={setShowTpl}>
+                <DialogContent className="max-w-6xl p-0 gap-0 h-[90vh] max-h-[90vh]">
+                    <div className="py-4 overflow-y-auto max-h-[90vh]">
+                        {renderCreationComponent()}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
