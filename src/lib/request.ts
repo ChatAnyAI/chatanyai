@@ -51,8 +51,8 @@ export async function request<T>(
         if (window.location.pathname !== '/login') window.location.href = '/login';
         throw new Error('Login expired, please login again');
         // 512 custom 5xx
-      }else if (response.status > 499 && response.status != 512) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      } else if (response.status > 499 && response.status != 512) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
     }
 
@@ -67,8 +67,8 @@ export async function request<T>(
   } catch (error) {
     if (!options.skipErrorToast) {
       // Show error toast
-      toast.error(error instanceof Error ? error.message : 
-                 (error as ResponseData<any>)?.msg || 'Request failed');
+      toast.error(error instanceof Error ? error.message :
+        (error as ResponseData<any>)?.msg || 'Request failed');
     }
     throw error;
   }
@@ -92,7 +92,12 @@ export const put = <T>(url: string, data?: any, options?: RequestOptions) =>
     body: JSON.stringify(data),
   });
 
-export const del = <T>(url: string, options?: RequestOptions) =>
-  request<T>(url, { ...options, method: 'DELETE' });
+export const del = <T>(url: string, data?: any, options?: RequestOptions) =>
+  request<T>(url,
+    {
+      ...options,
+      method: 'DELETE',
+      body: JSON.stringify(data),
+    });
 
 export default request;

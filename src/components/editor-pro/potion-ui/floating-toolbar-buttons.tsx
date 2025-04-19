@@ -24,16 +24,17 @@ import {
   Underline,
 } from 'lucide-react';
 
-import { AIToolbarButton } from './ai-toolbar-button';
-import { ColorDropdownMenu } from './color-dropdown-menu';
+import { AIToolbarButton } from '@/components/editor-pro/potion-ui/ai-toolbar-button';
+import { ColorDropdownMenu } from '@/components/editor-pro/potion-ui/color-dropdown-menu';
+import { InlineEquationToolbarButton } from '@/components/editor-pro/potion-ui/inline-equation-toolbar-button';
+import { LinkToolbarButton } from '@/components/editor-pro/potion-ui/link-toolbar-button';
+import { MarkToolbarButton } from '@/components/editor-pro/potion-ui/mark-toolbar-button';
+import { MoreDropdownMenu } from '@/components/editor-pro/potion-ui/more-dropdown-menu';
+import { ToolbarGroup } from '@/components/editor-pro/potion-ui/toolbar';
+import { TurnIntoDropdownMenu } from '@/components/editor-pro/potion-ui/turn-into-dropdown-menu';
+
 import { CommentToolbarButton } from './comment-toolbar-button';
-import { InlineEquationToolbarButton } from './inline-equation-toolbar-button';
-import { LinkToolbarButton } from './link-toolbar-button';
-import { MarkToolbarButton } from './mark-toolbar-button';
-import { MoreDropdownMenu } from './more-dropdown-menu';
 import { SuggestionToolbarButton } from './suggestion-toolbar-button';
-import { ToolbarGroup } from './toolbar';
-import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
 
 export function FloatingToolbarButtons() {
   const editor = useEditorRef();

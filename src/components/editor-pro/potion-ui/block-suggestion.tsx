@@ -1,13 +1,11 @@
-'use client';
-
 import React, { useMemo, useState } from 'react';
 
 import type {
-  TResolvedSuggestion,
-  TSuggestionElement,
-  TSuggestionText,
-} from '@udecode/plate-suggestion';
+  RouterCommentItem,
+  RouterDiscussionItem,
+} from '@/server/api/types';
 
+import { useQuery } from '@tanstack/react-query';
 import { cn } from '@udecode/cn';
 import {
   type NodeEntry,
@@ -35,34 +33,40 @@ import {
   VideoPlugin,
 } from '@udecode/plate-media/react';
 import {
+  type TResolvedSuggestion,
+  type TSuggestionElement,
+  type TSuggestionText,
   acceptSuggestion,
   getSuggestionKey,
   keyId2SuggestionId,
   rejectSuggestion,
 } from '@udecode/plate-suggestion';
-import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
 import { TablePlugin } from '@udecode/plate-table/react';
 import { TogglePlugin } from '@udecode/plate-toggle/react';
 import {
   ParagraphPlugin,
   useEditorPlugin,
-  useStoreSelect,
+  useEditorRef,
 } from '@udecode/plate/react';
 import { CheckIcon, XIcon } from 'lucide-react';
 
-import { ExtendedSuggestionPlugin } from '../components/editor/plugins/suggestion/ExtendedSuggestionPlugin';
-import { Avatar, AvatarFallback, AvatarImage } from './avatar';
+import { ExtendedSuggestionPlugin } from '@/components/editor-pro/components/editor/plugins/suggestion/ExtendedSuggestionPlugin';
+import { formatCommentDate } from '@/lib/date/formatDate';
+import { useDocumentId } from '@/hooks/use-document-id';
 import {
-  type TDiscussion,
-  discussionStore,
-  useFakeUserInfo,
-} from './block-discussion';
-import { Button } from './button';
-import { type TComment, Comment, formatCommentDate } from './comment';
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/editor-pro/potion-ui/avatar';
+import { Button } from '@/components/editor-pro/potion-ui/button';
+import { useTRPC } from '@/trpc/react';
+
+import { CommentItem } from './comment';
 import { CommentCreateForm } from './comment-create-form';
+import { ApiDocCommentDiscussionList } from '@/service/api';
 
 export interface ResolvedSuggestion extends TResolvedSuggestion {
-  comments: TComment[];
+  comments: RouterCommentItem[];
 }
 
 export const BLOCK_SUGGESTION = '__block__';
@@ -108,9 +112,13 @@ export const BlockSuggestionCard = ({
   isLast: boolean;
   suggestion: ResolvedSuggestion;
 }) => {
-  const { api, editor } = useEditorPlugin(SuggestionPlugin);
+  const trpc = useTRPC();
 
-  const userInfo = useFakeUserInfo(suggestion.userId);
+  const { data: userData } = useQuery(
+    trpc.user.getUser.queryOptions({ id: suggestion.userId })
+  );
+
+  const { api, editor } = useEditorPlugin(ExtendedSuggestionPlugin);
 
   const accept = (suggestion: ResolvedSuggestion) => {
     api.suggestion.withoutSuggestions(() => {
@@ -143,19 +151,21 @@ export const BlockSuggestionCard = ({
     >
       <div className="flex flex-col p-4">
         <div className="relative flex items-center">
-          {/* Replace to your own backend or refer to potion */}
-          {userInfo && (
-            <Avatar className="size-6">
-              <AvatarImage alt={userInfo.name} src={userInfo.avatarUrl} />
-              <AvatarFallback>{userInfo.name?.[0]}</AvatarFallback>
+          {userData && (
+            <Avatar className="mr-2 size-6">
+              <AvatarImage
+                alt={userData.name!}
+                src={userData.profileImageUrl!}
+              />
+              <AvatarFallback>{userData.name?.[0]}</AvatarFallback>
             </Avatar>
           )}
-          <h4 className="mx-2 text-sm leading-none font-semibold">
-            {userInfo?.name}
+          <h4 className="text-sm leading-none font-semibold">
+            {userData?.name}
           </h4>
-          <div className="text-xs leading-none text-muted-foreground/80">
+          <div className="ml-1.5 text-xs leading-none text-muted-foreground/80">
             <span className="mr-1">
-              {formatCommentDate(new Date(suggestion.createdAt))}
+              {formatCommentDate(suggestion.createdAt)}
             </span>
           </div>
         </div>
@@ -205,10 +215,8 @@ export const BlockSuggestionCard = ({
                         key={index}
                         className="flex items-center text-brand/80"
                       >
-                        <span className="text-sm">With:</span>
-                        <span className="text-sm">
-                          "{text || 'line breaks'}"
-                        </span>
+                        <span className="text-sm">with:</span>
+                        <span className="text-sm">{text || 'line breaks'}</span>
                       </div>
                     </React.Fragment>
                   )
@@ -220,7 +228,7 @@ export const BlockSuggestionCard = ({
                       <span className="text-sm text-muted-foreground">
                         {index === 0 ? 'Replace:' : 'Delete:'}
                       </span>
-                      <span className="text-sm">"{text || 'line breaks'}"</span>
+                      <span className="text-sm">{text || 'line breaks'}</span>
                     </div>
                   </React.Fragment>
                 ))}
@@ -240,14 +248,14 @@ export const BlockSuggestionCard = ({
                     </span>
                   ))}
                 </span>
-                <span className="text-sm">"{suggestion.newText}"</span>
+                <span className="text-sm">{suggestion.newText}</span>
               </div>
             )}
           </div>
         </div>
 
         {suggestion.comments.map((comment, index) => (
-          <Comment
+          <CommentItem
             key={comment.id ?? index}
             comment={comment}
             discussionLength={suggestion.comments.length}
@@ -293,12 +301,21 @@ export const useResolveSuggestion = (
   suggestionNodes: NodeEntry<TElement | TSuggestionText>[],
   blockPath: Path
 ) => {
-  const discussions = useStoreSelect(
-    discussionStore,
-    (state) => state.discussions
-  );
+  const editor = useEditorRef();
+  const documentId = useDocumentId();
+  const trpc = useTRPC();
+  const { data } = useQuery({
+    queryKey: ['commentDiscussions', documentId],
+    queryFn: async () => {
+      const discussions = await ApiDocCommentDiscussionList(documentId!);
+      // Set the fetched data into trpc.comment.discussions
+      trpc.comment.discussions.setData({ documentId }, { discussions });
+      return { discussions };
+    }
+  });
 
-  const { api, editor, getOption, setOption } = useEditorPlugin(
+
+  const { api, getOption, setOption } = useEditorPlugin(
     ExtendedSuggestionPlugin
   );
 
@@ -313,7 +330,7 @@ export const useResolveSuggestion = (
     // If there are no suggestion nodes in the corresponding path in the map, then update it.
     if (PathApi.isPath(previousPath)) {
       const nodes = api.suggestion.node({ id, at: previousPath, isText: true });
-      const parentNode = api.node(previousPath);
+      const parentNode = editor.api.node(previousPath);
       let lineBreakId: string | null = null;
 
       if (parentNode && ElementApi.isElement(parentNode[0])) {
@@ -371,10 +388,12 @@ export const useResolveSuggestion = (
           at: [],
           mode: 'all',
           match: (n) =>
-            (n[SuggestionPlugin.key] && n[getSuggestionKey(id)]) ||
+            (n[ExtendedSuggestionPlugin.key] && n[getSuggestionKey(id)]) ||
             api.suggestion.nodeId(n as TElement) === id,
         }),
       ];
+
+      if (entries.length === 0) return;
 
       // move line break to the end
       entries.sort(([, path1], [, path2]) => {
@@ -441,15 +460,12 @@ export const useResolveSuggestion = (
         }
       });
 
-      if (entries.length === 0) return;
-
       const nodeData = api.suggestion.suggestionData(entries[0][0]);
 
       if (!nodeData) return;
 
-      // const comments = data?.discussions.find((d) => d.id === id)?.comments;
       const comments =
-        discussions.find((s: TDiscussion) => s.id === id)?.comments || [];
+        data?.discussions.find((d) => d.id === id)?.comments || [];
       const createdAt = new Date(nodeData.createdAt);
 
       const keyId = getSuggestionKey(id);
@@ -504,20 +520,13 @@ export const useResolveSuggestion = (
     });
 
     return res;
-  }, [
-    api.suggestion,
-    blockPath,
-    discussions,
-    editor.api,
-    getOption,
-    suggestionNodes,
-  ]);
+  }, [api.suggestion, blockPath, data, editor.api, getOption, suggestionNodes]);
 
   return resolvedSuggestion;
 };
 
 export const isResolvedSuggestion = (
-  suggestion: ResolvedSuggestion | TDiscussion
+  suggestion: ResolvedSuggestion | RouterDiscussionItem
 ): suggestion is ResolvedSuggestion => {
   return 'suggestionId' in suggestion;
 };

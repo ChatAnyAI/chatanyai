@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useRef } from 'react';
 
 import type {
@@ -8,7 +6,6 @@ import type {
 } from '@udecode/plate-suggestion';
 
 import { cn } from '@udecode/cn';
-import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
 import {
   type RenderNodeWrapperProps,
   usePluginOption,
@@ -21,7 +18,11 @@ export const SuggestionBelowNodes = ({
   editor,
   element,
 }: RenderNodeWrapperProps<BaseSuggestionConfig>) => {
-  if (!editor.getApi(SuggestionPlugin).suggestion.isBlockSuggestion(element))
+  if (
+    !editor
+      .getApi(ExtendedSuggestionPlugin)
+      .suggestion.isBlockSuggestion(element)
+  )
     return;
 
   const suggestionData = element.suggestion;

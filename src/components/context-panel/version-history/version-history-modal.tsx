@@ -17,7 +17,8 @@ import {
 } from '@/components/editor-pro/potion-ui/dialog';
 import { useUpdateDocumentMutation } from '@/trpc/hooks/document-hooks';
 import { useDocumentVersionsQueryOptions } from '@/trpc/hooks/query-options';
-import { api, useTRPC } from '@/trpc/react';
+import { useTRPC } from '@/trpc/react';
+import { ApiDocVersionCreate } from '@/service/api';
 
 export function VersionHistoryModal({
   activeVersionId: initialVersionId,
@@ -42,7 +43,7 @@ export function VersionHistoryModal({
     if (!documentId || !activeVersionId) return;
 
     // TODO: loading toast
-    await updateDocument.mutateAsync({
+    await updateDocument.mutate({
       id: documentId,
       contentRich: activeVersion?.contentRich,
     });
@@ -55,11 +56,21 @@ export function VersionHistoryModal({
   const hasVersions =
     versions.data?.versions && versions.data.versions.length > 0;
 
-  const createVersion = api.version.createVersion.useMutation({
-    onSuccess: () => {
+  const [isPending, setIsPending] = React.useState(false);
+  const handleCreateVersion = async () => {
+    if (!documentId) return;
+
+    setIsPending(true);
+    try {
+      await ApiDocVersionCreate(documentId);
+      // Keep the same invalidation logic as the original
       void trpc.version.documentVersions.invalidate({ documentId });
-    },
-  });
+    } catch (error) {
+      console.error("Failed to create version:", error);
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <DialogContent className="flex h-[calc(100vh-130px)] flex-row gap-0 p-0 md:max-w-[calc(100vw-200px)]">
@@ -94,10 +105,8 @@ export function VersionHistoryModal({
             </p>
             <Button
               variant="brand"
-              disabled={createVersion.isPending}
-              onClick={() => {
-                createVersion.mutate({ documentId });
-              }}
+              disabled={isPending}
+              onClick={handleCreateVersion}
             >
               Save version
             </Button>

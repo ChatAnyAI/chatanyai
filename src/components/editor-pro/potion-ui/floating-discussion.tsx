@@ -1,7 +1,5 @@
-'use client';
-
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-
+import { useQuery } from '@tanstack/react-query';
 import { cn } from '@udecode/cn';
 import {
   type Node,
@@ -29,7 +27,6 @@ import {
   useEditorSelector,
   useEditorVersion,
   usePluginOption,
-  useStoreValue,
 } from '@udecode/plate/react';
 import {
   type PlateEditor,
@@ -40,27 +37,52 @@ import { CheckIcon, PencilLineIcon, XIcon } from 'lucide-react';
 
 import { ExtendedCommentsPlugin } from '@/components/editor-pro/components/editor/plugins/comments/ExtendedCommentsPlugin';
 import { ExtendedSuggestionPlugin } from '@/components/editor-pro/components/editor/plugins/suggestion/ExtendedSuggestionPlugin';
-import { useDebouncedCallback } from '@/components/editor-pro/hooks/use-debounce-callback';
+import { useDebouncedCallback } from '@/hooks/useDebounceCallback';
+import { formatCommentDate } from '@/lib/date/formatDate';
+import { useDocumentId } from '@/hooks/use-document-id';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from '@/components/editor-pro/potion-ui/avatar';
-import {
-  type TDiscussion,
-  discussionStore,
-  useFakeCurrentUserId,
-  useFakeUserInfo,
-} from '@/components/editor-pro/potion-ui/block-discussion';
 import { Button } from '@/components/editor-pro/potion-ui/button';
+import { useTRPC } from '@/trpc/react';
 
+import { CommentCreateForm } from '@/components/editor-pro/potion-ui/comment-create-form';
 import {
   type ResolvedSuggestion,
   BLOCK_SUGGESTION,
   TYPE_TEXT_MAP,
 } from './block-suggestion';
-import { Comment, formatCommentDate } from './comment';
-import { CommentCreateForm } from './comment-create-form';
+import { CommentItem } from './comment';
+import { ApiDocCommentDiscussionList } from '@/service/api';
+
+
+export interface RouterDiscussionItem {
+  id: string;
+  comments: {
+    id: string;
+    contentRich: any;
+    createdAt: Date;
+    discussionId: string;
+    isEdited: boolean;
+    updatedAt: Date;
+    user: {
+      id: string;
+      name: string | null;
+      profileImageUrl: string | null;
+    };
+  }[];
+  createdAt: Date;
+  documentContent: string;
+  isResolved: boolean;
+  user: {
+    id: string;
+    name: string | null;
+    profileImageUrl: string | null;
+  };
+  userId: string;
+}
 
 export const AfterEditableComments = () => {
   const mounted = useEditorMounted();
@@ -71,7 +93,7 @@ export const AfterEditableComments = () => {
 
   if (!mounted || isOverlapWithEditor) return;
 
-  return <FloatingDiscussion />;
+  return <FloatingComments />;
 };
 
 const getCommentTop = (
@@ -321,12 +343,13 @@ const useCommentingNode = () => {
   }, []);
 };
 
-export const FloatingDiscussion = () => {
+export const FloatingComments = () => {
   const editorContainerRef = useEditorContainerRef();
   const editor = useEditorRef();
   const commentApi = editor.getApi(ExtendedCommentsPlugin);
   const suggestionApi = editor.getApi(ExtendedSuggestionPlugin);
 
+  const documentId = useDocumentId();
   const activeCommentId = usePluginOption(ExtendedCommentsPlugin, 'activeId');
   const activeSuggestionId = usePluginOption(
     ExtendedSuggestionPlugin,
@@ -342,7 +365,18 @@ export const FloatingDiscussion = () => {
     'updateTimestamp'
   );
 
-  const discussions = useStoreValue(discussionStore, 'discussions');
+  const trpc = useTRPC();
+  // Use ApiDocCommentDiscussionList to fetch data
+  const { data } = useQuery({
+    queryKey: ['commentDiscussions', documentId],
+    queryFn: async () => {
+      const discussions = await ApiDocCommentDiscussionList(documentId!);
+      // Set the fetched data into trpc.comment.discussions
+      trpc.comment.discussions.setData({ documentId }, { discussions });
+      return { discussions };
+    }
+  });
+
   const domRef = React.useRef<Record<string, HTMLDivElement | null>>({});
   const topRef = React.useRef<Record<string, number>>({});
 
@@ -411,7 +445,7 @@ export const FloatingDiscussion = () => {
 
     topRef.current = {};
 
-    discussions.forEach((discussion) => {
+    data?.discussions?.forEach((discussion) => {
       if (
         discussion.isResolved ||
         !commentApi.comment.has({ id: discussion.id })
@@ -446,11 +480,11 @@ export const FloatingDiscussion = () => {
     });
 
     topRef.current = resolveOverlappingTop(topRef.current, domRef.current);
-    forceUpdate();
 
+    forceUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    discussions.length,
+    data?.discussions.length,
     suggestionList.length,
     editorContainerRef,
     isOverlapWithEditor,
@@ -483,12 +517,12 @@ export const FloatingDiscussion = () => {
   }, [debouncedUpdateFloat, updateTimestamp]);
 
   useEffect(() => {
-    if (!discussions) return;
+    if (!data) return;
 
     setTimeout(() => {
       renderFloatingDiscussion();
     }, 0);
-  }, [discussions, renderFloatingDiscussion]);
+  }, [data, renderFloatingDiscussion]);
 
   useEffect(() => {
     if (!activeId || !domRef.current[activeId]) return;
@@ -588,13 +622,14 @@ export const FloatingDiscussion = () => {
         </div>
       )}
 
-      {discussions.map(
+      {data?.discussions?.map(
         (discussion) =>
           !discussion.isResolved &&
           commentApi.comment.has({ id: discussion.id }) && (
             <FloatingCommentsContent
               key={discussion.id}
               ref={(el) => {
+                console.log('discussion', discussion);
                 domRef.current[discussion.id] = el;
               }}
               discussion={discussion}
@@ -623,7 +658,7 @@ export const FloatingDiscussion = () => {
 };
 
 type FloatingCommentsContentProps = {
-  discussion: TDiscussion;
+  discussion: RouterDiscussionItem;
   domRef: React.RefObject<Record<string, HTMLDivElement | null>>;
   top: number;
 };
@@ -694,9 +729,9 @@ const FloatingCommentsContent = ({
       data-discussion-id={discussion.id}
       data-hover={hoverId === discussion.id}
     >
-      {discussion.comments.length >= 3 && activeId !== discussion.id ? (
+      {discussion?.comments?.length >= 3 && activeId !== discussion.id ? (
         <>
-          <Comment
+          <CommentItem
             key={discussion.comments[0].id}
             onEditorClick={() => highlightDiscussion(editor, discussion.id)}
             comment={discussion.comments[0]}
@@ -712,7 +747,7 @@ const FloatingCommentsContent = ({
               Show {discussion.comments.length - 2} replies
             </div>
           </div>
-          <Comment
+          <CommentItem
             key={discussion.comments.at(-1)!.id}
             onEditorClick={() => highlightDiscussion(editor, discussion.id)}
             comment={discussion.comments.at(-1)!}
@@ -724,8 +759,8 @@ const FloatingCommentsContent = ({
           />
         </>
       ) : (
-        discussion.comments.map((comment, index) => (
-          <Comment
+        discussion?.comments?.map((comment, index) => (
+          <CommentItem
             key={comment.id ?? index}
             onEditorClick={() => highlightDiscussion(editor, discussion.id)}
             comment={comment}
@@ -759,6 +794,19 @@ const FloatingSuggestionContent = ({
   ref,
   top,
 }: React.ComponentProps<'div'> & FloatingSuggestionContentProps) => {
+  const documentId = useDocumentId();
+  const trpc = useTRPC();
+  // Use ApiDocCommentDiscussionList to fetch data
+  const { data } = useQuery({
+    queryKey: ['commentDiscussions', documentId],
+    queryFn: async () => {
+      const discussions = await ApiDocCommentDiscussionList(documentId!);
+      // Set the fetched data into trpc.comment.discussions
+      trpc.comment.discussions.setData({ documentId }, { discussions });
+      return { discussions };
+    }
+  });
+
   const { api, editor, setOption } = useEditorPlugin(ExtendedSuggestionPlugin);
   const nodeData = api.suggestion.suggestionData(entries[0][0]);
 
@@ -770,9 +818,12 @@ const FloatingSuggestionContent = ({
     })
   );
 
-  const userId = useFakeCurrentUserId();
-  const userData = useFakeUserInfo(userId);
-  const discussions = useStoreValue(discussionStore, 'discussions');
+  const { data: userData } = useQuery(
+    trpc.user.getUser.queryOptions(
+      { id: nodeData!.userId },
+      { enabled: !!nodeData?.userId }
+    )
+  );
 
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -842,7 +893,7 @@ const FloatingSuggestionContent = ({
 
   if (!nodeData) return null;
 
-  const comments = discussions.find((d) => d.id === id)?.comments || [];
+  const comments = data?.discussions.find((d) => d.id === id)?.comments || [];
   const createdAt = new Date(nodeData.createdAt);
   const keyId = getSuggestionKey(id);
 
@@ -957,8 +1008,11 @@ const FloatingSuggestionContent = ({
         <div className="relative flex items-center">
           {userData && (
             <>
-              <Avatar className="relative mr-2 size-6">
-                <AvatarImage alt={userData.name} src={userData.avatarUrl} />
+              <Avatar className="mr-2 size-6">
+                <AvatarImage
+                  alt={userData.name!}
+                  src={userData.profileImageUrl!}
+                />
                 <AvatarFallback>{userData.name?.[0]}</AvatarFallback>
               </Avatar>
               <PencilLineIcon className="absolute -bottom-2 left-4 size-4 rounded-[50%] bg-brand-foreground p-0.5 text-brand/80" />
@@ -983,7 +1037,7 @@ const FloatingSuggestionContent = ({
                     <span className="text-sm text-muted-foreground">
                       Delete:
                     </span>
-                    <span className="text-sm">{text}</span>
+                    <span className="text-sm">"{text}"</span>
                   </div>
                 ))}
               </React.Fragment>
@@ -1052,7 +1106,7 @@ const FloatingSuggestionContent = ({
 
         {suggestion.comments.length >= 3 && activeId !== id ? (
           <>
-            <Comment
+            <CommentItem
               key={suggestion.comments[0].id}
               comment={suggestion.comments[0]}
               discussionLength={suggestion.comments.length}
@@ -1067,7 +1121,7 @@ const FloatingSuggestionContent = ({
                 Show {suggestion.comments.length - 2} replies
               </div>
             </div>
-            <Comment
+            <CommentItem
               key={suggestion.comments.at(-1)!.id}
               comment={suggestion.comments.at(-1)!}
               discussionLength={suggestion.comments.length}
@@ -1079,7 +1133,7 @@ const FloatingSuggestionContent = ({
           </>
         ) : (
           suggestion.comments.map((comment, index) => (
-            <Comment
+            <CommentItem
               key={comment.id ?? index}
               comment={comment}
               discussionLength={suggestion.comments.length}

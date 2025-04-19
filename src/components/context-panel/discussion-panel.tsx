@@ -54,7 +54,7 @@ export default memo(function DiscussionPanel() {
                     {formatDiscussionDate(discussion.createdAt)}
                   </div>
 
-                  {discussion?.comments!.map((comment, index) => (
+                  {discussion?.comments?.map((comment, index) => (
                     <CommentItem
                       key={index}
                       comment={comment}

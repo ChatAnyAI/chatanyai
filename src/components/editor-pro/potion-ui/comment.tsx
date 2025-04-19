@@ -1,78 +1,45 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
+import type { RouterCommentItem } from '@/server/api/types';
 import type { Value } from '@udecode/plate';
 
 import { cn } from '@udecode/cn';
-import { CommentsPlugin } from '@udecode/plate-comments/react';
-import { Plate, useEditorPlugin, useStoreValue } from '@udecode/plate/react';
-import {
-  differenceInDays,
-  differenceInHours,
-  differenceInMinutes,
-  format,
-} from 'date-fns';
-import {
-  CheckIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  TrashIcon,
-  XIcon,
-} from 'lucide-react';
+import { Plate, useEditorPlugin } from '@udecode/plate/react';
+import { produce } from 'immer';
 
-import { Avatar, AvatarFallback, AvatarImage } from './avatar';
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { ExtendedCommentsPlugin } from '@/components/editor-pro/components/editor/plugins/comments/ExtendedCommentsPlugin';
+import { Icons } from '@/components/ui/icons';
+import { formatCommentDate } from '@/lib/date/formatDate';
+import { useDocumentId } from '@/hooks/use-document-id';
 import {
-  discussionStore,
-  useFakeCurrentUserId,
-  useFakeUserInfo,
-} from './block-discussion';
-import { Button } from './button';
-import { useCommentEditor } from './comment-create-form';
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/editor-pro/potion-ui/avatar';
+import { Button } from '@/components/editor-pro/potion-ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from './dropdown-menu';
-import { Editor, EditorContainer } from './editor';
+} from '@/components/editor-pro/potion-ui/dropdown-menu';
+import { Editor, EditorContainer } from '@/components/editor-pro/potion-ui/editor';
+import { api, useTRPC } from '@/trpc/react';
 
-export const formatCommentDate = (date: Date) => {
-  const now = new Date();
-  const diffMinutes = differenceInMinutes(now, date);
-  const diffHours = differenceInHours(now, date);
-  const diffDays = differenceInDays(now, date);
+import { useCommentEditor } from './comment-create-form';
+import { ApiDocDiscussionResolve, ApiDocDiscussionDetele, ApiDocCommentUpdate, ApiDocCommentDetele } from '@/service/api';
 
-  if (diffMinutes < 60) {
-    return `${diffMinutes}m`;
-  }
-  if (diffHours < 24) {
-    return `${diffHours}h`;
-  }
-  if (diffDays < 2) {
-    return `${diffDays}d`;
-  }
-
-  return format(date, 'MM/dd/yyyy');
-};
-
-export interface TComment {
-  id: string;
-  contentRich: Value;
-  createdAt: Date;
-  discussionId: string;
-  isEdited: boolean;
-  userId: string;
-}
-
-export function Comment(props: {
-  comment: TComment;
+export function CommentItem(props: {
+  comment: RouterCommentItem;
   discussionLength: number;
+  documentContent: string;
   editingId: string | null;
   index: number;
   setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
-  documentContent?: string;
   showDocumentContent?: boolean;
   onEditorClick?: () => void;
 }) {
@@ -86,65 +53,176 @@ export function Comment(props: {
     showDocumentContent = false,
     onEditorClick,
   } = props;
-  // const { user } = comment;
+  const { user } = comment;
 
-  const discussions = useStoreValue(discussionStore, 'discussions');
-  const userInfo = useFakeUserInfo(comment.userId);
-  const currentUserId = useFakeCurrentUserId();
-
-  const resolveDiscussion = (id: string) => {
-    const updatedDiscussions = discussions.map((discussion) => {
-      if (discussion.id === id) {
-        return { ...discussion, isResolved: true };
-      }
-
-      return discussion;
-    });
-    discussionStore.set('discussions', updatedDiscussions);
-  };
-
-  const removeDiscussion = (id: string) => {
-    const updatedDiscussions = discussions.filter(
-      (discussion: any) => discussion.id !== id
-    );
-    discussionStore.set('discussions', updatedDiscussions);
-  };
-
-  const updateComment = (input: {
-    id: string;
-    contentRich: any;
-    discussionId: string;
-    isEdited: boolean;
-  }) => {
-    const updatedDiscussions = discussions.map((discussion) => {
-      if (discussion.id === input.discussionId) {
-        const updatedComments = discussion.comments.map((comment) => {
-          if (comment.id === input.id) {
-            return {
-              ...comment,
-              contentRich: input.contentRich,
-              isEdited: true,
-              updatedAt: new Date(),
-            };
-          }
-
-          return comment;
+  const trpc = useTRPC();
+  const documentId = useDocumentId();
+  const resolveDiscussion = {
+    mutate: async (input: { id: string }) => {
+      try {
+        // Store previous discussions for rollback in case of error
+        await trpc.comment.discussions.cancel();
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
         });
 
-        return { ...discussion, comments: updatedComments };
-      }
+        // Optimistically update UI
+        trpc.comment.discussions.setData({ documentId }, (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
 
-      return discussion;
-    });
-    discussionStore.set('discussions', updatedDiscussions);
+            const index = draft.discussions.findIndex(
+              (comment) => comment.id === input.id
+            );
+
+            if (index === -1) return;
+
+            draft.discussions[index].isResolved = true;
+          })
+        );
+
+        // Make the actual API call
+        await ApiDocDiscussionResolve({ id: input.id });
+
+        // On success, invalidate the query to refetch fresh data
+        void trpc.comment.discussions.invalidate({ documentId });
+        
+        return { previousDiscussions };
+      } catch (error) {
+        // Restore previous data if there's an error
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+        if (previousDiscussions) {
+          trpc.comment.discussions.setData(
+            { documentId },
+            previousDiscussions
+          );
+        }
+        throw error;
+      }
+    }
   };
 
-  const { tf } = useEditorPlugin(CommentsPlugin);
+  const removeDiscussion = {
+    mutate: async (input: { id: string }) => {
+      try {
+        // Store previous discussions for rollback in case of error
+        await trpc.comment.discussions.cancel();
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
 
-  // Replace to your own backend or refer to potion
-  const isMyComment = currentUserId === comment.userId;
+        // Optimistically update UI
+        trpc.comment.discussions.setData({ documentId }, (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
 
-  const initialValue = comment.contentRich;
+            const index = draft.discussions.findIndex(
+              (comment) => comment.id === input.id
+            );
+
+            if (index === -1) return;
+
+            draft.discussions.splice(index, 1);
+          })
+        );
+
+        // Make the actual API call
+        await ApiDocDiscussionDetele({ id: input.id });
+
+        // On success, invalidate the query to refetch fresh data
+        void trpc.comment.discussions.invalidate({ documentId });
+        
+        return { previousDiscussions };
+      } catch (error) {
+        // Restore previous data if there's an error
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+        if (previousDiscussions) {
+          trpc.comment.discussions.setData(
+            { documentId },
+            previousDiscussions
+          );
+        }
+        throw error;
+      }
+    }
+  };
+
+  const updateComment = {
+    mutate: async (input: { id: string; contentRich: any; discussionId: string; isEdited: boolean }) => {
+      try {
+        // Store previous discussions for rollback in case of error
+        await trpc.comment.discussions.cancel();
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+
+        // Optimistically update UI
+        trpc.comment.discussions.setData({ documentId }, (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
+
+            const discussionsIndex = draft.discussions.findIndex(
+              (discussion) => discussion.id === input.discussionId
+            );
+
+            if (discussionsIndex === -1) return;
+
+            const replyIndex = draft.discussions[
+              discussionsIndex
+            ].comments.findIndex((comment) => comment.id === input.id);
+
+            if (replyIndex === -1) return;
+
+            const discussions = draft.discussions[discussionsIndex];
+            const comment = discussions.comments[replyIndex];
+
+            comment.isEdited = true;
+            comment.contentRich = input.contentRich as any;
+            comment.updatedAt = new Date();
+          })
+        );
+
+        // Make the actual API call
+        await ApiDocCommentUpdate({
+          id: input.id,
+          contentRich: input.contentRich,
+          discussionId: input.discussionId,
+          isEdited: input.isEdited
+        });
+
+        // On success, invalidate the query to refetch fresh data
+        void trpc.comment.discussions.invalidate({ documentId });
+        
+        return { previousDiscussions };
+      } catch (error) {
+        // Restore previous data if there's an error
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+        if (previousDiscussions) {
+          trpc.comment.discussions.setData(
+            { documentId },
+            previousDiscussions
+          );
+        }
+        throw error;
+      }
+    }
+  };
+
+  const { id: currentUserId } = useCurrentUser();
+  const { tf } = useEditorPlugin(ExtendedCommentsPlugin);
+
+  const isMyComment = useMemo(
+    () => currentUserId === user.id,
+    [currentUserId, user.id]
+  );
+
+  const initialValue = comment.contentRich as Value;
 
   const commentEditor = useCommentEditor(
     {
@@ -163,7 +241,7 @@ export function Comment(props: {
   };
 
   const onSave = () => {
-    void updateComment({
+    updateComment.mutate({
       id: comment.id,
       contentRich: commentEditor.children,
       discussionId: comment.discussionId,
@@ -173,7 +251,7 @@ export function Comment(props: {
   };
 
   const onResolveComment = () => {
-    void resolveDiscussion(comment.discussionId);
+    resolveDiscussion.mutate({ id: comment.discussionId });
     tf.comment.unsetMark({ id: comment.discussionId });
   };
 
@@ -190,21 +268,17 @@ export function Comment(props: {
       onMouseLeave={() => setHovering(false)}
     >
       <div className="relative flex items-center">
-        {userInfo && (
-          <Avatar className="size-6">
-            <AvatarImage alt={userInfo.name} src={userInfo.avatarUrl} />
-            <AvatarFallback>{userInfo.name?.[0]}</AvatarFallback>
+        {user && (
+          <Avatar className="mr-2 size-6">
+            <AvatarImage alt={user.name!} src={user.profileImageUrl!} />
+            <AvatarFallback>{user.name?.[0]}</AvatarFallback>
           </Avatar>
         )}
-        <h4 className="mx-2 text-sm leading-none font-semibold">
-          {/* Replace to your own backend or refer to potion */}
-          {userInfo?.name}
-        </h4>
 
-        <div className="text-xs leading-none text-muted-foreground/80">
-          <span className="mr-1">
-            {formatCommentDate(new Date(comment.createdAt))}
-          </span>
+        <h4 className="text-sm leading-none font-semibold">{user?.name}</h4>
+
+        <div className="ml-1.5 text-xs leading-none text-muted-foreground/80">
+          <span className="mr-1">{formatCommentDate(comment.createdAt)}</span>
           {comment.isEdited && <span>(edited)</span>}
         </div>
 
@@ -215,9 +289,10 @@ export function Comment(props: {
                 variant="ghost"
                 className="h-6 p-1 text-muted-foreground"
                 onClick={onResolveComment}
+                tooltip="Resolve"
                 type="button"
               >
-                <CheckIcon className="size-4" />
+                <Icons.check className="size-4" />
               </Button>
             )}
 
@@ -230,7 +305,7 @@ export function Comment(props: {
               onRemoveComment={() => {
                 if (discussionLength === 1) {
                   tf.comment.unsetMark({ id: comment.discussionId });
-                  void removeDiscussion(comment.discussionId);
+                  removeDiscussion.mutate({ id: comment.discussionId });
                 }
               }}
               comment={comment}
@@ -248,7 +323,7 @@ export function Comment(props: {
             <div className="absolute top-[5px] left-3 h-full w-0.5 shrink-0 bg-muted" />
           )}
           <div className="my-px w-0.5 shrink-0 bg-highlight" />
-          {documentContent && <div className="ml-2">{documentContent}</div>}
+          <div className="ml-2">{documentContent}</div>
         </div>
       )}
 
@@ -267,29 +342,29 @@ export function Comment(props: {
             {isEditing && (
               <div className="ml-auto flex shrink-0 gap-1">
                 <Button
-                  size="icon"
+                  size="iconSm"
                   variant="ghost"
                   className="size-[28px]"
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     void onCancel();
                   }}
                 >
-                  <div className="flex size-5 shrink-0 items-center justify-center rounded-[50%] bg-primary/40">
-                    <XIcon className="size-3 stroke-[3px] text-background" />
+                  <div className="flex size-5 items-center justify-center rounded-full bg-primary/40">
+                    <Icons.x className="size-3 stroke-[3px] text-background" />
                   </div>
                 </Button>
 
                 <Button
-                  size="icon"
+                  size="iconSm"
                   variant="ghost"
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     void onSave();
                   }}
                 >
-                  <div className="flex size-5 shrink-0 items-center justify-center rounded-[50%] bg-brand">
-                    <CheckIcon className="size-3 stroke-[3px] text-background" />
+                  <div className="flex size-5 items-center justify-center rounded-full bg-brand">
+                    <Icons.check className="size-3 stroke-[3px] text-background" />
                   </div>
                 </Button>
               </div>
@@ -302,7 +377,7 @@ export function Comment(props: {
 }
 
 interface CommentMoreDropdownProps {
-  comment: TComment;
+  comment: RouterCommentItem;
   dropdownOpen: boolean;
   setDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
@@ -320,7 +395,61 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
     onRemoveComment,
   } = props;
 
-  const discussions = useStoreValue(discussionStore, 'discussions');
+  const trpc = useTRPC();
+  const documentId = useDocumentId();
+  const deleteComment = {
+    mutate: async (input: { id: string; discussionId: string }) => {
+      try {
+        // Store previous discussions for rollback in case of error
+        await trpc.comment.discussions.cancel();
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+
+        // Optimistically update UI
+        trpc.comment.discussions.setData({ documentId }, (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
+
+            const discussionId = draft.discussions.findIndex(
+              (discussion) => discussion.id === input.discussionId
+            );
+
+            if (discussionId === -1) return;
+
+            const discussions = draft.discussions[discussionId];
+
+            const replyIndex = discussions.comments.findIndex(
+              (comment) => comment.id === input.id
+            );
+
+            discussions.comments.splice(replyIndex, 1);
+          })
+        );
+
+        // Make the actual API call
+        await ApiDocCommentDetele({ id: input.id });
+
+        // On success, invalidate the query to refetch fresh data
+        void trpc.comment.discussions.invalidate({ documentId });
+        onRemoveComment?.();
+        
+        return { previousDiscussions };
+      } catch (error) {
+        // Restore previous data if there's an error
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+        if (previousDiscussions) {
+          trpc.comment.discussions.setData(
+            { documentId },
+            previousDiscussions
+          );
+        }
+        throw error;
+      }
+    }
+  };
 
   const selectedEditCommentRef = React.useRef<boolean>(false);
 
@@ -328,33 +457,11 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
     if (!comment.id)
       return alert('You are operating too quickly, please try again later.');
 
-    // Find and update the discussion
-    const updatedDiscussions = discussions.map((discussion: any) => {
-      if (discussion.id !== comment.discussionId) {
-        return discussion;
-      }
-
-      const commentIndex = discussion.comments.findIndex(
-        (c: any) => c.id === comment.id
-      );
-
-      if (commentIndex === -1) {
-        return discussion;
-      }
-
-      return {
-        ...discussion,
-        comments: [
-          ...discussion.comments.slice(0, commentIndex),
-          ...discussion.comments.slice(commentIndex + 1),
-        ],
-      };
+    deleteComment.mutate({
+      id: comment.id,
+      discussionId: comment.discussionId,
     });
-
-    // Save back to session storage
-    discussionStore.set('discussions', updatedDiscussions);
-    onRemoveComment?.();
-  }, [comment.discussionId, comment.id, discussions, onRemoveComment]);
+  }, [comment.discussionId, comment.id, deleteComment]);
 
   const onEditComment = React.useCallback(() => {
     selectedEditCommentRef.current = true;
@@ -372,8 +479,12 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
       modal={false}
     >
       <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-        <Button variant="ghost" className={cn('h-6 p-1 text-muted-foreground')}>
-          <MoreHorizontalIcon className="size-4" />
+        <Button
+          variant="ghost"
+          className={cn('h-6 p-1 text-muted-foreground')}
+          tooltip="More actions"
+        >
+          <Icons.more className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -389,11 +500,11 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
       >
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={onEditComment}>
-            <PencilIcon className="size-4" />
+            <Icons.edit className="size-4" />
             Edit comment
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onDeleteComment}>
-            <TrashIcon className="size-4" />
+            <Icons.trash className="size-4" />
             Delete comment
           </DropdownMenuItem>
         </DropdownMenuGroup>

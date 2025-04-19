@@ -1,33 +1,27 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { createContext, useMemo, useReducer } from 'react';
 
+import type { RouterDiscussionItem } from '@/server/api/types';
 import type { TSuggestionText } from '@udecode/plate-suggestion';
 import type {
   PlateRenderElementProps,
   RenderNodeWrapper,
 } from '@udecode/plate/react';
 
+import { useQuery } from '@tanstack/react-query';
 import {
   type NodeEntry,
   type Path,
   type TElement,
-  createZustandStore,
   PathApi,
   TextApi,
 } from '@udecode/plate';
-import {
-  type BaseCommentsConfig,
-  type TCommentText,
-  getDraftCommentKey,
-} from '@udecode/plate-comments';
-import { CommentsPlugin } from '@udecode/plate-comments/react';
-import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
+import { type TCommentText, getDraftCommentKey } from '@udecode/plate-comments';
 import {
   useEditorPlugin,
   useEditorRef,
   usePluginOption,
-  useStoreValue,
 } from '@udecode/plate/react';
 import {
   MessageSquareTextIcon,
@@ -36,6 +30,8 @@ import {
 } from 'lucide-react';
 
 import { ExtendedCommentsPlugin } from '@/components/editor-pro/components/editor/plugins/comments/ExtendedCommentsPlugin';
+import { ExtendedSuggestionPlugin } from '@/components/editor-pro/components/editor/plugins/suggestion/ExtendedSuggestionPlugin';
+import { useDocumentId } from '@/hooks/use-document-id';
 import { Button } from '@/components/editor-pro/potion-ui/button';
 import {
   Popover,
@@ -43,174 +39,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/editor-pro/potion-ui/popover';
+import { useTRPC } from '@/trpc/react';
 
-import { ExtendedSuggestionPlugin } from '../components/editor/plugins/suggestion/ExtendedSuggestionPlugin';
 import {
   BlockSuggestionCard,
   isResolvedSuggestion,
   useResolveSuggestion,
 } from './block-suggestion';
-import { type TComment, Comment } from './comment';
+import { CommentItem } from './comment';
 import { CommentCreateForm } from './comment-create-form';
+import { ApiDocCommentDiscussionList } from '@/service/api';
 
-export interface TDiscussion {
-  id: string;
-  comments: TComment[];
-  createdAt: Date;
-  isResolved: boolean;
-  userId: string;
-  documentContent?: string;
-}
+export const ForceUpdateContext = createContext<() => void>(() => {});
 
-const initTestDiscussions = [
-  {
-    id: 'discussion1',
-    comments: [
-      {
-        id: 'comment1',
-        contentRich: [
-          {
-            children: [
-              {
-                text: 'This is a comment',
-              },
-            ],
-            type: 'p',
-          },
-        ],
-        createdAt: new Date(Date.now() - 900_000),
-        discussionId: 'discussion1',
-        isEdited: false,
-        userId: 'user1',
-      },
-    ],
-    createdAt: new Date(),
-    documentContent: 'comments',
-    isResolved: false,
-    userId: 'user1',
-  },
-  {
-    id: 'discussion2',
-    comments: [
-      {
-        id: 'comment1',
-        contentRich: [
-          {
-            children: [
-              {
-                text: 'There will be animation here',
-              },
-            ],
-            type: 'p',
-          },
-        ],
-        createdAt: new Date(Date.now() - 900_000),
-        discussionId: 'discussion1',
-        isEdited: false,
-        userId: 'user1',
-      },
-    ],
-    createdAt: new Date(),
-    documentContent: 'here',
-    isResolved: false,
-    userId: 'user2',
-  },
-  {
-    id: 'discussion3',
-    comments: [
-      {
-        id: 'comment1',
-        contentRich: [
-          {
-            children: [
-              {
-                text: 'Try hovering here',
-              },
-            ],
-            type: 'p',
-          },
-        ],
-        createdAt: new Date(Date.now() - 900_000),
-        discussionId: 'discussion3',
-        isEdited: false,
-        userId: 'user3',
-      },
-    ],
-    createdAt: new Date(),
-    documentContent: 'activate',
-    isResolved: false,
-    userId: 'user3',
-  },
-  {
-    id: 'discussion4',
-    comments: [
-      {
-        id: 'comment1',
-        contentRich: [
-          {
-            children: [
-              {
-                text: 'Click here to highlight this block',
-              },
-            ],
-            type: 'p',
-          },
-        ],
-        createdAt: new Date(Date.now() - 900_000),
-        discussionId: 'discussion4',
-        isEdited: false,
-        userId: 'user2',
-      },
-    ],
-    createdAt: new Date(),
-    documentContent: 'block',
-    isResolved: false,
-    userId: 'user2',
-  },
-];
-
-type TDiscussionStore = {
-  discussions: TDiscussion[];
-};
-
-export const discussionStore = createZustandStore<TDiscussionStore>(
-  {
-    discussions: initTestDiscussions,
-  },
-  {
-    devtools: { enabled: true }, // Redux DevTools with options
-    mutative: true, // shorthand for { enabled: true }
-    name: 'discussion',
-  }
-);
-
-export const useFakeCurrentUserId = () => 'user3';
-
-export const useFakeUserInfo = (userId: string) => {
-  const mockUsers = [
-    {
-      id: 'user1',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/19695832?s=96&v=4',
-      name: 'zbeyens',
-    },
-    {
-      id: 'user2',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/4272090?v=4',
-      name: '12joan',
-    },
-    {
-      id: 'user3',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/164472012?v=4',
-      name: 'felixfeng33',
-    },
-  ];
-
-  return mockUsers.find((user) => user.id === userId);
-};
-
-export const BlockDiscussion: RenderNodeWrapper<BaseCommentsConfig> = (
-  props
-) => {
+export const BlockDiscussion: RenderNodeWrapper = (props) => {
   const isOverlapWithEditor = usePluginOption(
     ExtendedCommentsPlugin,
     'isOverlapWithEditor'
@@ -218,28 +60,34 @@ export const BlockDiscussion: RenderNodeWrapper<BaseCommentsConfig> = (
 
   if (!isOverlapWithEditor) return;
 
-  const { api, editor, element } = props;
+  const { editor, element } = props;
 
   const blockPath = editor.api.findPath(element);
 
   // avoid duplicate in table or column
   if (!blockPath || blockPath.length > 1) return;
 
-  const draftCommentNode = api.comment.node({ at: blockPath, isDraft: true });
+  const draftCommentNode = editor
+    .getApi(ExtendedCommentsPlugin)
+    .comment.node({ at: blockPath, isDraft: true });
 
-  const commentNodes = [...api.comment.nodes({ at: blockPath })];
+  const commentNodes = [
+    ...editor.getApi(ExtendedCommentsPlugin).comment.nodes({ at: blockPath }),
+  ];
 
   const suggestionNodes = [
-    ...editor.getApi(SuggestionPlugin).suggestion.nodes({ at: blockPath }),
+    ...editor
+      .getApi(ExtendedSuggestionPlugin)
+      .suggestion.nodes({ at: blockPath }),
   ];
 
   if (
     commentNodes.length === 0 &&
     suggestionNodes.length === 0 &&
-    !draftCommentNode
-  ) {
+    !draftCommentNode &&
+    isOverlapWithEditor
+  )
     return;
-  }
 
   return (props) => (
     <BlockCommentsContent
@@ -264,6 +112,7 @@ const BlockCommentsContent = ({
   draftCommentNode: NodeEntry<TCommentText> | undefined;
   suggestionNodes: NodeEntry<TElement | TSuggestionText>[];
 }) => {
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
   const editor = useEditorRef();
 
   const resolvedSuggestion = useResolveSuggestion(suggestionNodes, blockPath);
@@ -320,7 +169,7 @@ const BlockCommentsContent = ({
       activeNode = suggestionNodes.find(
         ([node]) =>
           TextApi.isText(node) &&
-          editor.getApi(SuggestionPlugin).suggestion.nodeId(node) ===
+          editor.getApi(ExtendedSuggestionPlugin).suggestion.nodeId(node) ===
             activeSuggestion.suggestionId
       );
     }
@@ -330,7 +179,7 @@ const BlockCommentsContent = ({
       } else {
         activeNode = commentNodes.find(
           ([node]) =>
-            editor.getApi(CommentsPlugin).comment.nodeId(node) ===
+            editor.getApi(ExtendedCommentsPlugin).comment.nodeId(node) ===
             activeCommentId
         );
       }
@@ -353,114 +202,119 @@ const BlockCommentsContent = ({
     return <div className="w-full">{children}</div>;
 
   return (
-    <div className="flex w-full justify-between">
-      <Popover
-        open={open}
-        onOpenChange={(_open_) => {
-          if (!_open_ && isCommenting && draftCommentNode) {
-            editor.tf.unsetNodes(getDraftCommentKey(), {
-              at: [],
-              mode: 'lowest',
-              match: (n) => n[getDraftCommentKey()],
-            });
-          }
+    <ForceUpdateContext.Provider value={forceUpdate}>
+      <div className="flex w-full justify-between">
+        <Popover
+          open={open}
+          onOpenChange={(_open_) => {
+            if (!_open_ && isCommenting && draftCommentNode) {
+              editor.tf.unsetNodes(getDraftCommentKey(), {
+                at: [],
+                mode: 'lowest',
+                match: (n) => n[getDraftCommentKey()],
+              });
+            }
 
-          setOpen(_open_);
-        }}
-      >
-        <div className="w-full">{children}</div>
-        {anchorElement && (
-          <PopoverAnchor
-            asChild
-            className="w-full"
-            virtualRef={{ current: anchorElement }}
-          />
-        )}
-
-        <PopoverContent
-          className="max-h-[min(50dvh,calc(-24px+var(--radix-popper-available-height)))] w-[380px] max-w-[calc(100vw-24px)] min-w-[130px] overflow-y-auto p-0 data-[state=closed]:opacity-0"
-          onCloseAutoFocus={(e) => e.preventDefault()}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          align="center"
-          side="bottom"
+            setOpen(_open_);
+          }}
         >
-          {isCommenting ? (
-            <CommentCreateForm className="p-4" focusOnMount />
-          ) : (
-            <React.Fragment>
-              {noneActive ? (
-                sortedMergedData.map((item, index) =>
-                  isResolvedSuggestion(item) ? (
-                    <BlockSuggestionCard
-                      key={item.suggestionId}
-                      idx={index}
-                      isLast={index === sortedMergedData.length - 1}
-                      suggestion={item}
-                    />
-                  ) : (
-                    <BlockComment
-                      key={item.id}
-                      discussion={item}
-                      isLast={index === sortedMergedData.length - 1}
-                    />
-                  )
-                )
-              ) : (
-                <React.Fragment>
-                  {activeSuggestion && (
-                    <BlockSuggestionCard
-                      key={activeSuggestion.suggestionId}
-                      idx={0}
-                      isLast={true}
-                      suggestion={activeSuggestion}
-                    />
-                  )}
-
-                  {activeDiscussion && (
-                    <BlockComment discussion={activeDiscussion} isLast={true} />
-                  )}
-                </React.Fragment>
-              )}
-            </React.Fragment>
+          <div className="w-full">{children}</div>
+          {anchorElement && (
+            <PopoverAnchor
+              asChild
+              className="w-full"
+              virtualRef={{ current: anchorElement }}
+            />
           )}
-        </PopoverContent>
 
-        {totalCount > 0 && (
-          <div className="relative left-0 size-0 select-none">
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                className="mt-1 ml-1 flex h-6 gap-1 px-1.5 py-0 text-muted-foreground/80 hover:text-muted-foreground/80 data-[active=true]:bg-muted"
-                data-active={open}
-                contentEditable={false}
-              >
-                {suggestionsCount > 0 && discussionsCount === 0 && (
-                  <PencilLineIcon className="size-4 shrink-0" />
+          <PopoverContent
+            className="max-h-[min(50dvh,calc(-24px+var(--radix-popper-available-height)))] w-[380px] max-w-[calc(100vw-24px)] min-w-[130px] overflow-y-auto p-0 data-[state=closed]:opacity-0"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            align="center"
+            side="bottom"
+          >
+            {isCommenting ? (
+              <CommentCreateForm className="p-4" focusOnMount />
+            ) : (
+              <React.Fragment>
+                {noneActive ? (
+                  sortedMergedData.map((item, index) =>
+                    isResolvedSuggestion(item) ? (
+                      <BlockSuggestionCard
+                        key={item.suggestionId}
+                        idx={index}
+                        isLast={index === sortedMergedData.length - 1}
+                        suggestion={item}
+                      />
+                    ) : (
+                      <BlockCommentsCard
+                        key={item.id}
+                        discussion={item}
+                        isLast={index === sortedMergedData.length - 1}
+                      />
+                    )
+                  )
+                ) : (
+                  <React.Fragment>
+                    {activeSuggestion && (
+                      <BlockSuggestionCard
+                        key={activeSuggestion.suggestionId}
+                        idx={0}
+                        isLast={true}
+                        suggestion={activeSuggestion}
+                      />
+                    )}
+
+                    {activeDiscussion && (
+                      <BlockCommentsCard
+                        discussion={activeDiscussion}
+                        isLast={true}
+                      />
+                    )}
+                  </React.Fragment>
                 )}
+              </React.Fragment>
+            )}
+          </PopoverContent>
 
-                {suggestionsCount === 0 && discussionsCount > 0 && (
-                  <MessageSquareTextIcon className="size-4 shrink-0" />
-                )}
+          {totalCount > 0 && (
+            <div className="relative left-0 size-0 select-none">
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="mt-1 ml-1 flex h-6 gap-1 px-1.5 py-0 text-muted-foreground/80 hover:text-muted-foreground/80 data-[active=true]:bg-muted"
+                  data-active={open}
+                  contentEditable={false}
+                >
+                  {suggestionsCount > 0 && discussionsCount === 0 && (
+                    <PencilLineIcon className="size-4 shrink-0" />
+                  )}
 
-                {suggestionsCount > 0 && discussionsCount > 0 && (
-                  <MessagesSquareIcon className="size-4 shrink-0" />
-                )}
+                  {suggestionsCount === 0 && discussionsCount > 0 && (
+                    <MessageSquareTextIcon className="size-4 shrink-0" />
+                  )}
 
-                <span className="text-xs font-semibold">{totalCount}</span>
-              </Button>
-            </PopoverTrigger>
-          </div>
-        )}
-      </Popover>
-    </div>
+                  {suggestionsCount > 0 && discussionsCount > 0 && (
+                    <MessagesSquareIcon className="size-4 shrink-0" />
+                  )}
+
+                  <span className="text-xs font-semibold">{totalCount}</span>
+                </Button>
+              </PopoverTrigger>
+            </div>
+          )}
+        </Popover>
+      </div>
+    </ForceUpdateContext.Provider>
   );
 };
 
-export const BlockComment = ({
+export const BlockCommentsCard = ({
   discussion,
   isLast,
 }: {
-  discussion: TDiscussion;
+  discussion: RouterDiscussionItem;
   isLast: boolean;
 }) => {
   const [editingId, setEditingId] = React.useState<string | null>(null);
@@ -469,7 +323,7 @@ export const BlockComment = ({
     <React.Fragment key={discussion.id}>
       <div className="p-4">
         {discussion.comments.map((comment, index) => (
-          <Comment
+          <CommentItem
             key={comment.id ?? index}
             comment={comment}
             discussionLength={discussion.comments.length}
@@ -492,9 +346,21 @@ export const useResolvedDiscussion = (
   commentNodes: NodeEntry<TCommentText>[],
   blockPath: Path
 ) => {
-  const { api, getOption, setOption } = useEditorPlugin(ExtendedCommentsPlugin);
+  const documentId = useDocumentId();
+  const trpc = useTRPC();
+  
+  // Use ApiDocCommentDiscussionList to fetch data
+  const { data: discussionsData } = useQuery({
+    queryKey: ['commentDiscussions', documentId],
+    queryFn: async () => {
+      const discussions = await ApiDocCommentDiscussionList(documentId!);
+      // Set the fetched data into trpc.comment.discussions
+      trpc.comment.discussions.setData({ documentId }, { discussions });
+      return { discussions };
+    }
+  });
 
-  const discussions = useStoreValue(discussionStore, 'discussions');
+  const { api, getOption, setOption } = useEditorPlugin(ExtendedCommentsPlugin);
 
   commentNodes.forEach(([node]) => {
     const id = api.comment.nodeId(node);
@@ -521,16 +387,14 @@ export const useResolvedDiscussion = (
     setOption('uniquePathMap', new Map(map).set(id, blockPath));
   });
 
+  if (!discussionsData) return [];
+
   const commentsIds = new Set(
     commentNodes.map(([node]) => api.comment.nodeId(node)).filter(Boolean)
   );
 
-  const resolvedDiscussions = discussions
-    .map((d: TDiscussion) => ({
-      ...d,
-      createdAt: new Date(d.createdAt),
-    }))
-    .filter((item: TDiscussion) => {
+  const discussions: RouterDiscussionItem[] = discussionsData.discussions.filter(
+    (item: RouterDiscussionItem) => {
       /** If comment cross blocks just show it in the first block */
       const commentsPathMap = getOption('uniquePathMap');
       const firstBlockPath = commentsPathMap.get(item.id);
@@ -543,7 +407,8 @@ export const useResolvedDiscussion = (
         commentsIds.has(item.id) &&
         !item.isResolved
       );
-    });
+    }
+  );
 
-  return resolvedDiscussions;
+  return discussions;
 };

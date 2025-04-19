@@ -171,7 +171,7 @@ function DocumentMenuContent() {
       success: 'Note moved to trash.',
     });
 
-    router.push(routes.home());
+    router('/');
   };
 
   const onCustomDocument = useCallback(

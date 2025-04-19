@@ -212,6 +212,7 @@
     "tailwindcss-animate": "1.0.7",
     "terser-webpack-plugin": "^5.2.5",
     "throttleit": "^2.1.0",
+    "ts-essentials": "^10.0.4",
     "use-file-picker": "^2.1.2",
     "usehooks-ts": "^3.1.0",
     "vaul": "^0.9.6",

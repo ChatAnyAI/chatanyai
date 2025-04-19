@@ -3,20 +3,25 @@
 import React from 'react';
 
 import { cn } from '@udecode/cn';
-import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
 import { useEditorPlugin, usePluginOption } from '@udecode/plate/react';
 import { PencilLineIcon } from 'lucide-react';
 
-import { ToolbarButton } from './toolbar';
+import { useAuthGuard } from '@/hooks/use-auth-guard';
+import { ExtendedSuggestionPlugin } from '@/components/editor-pro/components/editor/plugins/suggestion/ExtendedSuggestionPlugin';
+import { ToolbarButton } from '@/components/editor-pro/potion-ui/toolbar';
 
 export function SuggestionToolbarButton() {
-  const { setOption } = useEditorPlugin(SuggestionPlugin);
-  const isSuggesting = usePluginOption(SuggestionPlugin, 'isSuggesting');
+  const { setOption } = useEditorPlugin(ExtendedSuggestionPlugin);
+  const isSuggesting = usePluginOption(
+    ExtendedSuggestionPlugin,
+    'isSuggesting'
+  );
+  const authGuard = useAuthGuard();
 
   return (
     <ToolbarButton
       className={cn(isSuggesting && 'text-brand/80 hover:text-brand/80')}
-      onClick={() => setOption('isSuggesting', !isSuggesting)}
+      onClick={() => authGuard(() => setOption('isSuggesting', !isSuggesting))}
       onMouseDown={(e) => e.preventDefault()}
       tooltip={isSuggesting ? 'Turn off suggesting' : 'Suggestion edits'}
     >

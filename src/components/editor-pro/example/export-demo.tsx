@@ -9,7 +9,7 @@ import { ChevronDownIcon } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 import { Label } from '@/components/ui/label';
-import { Button } from '@/registry/default/potion-ui/button';
+import { Button } from '@/components/editor-pro/potion-ui/button';
 import {
   Dialog,
   DialogContent,
@@ -18,16 +18,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/registry/default/potion-ui/dialog';
+} from '@/components/editor-pro/potion-ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/registry/default/potion-ui/dropdown-menu';
-import { Editor, EditorContainer } from '@/registry/default/potion-ui/editor';
-import { Input } from '@/registry/default/potion-ui/input';
+} from '@/components/editor-pro/potion-ui/dropdown-menu';
+import { Editor, EditorContainer } from '@/components/editor-pro/potion-ui/editor';
+import { Input } from '@/components/editor-pro/potion-ui/input';
 
 import { useCreateEditor } from '../components/editor/use-create-editor';
 import { useCreatePrintEditor } from '../components/editor/use-create-print-editor';

@@ -8,10 +8,17 @@ import type { UseHooks } from '@udecode/plate/react';
 import { type Path, isSlateElement, isSlateString } from '@udecode/plate';
 import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
 
+import { useCurrentUser } from '@/hooks/use-current-user';
+import { BlockSuggestion } from '@/components/editor-pro/potion-ui/block-suggestion';
+
 const useHooksSuggestion: UseHooks<BaseSuggestionConfig> = ({ setOption }) => {
+  const user = useCurrentUser();
+
   useEffect(() => {
-    setOption('currentUserId', '1');
-  }, [setOption]);
+    if (!user?.id) return;
+
+    setOption('currentUserId', user.id);
+  }, [setOption, user]);
 };
 
 export const ExtendedSuggestionPlugin = SuggestionPlugin.extend({
@@ -64,6 +71,14 @@ export const ExtendedSuggestionPlugin = SuggestionPlugin.extend({
       if (!isSet) unsetActiveSuggestion();
     },
   },
-  //@ts-ignore
+  render: {
+    belowRootNodes: ({ api, element }) => {
+      if (!api.suggestion!.isBlockSuggestion(element)) {
+        return null;
+      }
+
+      return <BlockSuggestion element={element} />;
+    },
+  },
   useHooks: useHooksSuggestion,
 });

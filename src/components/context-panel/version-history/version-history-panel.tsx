@@ -28,6 +28,7 @@ import {
 import { api, useTRPC } from '@/trpc/react';
 
 import { VersionsSkeleton } from './versions-skeleton';
+import { ApiDocVersionCreate, ApiDocVersionDelete } from '@/service/api';
 
 export const {
   useVersionSet,
@@ -54,16 +55,33 @@ export default memo(function VersionHistoryPanel() {
     select: (data) => !!data.document,
   });
   const versions = useQuery(useDocumentVersionsQueryOptions());
-  const createVersion = api.version.createVersion.useMutation({
-    onSuccess: () => {
-      void trpc.version.documentVersions.invalidate({ documentId });
+
+  // Replace the trpc mutation with a custom mutation that uses APiDocVersionCreate
+  const createVersion = {
+    isPending: false,
+    mutate: async ({ documentId }: { documentId: string }) => {
+      try {
+        await ApiDocVersionCreate(documentId);
+        // Keep the same invalidation logic as the original
+        void trpc.version.documentVersions.invalidate({ documentId });
+      } catch (error) {
+        console.error("Failed to create version:", error);
+      }
     },
-  });
-  const deleteVersion = api.version.deleteVersion.useMutation({
-    onSuccess: () => {
-      void trpc.version.documentVersions.invalidate({ documentId });
-    },
-  });
+  };
+
+  // Replace the trpc delete mutation with a custom implementation that uses ApiDocVersionDelete
+  const deleteVersion = {
+    mutate: async ({ id }: { id: string }) => {
+      try {
+        await ApiDocVersionDelete(id);
+        // Keep the same invalidation logic as the original
+        void trpc.version.documentVersions.invalidate({ documentId });
+      } catch (error) {
+        console.error("Failed to delete version:", error);
+      }
+    }
+  };
 
   const onDeleteVersionDialog = React.useCallback(
     (id: string) => {

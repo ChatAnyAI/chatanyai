@@ -6,12 +6,15 @@ import { getDraftCommentKey } from '@udecode/plate-comments';
 import { useEditorPlugin } from '@udecode/plate/react';
 import { MessageSquareTextIcon } from 'lucide-react';
 
-import { ExtendedCommentsPlugin } from '@/components/editor-pro/components/editor/plugins/comments/ExtendedCommentsPlugin';
+import { useAuthGuard } from '@/hooks/use-auth-guard';
+import { ToolbarButton } from '@/components/editor-pro/potion-ui/toolbar';
 
-import { ToolbarButton } from './toolbar';
+import { ExtendedCommentsPlugin } from '@/components/editor-pro/components/editor/plugins/comments/ExtendedCommentsPlugin';
 
 export function CommentToolbarButton() {
   const { editor, setOption, tf } = useEditorPlugin(ExtendedCommentsPlugin);
+
+  const authGuard = useAuthGuard();
 
   const onCommentToolbarButton = React.useCallback(() => {
     if (!editor.selection) return;
@@ -24,7 +27,9 @@ export function CommentToolbarButton() {
 
   return (
     <ToolbarButton
-      onClick={onCommentToolbarButton}
+      onClick={() => {
+        authGuard(onCommentToolbarButton);
+      }}
       data-plate-prevent-overlay
       shortcut="⌘+Shift+M"
       tooltip="Comment"

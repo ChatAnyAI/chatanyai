@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo } from 'react';
 
 import { cn, withProps } from '@udecode/cn';
-import { type Value, nanoid, NodeApi } from '@udecode/plate';
+import { type Value, NodeApi } from '@udecode/plate';
 import { AIPlugin } from '@udecode/plate-ai/react';
 import {
   BasicMarksPlugin,
@@ -22,30 +22,32 @@ import {
   MentionInputPlugin,
   MentionPlugin,
 } from '@udecode/plate-mention/react';
-import { Plate, useEditorRef, useStoreSelect } from '@udecode/plate/react';
+import { Plate, useEditorRef } from '@udecode/plate/react';
 import { type CreatePlateEditorOptions, PlateLeaf } from '@udecode/plate/react';
-import { ArrowUpIcon } from 'lucide-react';
+import { produce } from 'immer';
 
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { useCreateEditor } from '@/components/editor-pro/components/editor/use-create-editor';
-
-import type { TComment } from './comment';
-
-import { AILeaf } from './ai-leaf';
-import { Avatar, AvatarFallback, AvatarImage } from './avatar';
+import { Icons } from '@/components/ui/icons';
+import { mergeDefined } from '@/lib/mergeDefined';
+import { useDocumentId } from '@/hooks/use-document-id';
+import { omitNil } from '@/lib/omitNull';
+import { AILeaf } from '@/components/editor-pro/potion-ui/ai-leaf';
 import {
-  type TDiscussion,
-  discussionStore,
-  useFakeCurrentUserId,
-  useFakeUserInfo,
-} from './block-discussion';
-import { Button } from './button';
-import { DateElement } from './date-element';
-import { Editor, EditorContainer } from './editor';
-import { EmojiInputElement } from './emoji-input-element';
-import { InlineEquationElement } from './inline-equation-element';
-import { LinkElement } from './link-element';
-import { MentionElement } from './mention-element';
-import { MentionInputElement } from './mention-input-element';
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/components/editor-pro/potion-ui/avatar';
+import { Button } from '@/components/editor-pro/potion-ui/button';
+import { DateElement } from '@/components/editor-pro/potion-ui/date-element';
+import { Editor, EditorContainer } from '@/components/editor-pro/potion-ui/editor';
+import { EmojiInputElement } from '@/components/editor-pro/potion-ui/emoji-input-element';
+import { InlineEquationElement } from '@/components/editor-pro/potion-ui/inline-equation-element';
+import { LinkElement } from '@/components/editor-pro/potion-ui/link-element';
+import { MentionElement } from '@/components/editor-pro/potion-ui/mention-element';
+import { MentionInputElement } from '@/components/editor-pro/potion-ui/mention-input-element';
+import { api, useTRPC } from '@/trpc/react';
+import { ApiDocCommentWithDiscussionCreate, ApiDocCommentCreate } from '@/service/api';
 
 export const useCommentEditor = (
   options: Omit<CreatePlateEditorOptions, 'plugins'> = {},
@@ -92,17 +94,119 @@ export function CommentCreateForm({
   focusOnMount?: boolean;
   isSuggesting?: boolean;
 }) {
-  const discussions = useStoreSelect(
-    discussionStore,
-    (state) => state.discussions
-  );
+  const trpc = useTRPC();
+  const current = useCurrentUser();
+  const documentId = useDocumentId();
+
+  const createComment = {
+    mutateAsync: async (input: {
+      contentRich: any;
+      discussionId: string;
+    }) => {
+      try {
+        await trpc.comment.discussions.cancel();
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+
+        trpc.comment.discussions.setData({ documentId }, (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
+
+            const comments = draft.discussions.find(
+              (comment) => comment.id === input.discussionId
+            )?.comments;
+
+            const newUserInfo = mergeDefined(omitNil(input), {
+              createdAt: new Date(),
+              updatedAt: new Date(),
+              user: omitNil(current),
+            });
+
+            comments?.push(newUserInfo);
+          })
+        );
+
+        const response = await ApiDocCommentCreate({
+          contentRich: JSON.stringify(input.contentRich),
+          discussionId: input.discussionId,
+        });
+
+        void trpc.comment.discussions.invalidate({ documentId });
+
+        return response;
+      } catch (error) {
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+        if (previousDiscussions) {
+          trpc.comment.discussions.setData(
+            { documentId },
+            previousDiscussions
+          );
+        }
+        throw error;
+      }
+    },
+    mutate: (input: {
+      contentRich: any;
+      discussionId: string;
+    }) => {
+      void createComment.mutateAsync(input);
+    },
+  };
+
+  const createDiscussionWithComment = {
+    mutateAsync: async (input: {
+      contentRich: any;
+      discussionId?: string;
+      documentContent: string;
+      documentId: string;
+    }) => {
+      try {
+        await trpc.comment.discussions.cancel();
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+
+        const response = await ApiDocCommentWithDiscussionCreate({
+          contentRich: JSON.stringify(input.contentRich),
+          discussionId: input.discussionId!,
+          documentContent: input.documentContent,
+          documentId: input.documentId,
+        });
+
+        void trpc.comment.discussions.invalidate({ documentId });
+
+        return response;
+      } catch (error) {
+        const previousDiscussions = trpc.comment.discussions.getData({
+          documentId,
+        });
+        if (previousDiscussions) {
+          trpc.comment.discussions.setData(
+            { documentId },
+            previousDiscussions
+          );
+        }
+        throw error;
+      }
+    },
+    mutate: (input: {
+      contentRich: any;
+      discussionId?: string;
+      documentContent: string;
+      documentId: string;
+    }) => {
+      void createDiscussionWithComment.mutateAsync(input);
+    },
+  };
 
   const editor = useEditorRef();
+  const currentUser = useCurrentUser();
   const discussionId = useCommentId() ?? discussionIdProp;
   const [resetKey, setResetKey] = React.useState(0);
 
-  const currentUserId = useFakeCurrentUserId();
-  const userInfo = useFakeUserInfo(currentUserId);
   const [commentValue, setCommentValue] = React.useState<Value | undefined>();
   const commentContent = useMemo(
     () =>
@@ -119,38 +223,14 @@ export function CommentCreateForm({
     }
   }, [commentEditor, focusOnMount]);
 
-  const onAddComment = React.useCallback(() => {
+  const onAddComment = React.useCallback(async () => {
     setResetKey((prev) => prev + 1);
 
     if (discussionId) {
-      // Get existing discussion
-      const discussion = discussions.find((d: any) => d.id === discussionId);
-
-      if (!discussion || !commentValue) return;
-
-      // Create reply comment
-      const comment: TComment = {
-        id: nanoid(),
-        contentRich: commentValue,
-        createdAt: new Date(),
-        discussionId,
-        isEdited: false,
-        // mock user id
-        userId: currentUserId,
-      };
-
-      // Add reply to discussion comments
-      const updatedDiscussion = {
-        ...discussion,
-        comments: [...discussion.comments, comment],
-      };
-
-      // Filter out old discussion and add updated one
-      const updatedDiscussions = discussions
-        .filter((d: any) => d.id !== discussionId)
-        .concat(updatedDiscussion);
-
-      discussionStore.set('discussions', updatedDiscussions);
+      createComment.mutate({
+        contentRich: commentValue as any,
+        discussionId: discussionId,
+      });
 
       return;
     }
@@ -165,30 +245,11 @@ export function CommentCreateForm({
       .map(([node]) => node.text)
       .join('');
 
-    const _discussionId = nanoid();
-    // Mock creating new discussion
-    const newDiscussion: TDiscussion = {
-      id: _discussionId,
-      comments: [
-        {
-          id: nanoid(),
-          contentRich: commentValue!,
-          createdAt: new Date(),
-          discussionId: _discussionId,
-          isEdited: false,
-          userId: currentUserId,
-        },
-      ],
-      createdAt: new Date(),
-      documentContent,
-      isResolved: false,
-      userId: currentUserId,
-    };
-
-    // Update discussions store
-    discussionStore.set('discussions', [...discussions, newDiscussion]);
-
-    const id = newDiscussion.id;
+    const { id } = await createDiscussionWithComment.mutateAsync({
+      contentRich: commentValue as any,
+      documentContent: documentContent,
+      documentId,
+    });
 
     commentsNodeEntry.forEach(([_, path]) => {
       editor.tf.setNodes(
@@ -199,47 +260,43 @@ export function CommentCreateForm({
       );
       editor.tf.unsetNodes([getDraftCommentKey()], { at: path });
     });
-  }, [discussionId, editor, commentValue, currentUserId, discussions]);
+  }, [
+    discussionId,
+    editor,
+    createDiscussionWithComment,
+    commentValue,
+    documentId,
+    createComment,
+  ]);
 
-  const onAddSuggestion = React.useCallback(() => {
+  const onAddSuggestion = React.useCallback(async () => {
     if (!discussionId) return;
-    if (!commentValue) return;
 
-    // Mock creating suggestion
-    const suggestion: TDiscussion = {
-      id: discussionId,
-      comments: [
-        {
-          id: nanoid(),
-          contentRich: commentValue!,
-          createdAt: new Date(),
-          discussionId,
-          isEdited: false,
-          userId: 'user1',
-        },
-      ],
-      createdAt: new Date(),
-      isResolved: false,
-      userId: 'user1',
-    };
+    const suggestionId = discussionId;
 
-    // Update discussions store
-    discussionStore.set('discussions', [...discussions, suggestion]);
-  }, [discussionId, commentValue, discussions]);
+    await createDiscussionWithComment.mutateAsync({
+      contentRich: commentValue as any,
+      discussionId: suggestionId,
+      documentContent: '__suggestion__',
+      documentId,
+    });
+  }, [discussionId, createDiscussionWithComment, commentValue, documentId]);
 
   return (
     <div className={cn('flex w-full', className)}>
-      <div className="mt-1 mr-1 shrink-0">
-        {/* Replace to your own backend or refer to potion */}
-        {userInfo && (
-          <Avatar className="size-6">
-            <AvatarImage alt={userInfo.name} src={userInfo.avatarUrl} />
-            <AvatarFallback>{userInfo.name?.[0]}</AvatarFallback>
+      <div className="mt-1 shrink-0">
+        {currentUser && (
+          <Avatar className="mr-2 size-6">
+            <AvatarImage
+              alt={currentUser.name!}
+              src={currentUser.profileImageUrl!}
+            />
+            <AvatarFallback>{currentUser.name?.[0]}</AvatarFallback>
           </Avatar>
         )}
       </div>
 
-      <div className="relative flex grow gap-2">
+      <div className="relative -ml-1 flex grow gap-2">
         <Plate
           onChange={({ value }) => {
             setCommentValue(value);
@@ -256,7 +313,7 @@ export function CommentCreateForm({
             />
 
             <Button
-              size="icon"
+              size="iconSm"
               variant="ghost"
               className="absolute right-0 bottom-0 ml-auto shrink-0"
               disabled={commentContent.trim().length === 0}
@@ -270,8 +327,8 @@ export function CommentCreateForm({
                 }
               }}
             >
-              <div className="flex size-6 items-center justify-center rounded-full">
-                <ArrowUpIcon />
+              <div className="flex size-6 items-center justify-center rounded-full bg-brand">
+                <Icons.arrowUp className="size-4 stroke-[3px] text-background" />
               </div>
             </Button>
           </EditorContainer>

@@ -6,85 +6,95 @@ import { useDebouncedCallback } from '@/hooks/useDebounceCallback';
 import { useWarnIfUnsavedChanges } from '@/hooks/useWarnIfUnsavedChanges';
 import { mergeDefined } from '@/lib/mergeDefined';
 import { api, useTRPC } from '@/trpc/react';
+import { ApiDocContent, ApiUpdateAppInfo } from '@/service/api'
 
 export const useUpdateDocumentMutation = () => {
   const trpc = useTRPC();
 
-  return api.document.update.useMutation({
-    onError: (_, __, context: any) => {
-      if (context?.previousDocuments) {
-        trpc.document.documents.setData({}, context.previousDocuments);
-      }
-      if (context?.previousDocument) {
-        trpc.document.document.setData(
-          { id: context.id },
-          context.previousDocument
-        );
-      }
-    },
-    onMutate: async (input) => {
-      await trpc.document.documents.cancel();
-      await trpc.document.document.cancel({ id: input.id });
-
+  return {
+    mutate: async (input: { id: string; title?: string; contentRich?: any }) => {
+      // Extract app and channel IDs from the document ID
+      const [appId, channelId] = input.id.split(':');
+      
+      // Store previous data for rollback in case of error
       const previousDocuments = trpc.document.documents.getData({});
       const previousDocument = trpc.document.document.getData({ id: input.id });
+      
+      try {
+        // Update local data optimistically
+        trpc.document.document.setData({ id: input.id }, (old) =>
+          produce(old, (draft) => {
+            if (!draft?.document) return draft;
 
-      trpc.document.document.setData({ id: input.id }, (old) =>
-        produce(old, (draft) => {
-          if (!draft?.document) return draft;
+            draft.document = {
+              ...mergeDefined(input, draft.document, {
+                omitNull: true,
+              }),
+            };
+          })
+        );
 
-          draft.document = {
-            ...mergeDefined(input, draft.document, {
-              omitNull: true,
-            }),
-          };
-        })
-      );
+        trpc.document.documents.setData({}, (old) =>
+          produce(old, (draft) => {
+            if (!draft) return draft;
 
-      trpc.document.documents.setData({}, (old) =>
-        produce(old, (draft) => {
-          if (!draft) return draft;
+            draft.documents = draft.documents.map((document) => {
+              if (document.id === input.id) {
+                return mergeDefined(input, document, { omitNull: true });
+              }
 
-          draft.documents = draft.documents.map((document) => {
-            if (document.id === input.id) {
-              return mergeDefined(input, document, { omitNull: true });
-            }
+              return document;
+            });
+          })
+        );
 
-            return document;
+        // Only call the API if we have content to update
+        if (input.contentRich) {
+          await ApiDocContent(appId, channelId, { 
+            content: JSON.stringify(input.contentRich) 
           });
-        })
-      );
-
-      return { id: input.id, previousDocument, previousDocuments };
+        }
+        
+        return { id: input.id, previousDocument, previousDocuments };
+      } catch (error) {
+        // Rollback on error
+        if (previousDocuments) {
+          trpc.document.documents.setData({}, previousDocuments);
+        }
+        if (previousDocument) {
+          trpc.document.document.setData(
+            { id: input.id },
+            previousDocument
+          );
+        }
+        throw error;
+      }
     },
-  });
+    isPending: () => false, // Simplified state management
+    reset: () => {}, // No-op function to match original API
+  };
 };
 
 export const useUpdateDocumentTitle = () => {
-  const updateDocument = useUpdateDocumentMutation();
   const trpc = useTRPC();
-
-  const updateDocumentDebounced = useDebouncedCallback(
-    updateDocument.mutate,
-    500
-  );
+  const { mutate: updateDocument } = useUpdateDocumentMutation();
 
   return useCallback(
     (input: { id: string; title: string }) => {
-      updateDocumentDebounced({
-        id: input.id,
-        title: input.title,
-      });
-
+      // Extract app and channel IDs from the document ID
+      const [appId, channelId] = input.id.split(':');
+      
+      // Store the current document data for UI optimistic updates
       const currentDocument = trpc.document.document.getData({ id: input.id });
       const parentDocumentId = currentDocument?.document?.parentDocumentId;
 
+      // Update local data optimistically for responsive UI
       void Promise.all([
         trpc.document.document.setData({ id: input.id }, (prevData) =>
           produce(prevData, (draft) => {
             if (draft?.document) {
               draft.document = {
-                ...mergeDefined(input, draft.document, {
+                ...mergeDefined({ title: input.title }, draft.document, {
                   omitNull: true,
                 }),
               };
@@ -97,9 +107,8 @@ export const useUpdateDocumentTitle = () => {
 
             draft.documents = draft.documents.map((document) => {
               if (document.id === input.id) {
-                return mergeDefined(input, document, { omitNull: true });
+                return mergeDefined({ title: input.title }, document, { omitNull: true });
               }
-
               return document;
             });
           })
@@ -111,17 +120,21 @@ export const useUpdateDocumentTitle = () => {
 
                 draft.documents = draft.documents.map((document) => {
                   if (document.id === input.id) {
-                    return mergeDefined(input, document, { omitNull: true });
+                    return mergeDefined({ title: input.title }, document, { omitNull: true });
                   }
-
                   return document;
                 });
               })
             )
           : Promise.resolve(),
       ]);
+      
+      // Call the API to update the document title
+      void ApiUpdateAppInfo(appId, {
+        name: input.title,
+      });
     },
-    [trpc, updateDocumentDebounced]
+    [trpc]
   );
 };
 

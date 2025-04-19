@@ -8,6 +8,7 @@ import { isSlateString } from '@udecode/plate';
 import { getDraftCommentKey } from '@udecode/plate-comments';
 import { CommentsPlugin } from '@udecode/plate-comments/react';
 import { useEditorContainerRef, useHotkeys } from '@udecode/plate/react';
+import { debounce } from 'lodash';
 
 export const ExtendedCommentsPlugin = CommentsPlugin.extend({
   options: {
@@ -70,21 +71,23 @@ export const ExtendedCommentsPlugin = CommentsPlugin.extend({
 
         if (!editable) return;
 
-        const observer = new ResizeObserver((entries) => {
-          const width = entries[0].contentRect.width;
-          const isOverlap = width < 700;
+        const handleResize = debounce(() => {
+          const styles = window.getComputedStyle(editable);
+          const isOverlap = Number.parseInt(styles.paddingRight) < 80 + 288;
 
           editor.setOption(
             ExtendedCommentsPlugin,
             'isOverlapWithEditor',
             isOverlap
           );
-        });
+        }, 100);
 
-        observer.observe(editable);
+        window.addEventListener('resize', handleResize);
+        handleResize();
 
         return () => {
-          observer.disconnect();
+          window.removeEventListener('resize', handleResize);
+          handleResize.cancel();
         };
       }, [editor, editorContainerRef]);
 
@@ -116,8 +119,8 @@ export const ExtendedCommentsPlugin = CommentsPlugin.extend({
             const { newProperties, properties } = operation;
 
             if (
-              (properties as Record<string, unknown>)?.[getDraftCommentKey()] ||
-              (newProperties as Record<string, unknown>)?.[getDraftCommentKey()]
+              properties?.[getDraftCommentKey()] ||
+              newProperties?.[getDraftCommentKey()]
             )
               return;
 

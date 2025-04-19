@@ -801,4 +801,80 @@ export const ApiOauthSupport = () => {
 }
 
 
+export const ApiDocCommentDiscussionList = (documentId: string) => {
+  return get(`/api/discussion/list`, {
+    params: {
+      documentId
+    }
+  })
+}
 
+interface ApiCommentWithDiscussionCreateRequest {
+  contentRich: string;
+  discussionId: string;
+  documentContent: string;
+  documentId: string;
+}
+export const ApiDocCommentWithDiscussionCreate = (data: ApiCommentWithDiscussionCreateRequest) => { 
+  return post(`/api/discussion/createWithComment`, data);
+}
+interface ApiCommentCreateRequest {
+  discussionId: string;
+  documentContent: string;
+}
+export const ApiDocCommentCreate = (data: ApiCommentCreateRequest) =>{ 
+  return post(`/api/discussion/create`, data);
+}
+interface ApiCommentUpdateRequest {
+  id: string;
+  contentRich: string;
+  discussionId: string;
+  isEdited: boolean;
+}
+export const ApiDocCommentUpdate = (data: ApiCommentUpdateRequest) => {
+  return post(`/api/comment/update`, data);
+}
+
+export const ApiDocDiscussionResolve = (data: {id: string}) => {
+  return post(`/api/discussion/resolve`, data);
+}
+
+export const ApiDocDiscussionDetele = (data: { id: string }) => {
+  return del(`/api/discussion/delete`, data);
+}
+
+export const ApiDocCommentDetele = (data: { id: string }) => {
+  return del(`/api/comment/delete`, data);
+}
+
+export const ApiDocVersionList = (documentId: string) => {
+  return get(`/api/doc/version/list`, {
+    params: {
+      documentId
+    }
+  })
+}
+
+export const ApiDocVersionCreate = (documentId: string) => {
+  return post(`/api/doc/version/create`, {
+    documentId
+  })
+}
+export const ApiDocVersionRestore = (id: string) => {
+  return post(`/api/doc/version/restore`, {
+    id
+  })
+}
+export const ApiDocVersionDelete = (id: string) => {
+  return post(`/api/doc/version/delete`, {
+    id
+  })
+}
+
+export const ApiDocVersionDetail = (documentVersionId: string) => {
+  return get(`/api/doc/version/detail`, {
+    params: {
+      documentVersionId
+    }
+  })
+}
