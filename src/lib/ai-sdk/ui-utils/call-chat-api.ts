@@ -1,7 +1,7 @@
 import { processChatResponse } from './process-chat-response';
 import { processChatTextResponse } from './process-chat-text-response';
 import { IdGenerator, JSONValue, UIMessage, UseChatOptions } from './types';
-import {Employee} from "@/service/api";
+import { Assistant, Employee } from '@/service/api';
 
 // use function to allow for mocking in tests:
 const getOriginalFetch = () => fetch;
@@ -21,10 +21,10 @@ export async function callChatApi({
   generateId,
   fetch = getOriginalFetch(),
   lastMessage,
-  employee,
+  assistant,
 }: {
   api: string;
-  employee: Employee;
+  assistant: Assistant;
   body: Record<string, any>;
   streamProtocol: 'data' | 'text' | undefined;
   credentials: RequestCredentials | undefined;
@@ -90,10 +90,11 @@ export async function callChatApi({
       return;
     }
 
+    // [核心1]
     case 'data': {
       await processChatResponse({
         stream: response.body,
-        employee,
+        assistant,
         update: onUpdate,
         lastMessage,
         onToolCall,

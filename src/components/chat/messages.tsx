@@ -3,7 +3,7 @@ import { PreviewMessage, ThinkingMessage } from './message';
 import { useScrollToBottom } from './use-scroll-to-bottom';
 import { memo } from 'react';
 import equal from 'fast-deep-equal';
-import {Employee} from "@/service/api";
+import { Assistant, Employee } from '@/service/api';
 
 interface MessagesProps {
   channelId: string;
@@ -17,7 +17,7 @@ interface MessagesProps {
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
   isBlockVisible: boolean;
-  employee?: Employee;
+  assistant?: Assistant;
 }
 
 function PureMessages({
@@ -27,7 +27,7 @@ function PureMessages({
   setMessages,
   reload,
   isReadonly,
-  employee,
+  assistant,
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>(isLoading);
@@ -40,7 +40,6 @@ function PureMessages({
       // className="flex flex-col min-w-0 gap-6 flex-1 pt-4 bg-white dark:bg-zinc-900"
     >
       {/* {messages.length === 0 && <Overview />} */}
-
       {messages.map((message, index) => (
         <PreviewMessage
           key={message.id}
@@ -52,10 +51,9 @@ function PureMessages({
           isReadonly={isReadonly}
         />
       ))}
-
       {isLoading &&
         messages.length > 0 &&
-        messages[messages.length - 1].role === 'user' && <ThinkingMessage employee={employee!} />}
+        messages[messages.length - 1].role === 'user' && <ThinkingMessage assistant={assistant!} />}
 
       <div
         ref={messagesEndRef}

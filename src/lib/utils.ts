@@ -88,7 +88,7 @@ export function convertToUIMessages(messages: Array<RespChatHistoryMessage>): Ar
             toolInvocations,
             annotations: getAnnotations(historyMessage),
             user: historyMessage.user,
-            employee: historyMessage.employee,
+            assistant: historyMessage.assistant,
         });
 
         return chatMessages;

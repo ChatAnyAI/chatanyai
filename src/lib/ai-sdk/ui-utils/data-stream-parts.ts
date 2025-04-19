@@ -4,6 +4,7 @@ import {
 } from '@/lib/ai-sdk/provider';
 import { ToolCall, ToolResult } from '@/lib/ai-sdk/provider-utils';
 import { JSONValue } from './types';
+import { Assistant } from '@/service/api';
 
 export type DataStreamString =
   `${(typeof DataStreamStringPrefixes)[keyof typeof DataStreamStringPrefixes]}:${string}\n`;
@@ -50,6 +51,15 @@ const errorStreamPart: DataStreamPart<'3', 'error', string> = {
     // }
     // return { type: 'error', value };
     return { type: "error", value: typeof value !== "string" ? JSON.stringify(value) : value };
+  },
+};
+
+
+const assistantStreamPart: DataStreamPart<'5', 'assistant', { assistant: Assistant}> = {
+  code: '5',
+  name: 'assistant',
+  parse: (value: JSONValue) => {
+    return { type: "assistant", value:  value as unknown as { assistant: Assistant}, };
   },
 };
 
@@ -452,6 +462,7 @@ const dataStreamParts = [
   textStreamPart,
   dataStreamPart,
   errorStreamPart,
+  assistantStreamPart,
   messageAnnotationsStreamPart,
   toolCallStreamPart,
   toolResultStreamPart,
