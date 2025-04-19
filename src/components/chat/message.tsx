@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import { SparklesIcon } from 'lucide-react';
 import { ErrorMessage } from './error-message';
-import {Employee} from "@/service/api";
+import { Assistant, Employee } from '@/service/api';
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {Logo} from "@/components/team-switcher";
 
@@ -65,9 +65,6 @@ const PurePreviewMessage = ({
     return message.id;
   }, [message.annotations, message.id]);
 
-
-  console.log("message",message)
-
   return (
     <AnimatePresence>
       <motion.div
@@ -88,7 +85,7 @@ const PurePreviewMessage = ({
             },
           )}
         >
-          <MessageAssistantAvatar role={message.role} employee={message.employee} name={avatarInfo?.name} />
+          <MessageAssistantAvatar role={message.role} assistant={message.assistant} name={avatarInfo?.name} />
           <div className="flex flex-col gap-2 w-full">
             {message.experimental_attachments && (
               <div className="flex flex-row justify-end gap-2">
@@ -170,7 +167,7 @@ export const PreviewMessage = memo(
   },
 );
 
-export const ThinkingMessage = ({employee}:{employee: Employee}) => {
+export const ThinkingMessage = ({assistant}:{assistant: Assistant}) => {
   const role = 'assistant';
 
   return (
@@ -189,17 +186,15 @@ export const ThinkingMessage = ({employee}:{employee: Employee}) => {
         )}
       >
         <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
-            { employee.avatar ? (
+            { assistant?.avatar ? (
                 <Avatar className="translate-y-px">
-                    <AvatarImage src={employee.avatar} alt={employee.name} />
+                    <AvatarImage src={assistant.avatar} alt={assistant.name} />
                 </Avatar>
             ) : (
                 <div className="translate-y-px">
-                    {/* <SparklesIcon size={14} /> */}
                     <Logo />
                 </div>
             )}
-            {/*<SparklesIcon size={14} />*/}
         </div>
 
         <div className="flex flex-col gap-2 w-full">

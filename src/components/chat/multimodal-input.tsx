@@ -33,7 +33,7 @@ import {Settings2} from "lucide-react";
 import { useRightSetting } from '@/app/front/aichat/component/rightSetting';
 import MentionList from "@/components/chat/mention-list";
 import useSWR from "swr";
-import {ApiEmployeeItemResp, ApiEmployeeList, Employee} from "@/service/api";
+import { ApiEmployeeItemResp, ApiEmployeeList, Assistant, Employee } from '@/service/api';
 
 // Define the mention type
 type Mention = {
@@ -55,7 +55,7 @@ function PureMultimodalInput({
   append,
   handleSubmit,
   className,
-  setEmployee,
+                               setAssistant,
 }: {
   channelId: string;
   input: string;
@@ -77,7 +77,7 @@ function PureMultimodalInput({
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
   className?: string;
-  setEmployee: (value: Employee) => void;
+  setAssistant: (value: Assistant) => void;
 }) {
   const autoFocus = true
   const placeholder = "Type a message here... (Use @ to mention your AI team members)"
@@ -430,7 +430,7 @@ function PureMultimodalInput({
     }
 
         // Handle member selection - completely rewritten to fix the bug
-    const handleSelectMember = (employee: Employee) => {
+    const handleSelectMember = (employee: Assistant) => {
         setShowMentions(false)
         if (!textareaRef.current || currentAtPos === -1) return
         // Get the plain text content
@@ -469,7 +469,7 @@ function PureMultimodalInput({
         setMention(newMention)
         // setMessage(newContent)
         setIsEmpty(false)
-        setEmployee(employee)
+        setAssistant(employee)
 
         // Update the input content and apply highlighting
         if (textareaRef.current) {

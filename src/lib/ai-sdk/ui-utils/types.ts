@@ -4,7 +4,7 @@ import {
 } from '@/lib/ai-sdk/provider';
 import { FetchFunction, ToolCall, ToolResult } from '@/lib/ai-sdk/provider-utils';
 import { LanguageModelUsage } from './duplicated/usage';
-import {Employee, User} from "@/service/api";
+import { Assistant, Employee, User } from '@/service/api';
 
 export * from './use-assistant-types';
 
@@ -117,7 +117,7 @@ that the assistant made as part of this message.
     | StepStartUIPart
   >;
   user?: User,
-  employee?: Employee,
+  assistant?: Assistant,
 }
 
 export type UIMessage = Message & {
@@ -287,7 +287,7 @@ Keeps the last message when an error happens. Defaults to `true`.
    */
   api?: string;
 
-  employee?: Employee;
+  assistant?: Assistant;
   /**
    * A unique identifier for the chat. If not provided, a random one will be
    * generated. When provided, the `useChat` hook with the same `id` will

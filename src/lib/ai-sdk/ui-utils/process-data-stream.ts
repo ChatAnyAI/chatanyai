@@ -34,6 +34,7 @@ export async function processDataStream({
   onFinishMessagePart,
   onFinishStepPart,
   onStartStepPart,
+  onAssistantPart,
 }: {
   stream: ReadableStream<Uint8Array>;
   onTextPart?: (
@@ -73,6 +74,11 @@ export async function processDataStream({
   ) => Promise<void> | void;
   onToolResultPart?: (
     streamPart: (DataStreamPartType & { type: 'tool_result' })['value'],
+  ) => Promise<void> | void;
+  onAssistantPart?: (
+    streamPart: (DataStreamPartType & {
+      type: 'assistant';
+    })['value'],
   ) => Promise<void> | void;
   onMessageAnnotationsPart?: (
     streamPart: (DataStreamPartType & {
@@ -120,7 +126,9 @@ export async function processDataStream({
       .decode(concatenatedChunks, { stream: true })
       .split('\n')
       .filter(line => line !== '') // splitting leaves an empty string at the end
+      // [核心3]
       .map(parseDataStreamPart);
+
 
     for (const { type, value } of streamParts) {
       switch (type) {
@@ -147,6 +155,10 @@ export async function processDataStream({
           break;
         case 'error':
           await onErrorPart?.(value);
+          break;
+        // 定义为assistant的一些基本信息
+        case 'assistant':
+          await onAssistantPart?.(value);
           break;
         case 'message_annotations':
           await onMessageAnnotationsPart?.(value);

@@ -2,7 +2,7 @@
 
 import { SparklesIcon } from './icons';
 import { MyUserAvatar, UserAvatar as UAvatar } from "@/components/user-avatar";
-import {AvatarUser, Employee, UserProfile} from '@/service/api';
+import { Assistant, AvatarUser, Employee, UserProfile } from '@/service/api';
 import { Logo } from '../team-switcher';
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import React from "react";
@@ -11,10 +11,10 @@ import React from "react";
 export interface MessageAvatarProps {
   role: string;
   name?: string;
-  employee: Employee | undefined;
+  assistant: Assistant | undefined;
 }
 
-export const MessageAssistantAvatar = ({ employee, role, name }: MessageAvatarProps) => {
+export const MessageAssistantAvatar = ({ assistant, role, name }: MessageAvatarProps) => {
   if (role !== 'assistant' && role !== 'system') return null;
 
   return (
@@ -28,9 +28,9 @@ export const MessageAssistantAvatar = ({ employee, role, name }: MessageAvatarPr
         {/*      <Logo />*/}
         {/*  </div>*/}
         {/*)}*/}
-        { employee?.avatar ? (
+        { assistant?.avatar ? (
             <Avatar className="translate-y-px">
-                <AvatarImage src={employee.avatar} alt={employee.name} />
+                <AvatarImage src={assistant.avatar} alt={assistant.name} />
             </Avatar>
         ) : (
               <div className="translate-y-px">

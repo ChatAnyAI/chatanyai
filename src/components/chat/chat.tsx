@@ -11,7 +11,7 @@ import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
 import { useBlockSelector } from '@/hooks/use-block';
 import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/rightSetting';
-import {ApiChatCreate, Employee, RespChannel} from "@/service/api";
+import { ApiChatCreate, Assistant, Employee, RespChannel } from '@/service/api';
 import { toast } from '@/hooks/use-toast';
 import { data, useNavigate } from 'react-router-dom';
 
@@ -44,7 +44,7 @@ function Chat({
   const { mutate } = useSWRConfig();
   const [channelId, setChannelId] = useState<string | undefined>(id);
   const navgate = useNavigate();
-  const [employee, setEmployee] = useState<Employee>({
+  const [assistant, setAssistant] = useState<Assistant>({
     id: 0,
     name: '',
     avatar: '',
@@ -67,10 +67,10 @@ function Chat({
   } = useChat({
     api: apiEndpoint,
     id: channelId, // Use channelId instead of id to ensure consistency
-    employee: employee,
+    assistant: assistant,
     body: {
       id: channelId, // Use channelId instead of id
-      employeeId: employee.id,
+      employeeId: assistant.id,
       modelId: selectedModelId,
       options: {
         frequency_penalty: settingData.frequencyPenalty,
@@ -88,6 +88,7 @@ function Chat({
       mutate('ApiChatListByAppId');
     },
     onError: (err: Error) => {
+      console.log("err",err)
       try {
         const data = JSON.parse(err.message).data;
         setMessages((prevMessages) => { 
@@ -95,7 +96,7 @@ function Chat({
             id: `error-${Date.now()}`,
             content: "An error occurred",
             role: "assistant",
-            employee: {
+            assistant: {
               id: 0,
               name: '',
               avatar: ''
@@ -112,7 +113,7 @@ function Chat({
             id: `error-${Date.now()}`,
             content: "An error occurred",
             role: "assistant",
-            employee: {
+            assistant: {
               id: 0,
               name: '',
               avatar: ''
@@ -196,7 +197,7 @@ function Chat({
             {
               hiddenMessage ? null :
                 <Messages
-                  employee={employee}
+                  assistant={assistant}
                   channelId={channelId!}
                   isLoading={isLoading}
                   messages={messages}
@@ -213,7 +214,7 @@ function Chat({
                   channelId={channelId!}
                   input={input}
                   setInput={setInput}
-                  setEmployee={setEmployee}
+                  setAssistant={setAssistant}
                   handleSubmit={handleMsgSubmit}
                   isLoading={isLoading}
                   stop={stop}

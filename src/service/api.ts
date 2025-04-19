@@ -102,6 +102,19 @@ export interface Employee {
     name: string;
 }
 
+
+export interface Assistant {
+  id: number;
+  avatar: string;
+  name: string;
+}
+
+
+export interface ChatAssistantResp {
+  content: string;
+  assistant: Assistant;
+}
+
 export interface ShareUser {
   id: number;
   name: string;
@@ -349,7 +362,6 @@ export type ApiEmployeeItemResp = {
   id: number
   name: string
   role: string
-  // capabilities: string[]
   status: EmployeeStatus
   createdAt: number
   avatar: string
@@ -548,7 +560,7 @@ export interface RespChatHistoryMessage {
   attachments: PostChatMessageAttachment[]; // Reuse existing PostChatMessageAttachment interface
   createdAt: number;
   user: User;
-  employee: Employee;
+  assistant: Assistant;
 }
 
 export const ApiChatHistory = (channelId: string, data?: Pagination) => {
@@ -684,32 +696,32 @@ export const ApiCopilotCreate = (data: CreateCopilotRequest) => {
   return post<{ guid: string }>('/api/copilot', data);
 }
 
-export interface Template {
-  id: number;
-  type: AppType; // Assuming AppType is already defined in your constants
-  name: string;
-  description: string;
-  icon: string;
-  fromAppId: string;
-  createdAt: number;
-  updatedAt: number;
-  deletedAt: number;
-  createdBy: number;
+export interface Template extends ApiEmployeeItemResp {
+  uid: number;
   teamId: number;
-  copilotPrompt: string;
   group: string;
 }
+
+
 // templates
-export const ApiTemplateList = (group: string, pageToLoad: number) => {
+export const ApiTemplateList = (group: string, keyword:string, pageToLoad: number) => {
   // TODO: Implement pagination
   return get<ResponseWithPagination<Template[]>>('/api/template/-/list', {
     params: {
       group,
+      keyword,
       pagination: JSON.stringify({
         currentPage: pageToLoad,
         pageSize: 10
       })
     }
+  });
+}
+
+// templateGroups
+export const ApiTemplateGroupList = () => {
+  // TODO: Implement pagination
+  return get<string[]>('/api/template/-/category', {
   });
 }
 
