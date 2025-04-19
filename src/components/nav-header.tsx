@@ -55,11 +55,6 @@ export function NavHeader({
         url: "/home",
         icon: House,
     }, {
-        id: "files",
-        name: t("sidebar.Recently Files"),
-        url: "#",
-        icon: Folder
-    }, {
         id: "shared",
         name: t("sidebar.Shared with me"),
         url: "#",
@@ -69,7 +64,14 @@ export function NavHeader({
         name: t("sidebar.MyAssistant"),
         url: "/assistant",
         icon: UserRoundPlus,
-    }]
+    }
+    // ,{
+    //         id: "files",
+    //         name: t("sidebar.Recently Files"),
+    //         url: "#",
+    //         icon: Folder
+    //     }
+    ]
     return (
         <SidebarGroup className={cn(className)}>
             {
