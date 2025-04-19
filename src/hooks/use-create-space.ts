@@ -65,7 +65,6 @@ export const useCreateSpace = () => {
       title: 'Space created successfully',
     });
     navigator(`/assistant`);
-
   }
 
   return {createSpace, chooseCopilotTemplate};

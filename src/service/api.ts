@@ -349,7 +349,6 @@ export type ApiEmployeeItemResp = {
   id: number
   name: string
   role: string
-  // capabilities: string[]
   status: EmployeeStatus
   createdAt: number
   avatar: string
@@ -684,17 +683,9 @@ export const ApiCopilotCreate = (data: CreateCopilotRequest) => {
   return post<{ guid: string }>('/api/copilot', data);
 }
 
-export interface Template {
-  id: number;
-  name: string;
-  role: string;
-  avatar: string;
-  createdAt: number;
-  updatedAt: number;
-  deletedAt: number;
+export interface Template extends ApiEmployeeItemResp {
   uid: number;
   teamId: number;
-  prompt: string;
   group: string;
 }
 

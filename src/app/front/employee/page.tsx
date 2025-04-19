@@ -68,6 +68,7 @@ export default function AIEmployeesDashboard() {
         return <CopilotCreation
             onClose={() => {
                 setShowTpl(false)
+                mutate()
             }}
         />
     }
