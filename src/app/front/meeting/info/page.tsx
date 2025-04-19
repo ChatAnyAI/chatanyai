@@ -13,6 +13,7 @@ import { ApiChatHistory, ApiGetChat, RespChannel, RespChatHistoryMessage } from 
 import { useGlobalStore } from '@/store/globalStore';
 import { ChatHeader } from '@/components/chat/chat-header';
 import { useTranslation } from 'react-i18next';
+import { Chat } from '@/components/chat/chat';
 
 export default function Page() {
   const { t } = useTranslation();
@@ -35,12 +36,12 @@ export default function Page() {
     () => ApiChatHistory(id!),
   );
 
-  useEffect(() => {
-    const ragContent = messageHistoryResp?.find(item => item.ragContent)?.ragContent;
-    if (ragContent) {
-      setMeetingData(JSON.parse(ragContent));
-    }
-  }, [messageHistoryResp])
+  // useEffect(() => {
+  //   const ragContent = messageHistoryResp?.find(item => item.ragContent)?.ragContent;
+  //   if (ragContent) {
+  //     setMeetingData(JSON.parse(ragContent));
+  //   }
+  // }, [messageHistoryResp])
 
   if (!storeData && isLoading) {
     return <div>{t('meeting-info-page.loading')}</div>
@@ -57,18 +58,30 @@ export default function Page() {
           <MeetingSetting onStart={setMeetingData} data={meetingData!} channelId={id!} />
           <>
             <div className="flex-1 flex overflow-hidden">
-              {selectedModelId && <MeetingChat
-                isStoreData={!!storeData}
-                meetingData={meetingData}
-                key={id}
+              {<Chat
                 id={id!}
-                appId={appId!}
                 initialMessages={convertToUIMessages(messageHistoryResp || [])}
                 selectedModelId={selectedModelId}
-                isReadonly={!!(chatResp && user.id !== chatResp?.uid)}
+                chatInfo={chatResp!}
+                // isReadonly={user.id !== chatResp?.uid}
+                appId={appId!}
+                hiddenHeader={true}
+                isMeeting={true}
+                meetingData={meetingData}
               />}
-              {selectedModelId && <DataStreamHandler id={id!} />}
-              <RightSidebar></RightSidebar>
+              <DataStreamHandler id={id!} />
+              {/*{selectedModelId && <MeetingChat*/}
+              {/*  isStoreData={!!storeData}*/}
+              {/*  meetingData={meetingData}*/}
+              {/*  key={id}*/}
+              {/*  id={id!}*/}
+              {/*  appId={appId!}*/}
+              {/*  initialMessages={convertToUIMessages(messageHistoryResp || [])}*/}
+              {/*  selectedModelId={selectedModelId}*/}
+              {/*  isReadonly={!!(chatResp && user.id !== chatResp?.uid)}*/}
+              {/*/>}*/}
+              {/*{selectedModelId && <DataStreamHandler id={id!} />}*/}
+              {/*<RightSidebar></RightSidebar>*/}
             </div>
           </>
         </div>

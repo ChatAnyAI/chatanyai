@@ -23,7 +23,7 @@ import {
     Edit2, Pencil
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import {ApiChatCreate, ApiEmployeeItemResp, ApiEmployeeList} from "@/service/api"
+import { ApiChatCreate, ApiEmployeeItemResp, ApiEmployeeList, Assistant } from '@/service/api';
 import { useNavigate, useParams } from "react-router-dom"
 import useSWR from "swr";
 import {motion} from "framer-motion";
@@ -32,51 +32,10 @@ import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/
 import {EmployeeStatus, EmployeeStatusEnum} from "@/lib/constants/constants";
 
 
-const demoTopics = [
-  "How to enhance user loyalty and brand stickiness through social platforms?",
-  "How to design an effective remote team collaboration process?",
-  "How to improve development efficiency while maintaining product quality?",
-  "How to build a successful corporate culture?",
-  "How to formulate effective marketing strategies?",
-  "How to enhance the customer service experience?",
-  "How to maintain a competitive edge during digital transformation?",
-  "How to establish an efficient cross - departmental communication mechanism?",
-  "How to optimize the user experience design of products?",
-  "How to formulate a sustainable business strategy?"
-]
-
-const demoData = [
-  {
-    id: 1,
-    name: "Alexander Reed",
-    description: "A 28 - 35-year-old man working as a technical supervisor. He has the ENTJ personality type, excels in system architecture design, values teamwork, is good at innovative thinking, and is enthusiastic about new technologies.",
-  },
-  {
-    id: 2,
-    name: "Isabella Lane",
-    description: "A 30 - 40-year-old woman serves as the director of user experience design. She has the INFJ personality type, possessing keen observation and empathy. She focuses on user needs analysis and pursues perfection in product experience.",
-  },
-  {
-    id: 3,
-    name: "Oliver Fox",
-    description: "A 25 - 32-year-old man who is the CEO of a startup. He has the ENTP personality type, is full of entrepreneurial spirit and strategic vision, is good at seizing market opportunities, and excels in cross - border resource integration.",
-  },
-]
-
-
-interface Character {
-  id: number
-  name: string
-  description: string
-}
-
 export type MeetingData = {
   topic: string
-  maxrounds: number
-  members: {
-    name: string
-    description: string
-  }[]
+  maxRound: number
+  assistantIds: number[]
 }
 export default function DiscussionSetup({
   data,
@@ -89,34 +48,40 @@ export default function DiscussionSetup({
 }) {
   const { t } = useTranslation();
   const [topic, setTopic] = useState<string>(data?.topic || "")
-  const [maxrounds, setMaxRounds] = useState<number>(data?.maxrounds || 2)
-  const [members, setMembers] = useState<Character[]>(data?.members ? data.members.map((m, i) => ({ ...m, id: i + 1 })) : demoData)
+  const [maxRound, setMaxRound] = useState<number>(data?.maxRound || 2)
+  const [assistants, setAssistants] = useState<Assistant[]>([{
+    id: 1,
+    name: "Assistant 1",
+    avatar: "",
+  }, {
+    id: 2,
+    name: "Assistant 2",
+    avatar: "",
+  }])
   const { toast } = useToast()
   const { appId } = useParams()
   const navigate = useNavigate()
-
   const isDisabled = !!data
-
-    const { data: employeeList, error,mutate } = useSWR<ApiEmployeeItemResp[]>('ApiEmployeeList', ApiEmployeeList);
+    const { data: assistantList, error, mutate } = useSWR<ApiEmployeeItemResp[]>('ApiEmployeeList', ApiEmployeeList);
     if (error) return <div>{t('home-page.failed-to-load')}</div>;
-    if (!employeeList) return (
+    if (!assistantList) return (
         <div className="w-full flex items-center justify-center h-[50vh]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
 
-  const addCharacter = () => {
-    const newId = members.length > 0 ? Math.max(...members.map((c) => c.id)) + 1 : 1
-    setMembers([...members, { id: newId, name: `New character ${newId}`, description: "" }])
-  }
-
-  const deleteCharacter = (id: number) => {
-    setMembers(members.filter((c) => c.id !== id))
-  }
-
-  const updateCharacter = (id: number, field: "name" | "description", value: string) => {
-    setMembers(members.map((c) => (c.id === id ? { ...c, [field]: value } : c)))
-  }
+  // const addCharacter = () => {
+  //   const newId = members.length > 0 ? Math.max(...members.map((c) => c.id)) + 1 : 1
+  //   setMembers([...members, { id: newId, name: `New character ${newId}`, description: "" }])
+  // }
+  //
+  // const deleteCharacter = (id: number) => {
+  //   setMembers(members.filter((c) => c.id !== id))
+  // }
+  //
+  // const updateCharacter = (id: number, field: "name" | "description", value: string) => {
+  //   setMembers(members.map((c) => (c.id === id ? { ...c, [field]: value } : c)))
+  // }
 
   const startDiscussion = () => {
     if (!topic.trim()) {
@@ -127,7 +92,7 @@ export default function DiscussionSetup({
       return;
     }
 
-    if (members.length === 0) {
+    if (assistants.length === 0) {
       toast({
         title: t('meeting-setting.add-character-error'),
         variant: "destructive"
@@ -137,8 +102,8 @@ export default function DiscussionSetup({
 
     const data = {
       topic,
-      maxrounds,
-      members: members.map(({ name, description }) => ({ name, description })),
+      maxRound,
+      assistantIds: assistants.map((assistant) => assistant.id),
     }
     console.log("startDiscussion", data, channelId)
     if (!+channelId) {
@@ -150,11 +115,6 @@ export default function DiscussionSetup({
     } else { 
       onStart(data);
     }
-  }
-
-  const generateRandomTopic = () => {
-    const randomIndex = Math.floor(Math.random() * demoTopics.length)
-    setTopic(demoTopics[randomIndex])
   }
 
   return (
@@ -196,10 +156,10 @@ export default function DiscussionSetup({
                           />
                       </div>
                       <div className="flex items-center gap-3 min-w-[300px]">
-                          <span className="text-sm whitespace-nowrap">Dialogue turns: {maxrounds}</span>
+                          <span className="text-sm whitespace-nowrap">Dialogue turns: {maxRound}</span>
                           <Slider
-                              value={[maxrounds]}
-                              onValueChange={(value) => setMaxRounds(value[0])}
+                              value={[maxRound]}
+                              onValueChange={(value) => setMaxRound(value[0])}
                               max={20}
                               min={1}
                               step={1}
@@ -249,9 +209,9 @@ export default function DiscussionSetup({
                       className="mb-8 cursor-pointer"
                   >
 
-                      {employeeList.length > 0 ? (
+                      {assistantList.length > 0 ? (
                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                              {employeeList.map((employee, index) => {
+                              {assistantList.map((assistant, index) => {
                                   let color = "";
                                   switch (index % 6) {
                                       case 0:
@@ -293,16 +253,16 @@ export default function DiscussionSetup({
                                                         <span className="text-xl">
                                                              <Avatar
                                                                  className="h-16 w-16 border-2 border-background shadow-md">
-                                                                <AvatarImage src={employee.avatar} alt={employee.name}/>
+                                                                <AvatarImage src={assistant.avatar} alt={assistant.name}/>
                                                             </Avatar>
                                                         </span>
                                                           <span
                                                               className="text-xs px-2 py-0.5 rounded-full bg-background/80 text-muted-foreground">
-                                                           {employee.role}
+                                                           {assistant.role}
                                                         </span>
                                                       </div>
 
-                                                      <h3 className="font-medium truncate">My name is {employee.name}</h3>
+                                                      <h3 className="font-medium truncate">My name is {assistant.name}</h3>
                                                   </div>
                                               </div>
                                           </div>

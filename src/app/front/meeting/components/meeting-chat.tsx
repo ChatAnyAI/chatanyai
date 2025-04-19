@@ -66,20 +66,20 @@ export default function Chat({
     initialMessages,
     experimental_throttle: 100,
     onFinish: () => {
-      if (isReadonly || !isStoreData
-        || (currentRound.current === 0 && memberIndex.current === 0)
-      ) return;
-      const lastMsg = getApiMessages();
-      if (!lastMsg) return;
-      setTimeout(() => { 
-        handleSubmit(undefined, {
-          body: {
-            messages: [lastMsg!],
-            current: currentName.current,
-          },
-          allowEmptySubmit: true
-        });
-      }, 1500)
+      // if (isReadonly || !isStoreData
+      //   || (currentRound.current === 0 && memberIndex.current === 0)
+      // ) return;
+      // const lastMsg = getApiMessages();
+      // if (!lastMsg) return;
+      // setTimeout(() => {
+      //   handleSubmit(undefined, {
+      //     body: {
+      //       messages: [lastMsg!],
+      //       current: currentName.current,
+      //     },
+      //     allowEmptySubmit: true
+      //   });
+      // }, 1500)
     },
     onError: (err: Error) => {
     try {
@@ -202,7 +202,7 @@ export default function Chat({
             reload={reload}
             isReadonly={isReadonly}
             isBlockVisible={isBlockVisible}
-            employee={undefined} />
+            assistant={undefined} />
         </div>
       </div>
     </>

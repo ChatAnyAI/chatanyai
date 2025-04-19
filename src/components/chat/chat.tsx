@@ -14,6 +14,7 @@ import { RightSidebar, useRightSetting } from '@/app/front/aichat/component/righ
 import { ApiChatCreate, Assistant, Employee, RespChannel } from '@/service/api';
 import { toast } from '@/hooks/use-toast';
 import { data, useNavigate } from 'react-router-dom';
+import { MeetingData } from '@/app/front/meeting/components/meeting-setting';
 
 function Chat({
   hiddenHeader,
@@ -27,6 +28,8 @@ function Chat({
   chatInfo,
   className,
   hiddenMessage,
+  isMeeting,
+  meetingData,
 }: {
   className?: string;
   hiddenHeader?: boolean;
@@ -38,6 +41,8 @@ function Chat({
   isReadonly: boolean;
   appId: string;
   isNew?: boolean;
+  isMeeting?:boolean;
+  meetingData?: MeetingData;
   chatInfo?: RespChannel;
 }) {
   const { settingData } = useRightSetting();
@@ -52,7 +57,10 @@ function Chat({
 
 
   // Create a dynamic API endpoint that updates when channelId changes
-  const apiEndpoint = `/api/app/${appId}/channel/${channelId}`;
+  let apiEndpoint = `/api/app/${appId}/channel/${channelId}`;
+  if (isMeeting) {
+    apiEndpoint += '/meeting';
+  }
 
   const {
     messages,
@@ -80,6 +88,7 @@ function Chat({
         // topP: settingData.topP,
       },
       appId,
+      meetingData: isMeeting ? meetingData : undefined,
       ...(pdfLink ? { pdfLink } : {})
     },
     initialMessages,
@@ -139,6 +148,17 @@ function Chat({
       setMessages([]); // Clear messages when switching to a new channel
     }
   }, [channelId, id, setMessages]);
+
+  useEffect(() => {
+    console.log("handleSubmit1112222")
+    console.log("isMeeting",isMeeting)
+    console.log("isReadonly",isReadonly)
+    if (isReadonly || !isMeeting) return;
+    console.log("handleSubmit")
+    handleSubmit(undefined, {
+      allowEmptySubmit: true
+    });
+  }, [id, channelId, isReadonly,isMeeting])
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
